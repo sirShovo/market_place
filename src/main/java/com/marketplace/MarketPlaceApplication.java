@@ -5,21 +5,27 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * MARKET PLACE API
- * Architecture: Hexagonal (Ports and Adapters) + DDD
+ * Main application class for the Market Place API.
+ * This application is built using Hexagonal Architecture (Ports and Adapters) 
+ * combined with Domain-Driven Design (DDD) principles.
  *
  * Layers:
- *   domain/          -> Lógica de negocio pura, sin dependencias de framework.
- *   application/     -> Casos de uso, Puertos de Entrada/Salida, DTOs.
- *   adapter/in/web/  -> Controladores REST (Driving Adapters).
- *   adapter/out/     -> Persistencia JPA, Clientes Externos (Driven Adapters).
- *   config/          -> Configuración de Spring, Seguridad, Manejo de Excepciones.
- *   shared/          -> Utilidades y constantes compartidas.
+ * - domain/: Pure business logic, no framework dependencies.
+ * - application/: Use cases, Input/Output Ports, DTOs.
+ * - adapter/in/web/: REST Controllers (Driving Adapters).
+ * - adapter/out/: JPA Persistence, External Clients (Driven Adapters).
+ * - config/: Spring configuration, Security, Exception handling.
+ * - shared/: Shared utilities and constants.
  */
 @SpringBootApplication
 @EnableScheduling
 public class MarketPlaceApplication {
 
+    /**
+     * Application entry point.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         SpringApplication.run(MarketPlaceApplication.class, args);
     }

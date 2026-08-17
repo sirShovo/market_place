@@ -12,16 +12,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * CONFIG - GlobalExceptionHandler
+ * Global Exception Handler configuration.
  *
- * Maneja las excepciones a nivel global de la API.
- * Intercepta excepciones de negocio (dominio) y de validacion (Spring)
- * para devolver siempre el formato estandarizado ApiResponse.
+ * This component acts as a centralized error handling mechanism across the entire API.
+ * It catches exceptions thrown by controllers or lower layers and maps them to a
+ * standardized HTTP response using the {@link ApiResponse} wrapper.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Manejo de errores de validacion (ej. @Valid en DTOs)
+    /**
+     * Handles validation errors thrown when a method argument annotated with @Valid fails validation.
+     * Extracts field-specific error messages and bundles them into the error response.
+     *
+     * @param ex The MethodArgumentNotValidException thrown by Spring Validation.
+     * @return A standardized ResponseEntity with a 400 BAD REQUEST status.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -34,10 +40,16 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("Validation failed", errors));
     }
 
-    // Excepcion global (Fallback)
+    /**
+     * Fallback exception handler for any unexpected server errors.
+     * Prevents stack traces from leaking to the client in production.
+     *
+     * @param ex The generic Exception caught.
+     * @return A standardized ResponseEntity with a 500 INTERNAL SERVER ERROR status.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleGeneralException(Exception ex) {
-        // En produccion se deberia hacer log del error y no exponer el mensaje detallado si es sensible
+        // In a production environment, errors should be logged and sensitive messages masked.
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("An unexpected error occurred: " + ex.getMessage()));
     }

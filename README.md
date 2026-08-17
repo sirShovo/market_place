@@ -1,6 +1,6 @@
 # MarketPlace API — Arquitectura Hexagonal + DDD + Spring Boot
 
-Documento de referencia arquitectonica y diseno estructural para el desarrollo de la API del Market Place, basado en el proyecto de referencia bancario ([SantiagoMacias](file:///c:/Users/Shovo/Documents/me/tdea/CSoftware2SantiagoMacias/CSoftware2SantiagoMacias-develop/SantiagoMacias)).
+Documento de referencia arquitectonica y diseno estructural para el desarrollo de la API del Market Place.
 
 ---
 
@@ -25,8 +25,8 @@ El proyecto base es un sistema de gestion bancaria desarrollado bajo los princip
 
 El proyecto cuenta con un modulo completo de autenticacion y autorizacion:
 - **Endpoints Publicos:** `/api/auth/login`, `/api/auth/register`, `/swagger-ui/**`, `/v3/api-docs/**`.
-- **Mecanismo de Login:** Recibe identificacion y contrasena en [AuthController.java](file:///c:/Users/Shovo/Documents/me/tdea/CSoftware2SantiagoMacias/CSoftware2SantiagoMacias-develop/SantiagoMacias/src/main/java/com/bank/adapter/in/web/controller/AuthController.java), valida credenciales cifradas con BCrypt y retorna un token JWT firmado (HMAC-SHA256).
-- **Filtro de Intercepcion:** [JwtAuthenticationFilter.java](file:///c:/Users/Shovo/Documents/me/tdea/CSoftware2SantiagoMacias/CSoftware2SantiagoMacias-develop/SantiagoMacias/src/main/java/com/bank/config/JwtAuthenticationFilter.java) intercepta cada peticion, valida el token y carga el contexto del usuario autenticado en Spring Security.
+- **Mecanismo de Login:** Recibe identificacion y contrasena en `AuthController.java`, valida credenciales cifradas con BCrypt y retorna un token JWT firmado (HMAC-SHA256).
+- **Filtro de Intercepcion:** `JwtAuthenticationFilter.java` intercepta cada peticion, valida el token y carga el contexto del usuario autenticado en Spring Security.
 - **Control de Acceso:** Basado en roles (RBAC) mediante metodos utilitarios como `SecurityContextHelper.requireAnyRole(...)`.
 
 ### 1.3 Persistencia y Base de Datos
