@@ -13,17 +13,19 @@ Este documento detalla el plan de acción para construir la API del Market Place
 ## Fases de Implementación
 
 ### Fase 1: Configuración Base y Arquitectura Inicial (Entregable 1)
-*Objetivo: Estructurar el cascarón del proyecto y configurar las dependencias.*
 
-- [ ] 1.1. Inicializar proyecto Spring Boot con dependencias base (Web, Data JPA, Security, Validation, MySQL/H2, JavaMailSender).
-- [ ] 1.2. Configurar `application.properties` (conexión a BD, variables JWT, dialecto de Hibernate, credenciales SMTP para correos).
+_Objetivo: Estructurar el cascarón del proyecto y configurar las dependencias._
+
+- [x] 1.1. Inicializar proyecto Spring Boot con dependencias base (Web, Data JPA, Security, Validation, MySQL/H2, JavaMailSender).
+- [x] 1.2. Configurar `application.properties` (conexión a BD, variables JWT, dialecto de Hibernate, credenciales SMTP para correos).
 - [ ] 1.3. Crear estructura de paquetes Hexagonal (`adapter`, `application`, `domain`, `config`, `shared`).
-- [ ] 1.4. Implementar utilidades compartidas y configuraciones globales:
-  - [ ] 1.4.1. `GlobalExceptionHandler` y envoltorio de respuesta unificado `ApiResponse`.
-  - [ ] 1.4.2. `JacksonConfig` para serialización de fechas y objetos.
+- [x] 1.4. Implementar utilidades compartidas y configuraciones globales:
+  - [x] 1.4.1. `GlobalExceptionHandler` y envoltorio de respuesta unificado `ApiResponse`.
+  - [x] 1.4.2. `JacksonConfig` para serialización de fechas y objetos.
 
 ### Fase 2: Modelado del Dominio (Entregable 2 - Específico para el Profesor)
-*Objetivo: Diseñar el núcleo del negocio sin dependencias tecnológicas (Puro Java).*
+
+_Objetivo: Diseñar el núcleo del negocio sin dependencias tecnológicas (Puro Java)._
 
 - [ ] 2.1. Definir Value Objects (Objetos Inmutables):
   - [ ] 2.1.1. `Money` (Manejo seguro de moneda y montos).
@@ -43,7 +45,8 @@ Este documento detalla el plan de acción para construir la API del Market Place
   - [ ] 2.4.1. `UserRepository`, `ProductRepository`, `OrderRepository`, `CategoryRepository`.
 
 ### Fase 3: Servicios y Eventos de Dominio (Entregable 3 - Específico para el Profesor)
-*Objetivo: Implementar las reglas de negocio complejas que cruzan múltiples agregados.*
+
+_Objetivo: Implementar las reglas de negocio complejas que cruzan múltiples agregados._
 
 - [ ] 3.1. Definir Eventos de Dominio (`DomainEvent`):
   - [ ] 3.1.1. `OrderCreatedEvent`, `OrderPaidEvent`, `OrderPaymentFailedEvent`.
@@ -54,7 +57,8 @@ Este documento detalla el plan de acción para construir la API del Market Place
   - [ ] 3.2.3. `OrderCheckoutDomainService` (Lógica de transición de estados de la orden invocando la simulación de pagos).
 
 ### Fase 4: Capa de Aplicación (Casos de Uso y Puertos)
-*Objetivo: Orquestar el dominio mediante los flujos de negocio.*
+
+_Objetivo: Orquestar el dominio mediante los flujos de negocio._
 
 - [ ] 4.1. Definir DTOs (Records de request/response para User, Product, Order).
 - [ ] 4.2. Definir Puertos de Entrada (`InputPorts`) y Salida (`OutputPorts`, incluyendo `EmailNotificationPort`).
@@ -65,7 +69,8 @@ Este documento detalla el plan de acción para construir la API del Market Place
   - [ ] 4.3.4. `CategoryUseCase` y `AuditLogUseCase`.
 
 ### Fase 5: Persistencia e Infraestructura (Adaptadores de Salida)
-*Objetivo: Conectar el dominio con la base de datos y sistemas externos.*
+
+_Objetivo: Conectar el dominio con la base de datos y sistemas externos._
 
 - [ ] 5.1. Implementar Adaptador de Correo: `EmailNotificationAdapter` que consuma `JavaMailSender` implementando `EmailNotificationPort`.
 - [ ] 5.2. Crear Entidades JPA (`UserJpaEntity`, `ProductJpaEntity`, `OrderJpaEntity`, etc.).
@@ -74,7 +79,8 @@ Este documento detalla el plan de acción para construir la API del Market Place
 - [ ] 5.5. Implementar Adaptadores de Persistencia que cumplan con los `OutputPorts` de repositorio.
 
 ### Fase 6: Controladores REST y Seguridad (Adaptadores de Entrada)
-*Objetivo: Exponer la API hacia el exterior y protegerla.*
+
+_Objetivo: Exponer la API hacia el exterior y protegerla._
 
 - [ ] 6.1. Configuración de Spring Security:
   - [ ] 6.1.1. `JwtTokenProvider` y `JwtAuthenticationFilter`.
@@ -86,7 +92,8 @@ Este documento detalla el plan de acción para construir la API del Market Place
 - [ ] 6.3. Integrar Swagger/OpenAPI UI para documentar automáticamente los endpoints.
 
 ### Fase 7: Schedulers y Refinamientos Finales
-*Objetivo: Añadir automatizaciones de negocio y pulir detalles.*
+
+_Objetivo: Añadir automatizaciones de negocio y pulir detalles._
 
 - [ ] 7.1. Implementar `OrderExpirationScheduler` (Cancelar órdenes no pagadas en X minutos y restaurar stock).
 - [ ] 7.2. Implementar módulo de Auditoría (Anotaciones o intercepciones AOP para alimentar el `AuditLog`).
