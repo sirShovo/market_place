@@ -30,4 +30,13 @@ public class Product {
     
     /** @return The product type */
     public ProductType getType() { return type; }
+    
+    /** @return The product name */
+    public String getName() { return name; }
+    
+    /** @return The product price */
+    public Money getPrice() { return price; }
+    
+    /** @return The seller ID */
+    public Long getSellerId() { return sellerId; }
 }

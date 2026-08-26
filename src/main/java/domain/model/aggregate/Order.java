@@ -40,4 +40,7 @@ public class Order {
     
     /** @return The list of order items */
     public List<OrderItem> getItems() { return items; }
+    
+    /** @return The buyer ID */
+    public Long getBuyerId() { return buyerId; }
 }

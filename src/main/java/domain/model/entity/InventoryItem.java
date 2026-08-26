@@ -33,4 +33,7 @@ public class InventoryItem {
     
     /** @param stock The stock quantity object to set */
     public void setStock(StockQuantity stock) { this.stock = stock; }
+    
+    /** @return The warehouse ID */
+    public Long getWarehouseId() { return warehouseId; }
 }
