@@ -115,7 +115,8 @@ Once **Phase 6** is completed, you will be able to run the application using `./
 
 Detailed architectural decisions and layer-specific documentation are maintained in the Software Design Document (`SDD/`) directory.
 
-- **[01. Architecture Overview](market_place/SDD/01_ARCHITECTURE_OVERVIEW.md):** Deep dive into the Hexagonal layers and dependency rules.
-- **[02. Domain Layer](market_place/SDD/02_DOMAIN_LAYER.md):** Documentation of the business aggregates, entities, and value objects.
+- **[01. Architecture Overview](SDD/01_ARCHITECTURE_OVERVIEW.md):** Deep dive into the Hexagonal layers and dependency rules.
+- **[02. Domain Layer](SDD/02_DOMAIN_LAYER.md):** Documentation of the business aggregates, entities, and value objects.
+- **[03. Domain Services and Events](SDD/03_DOMAIN_SERVICES_AND_EVENTS.md):** Explanation of cross-aggregate logic, payment simulation, and domain events.
 
 *(More documents will be added as implementation phases progress).*
