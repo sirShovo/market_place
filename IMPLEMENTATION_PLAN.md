@@ -1,93 +1,96 @@
 # Plan de Implementación: API Market Place (Hexagonal + DDD)
 
-Este documento detalla el plan de acción exhaustivo para construir la API del Market Place desde cero, basándose en la Especificación Funcional proporcionada y aplicando Arquitectura Hexagonal y Domain-Driven Design (DDD).
+Este documento detalla el plan de acción exhaustivo para construir la API del Market Place en Spring Boot. Combina la rigurosidad arquitectónica (Hexagonal + DDD) basada en el proyecto de referencia de Santiago, las decisiones de negocio previas, y las nuevas directrices de la Especificación Funcional oficial (PDF).
 
-## Acuerdos y Lineamientos
-- **Documentación SDD:** Toda la documentación de diseño (Software Design Document) se redactará y almacenará progresivamente en la carpeta `SDD/` del proyecto, completamente en inglés.
-- **Roles y Restricciones:** Se reflejan fielmente los roles (Comprador, Vendedor, Operador Logístico, Administrador, Supervisor) y la matriz de responsabilidades (ej. los vendedores no pueden auto-registrarse).
-- **Flujos de Producto:** Se distingue el flujo de pedidos entre productos Físicos (que pasan por logística y despacho) y productos Digitales (que pasan a entrega inmediata tras el pago).
-- **Trazabilidad de Inventario:** Para asegurar que "no se permiten existencias negativas" y rastrear "Ingreso, Reserva, Salida por venta, Ajuste y Devolución", se incluye una entidad `InventoryMovement` que actúa como registro inmutable (Audit Trail).
+## Decisiones y Acuerdos de Diseño
+- **Estructura Estricta (SantiagoMacias):** Se respetará exactamente la misma separación de paquetes: `adapter.in`, `adapter.out.persistence` (con sus `entity`, `repository`, `mapper`), `application.port.input`, `application.port.output`, `application.usecase`, `domain.repository`, `domain.service`.
+- **Documentación SDD:** Toda la documentación de diseño (Software Design Document) se redactará en inglés dentro de la carpeta `SDD/` por cada hito completado.
+- **Simulación de Pagos:** Se mantendrá a nivel de dominio una lógica que procese el pago con probabilidad de fallo, permitiendo al comprador (`BUYER`) reintentar la operación y probar el flujo de error.
+- **Manejo de Base de Datos:** Las tablas se crearán automáticamente desde las Entidades JPA mediante `spring.jpa.hibernate.ddl-auto=update`.
+- **Notificaciones por Correo:** Se implementará el envío de correos mediante un Adaptador de Salida (`EmailNotificationAdapter`).
+- **Lógica Específica del PDF:** 
+  - División entre productos Físicos (requieren despacho) y Digitales (entrega inmediata tras pago).
+  - Trazabilidad estricta de inventario: Se incluye la entidad `InventoryMovement` para rastrear ingresos, reservas, salidas, ajustes y devoluciones. No se permiten existencias negativas ni reservar productos dañados.
+  - Vendedores solo pueden ser registrados por el Administrador.
 
 ---
 
 ## Fases de Implementación
 
-### Fase 1: Estructura Base, Configuración y SDD Inicial
-*Objetivo: Inicializar el proyecto limpio, definir la arquitectura de carpetas y crear los cimientos de la documentación SDD.*
+### Fase 1: Configuración Base, Arquitectura Inicial y SDD (Entregable 1)
+_Objetivo: Estructurar el cascarón del proyecto y preparar la base de la documentación._
 
-- [ ] 1.1. Inicializar proyecto Spring Boot (Web, JPA, Security, Validation, MySQL).
-- [ ] 1.2. Configurar `application.properties` (Conexión a base de datos, JWT, ddl-auto=update).
-- [ ] 1.3. Crear el andamiaje Hexagonal (`adapter`, `application`, `domain`, `config`, `shared`).
-- [ ] 1.4. Crear directorio raíz `SDD/` (Software Design Document).
-- [ ] 1.5. Redactar `SDD/01_ARCHITECTURE_OVERVIEW.md` (En inglés): Explicación de la arquitectura Hexagonal y convenciones de código.
+- [ ] 1.1. Inicializar proyecto Spring Boot (Web, Data JPA, Security, Validation, MySQL/H2, JavaMailSender).
+- [ ] 1.2. Configurar `application.properties` (conexión a BD, variables JWT, dialecto de Hibernate, credenciales SMTP).
+- [ ] 1.3. Crear estructura de paquetes Hexagonal (`adapter`, `application`, `domain`, `config`, `shared`).
+- [ ] 1.4. Implementar utilidades compartidas y configuraciones globales:
+  - [ ] 1.4.1. `GlobalExceptionHandler` y envoltorio de respuesta unificado `ApiResponse`.
+  - [ ] 1.4.2. `JacksonConfig` para serialización de fechas y objetos.
+- [ ] 1.5. Crear directorio `SDD/` y redactar `SDD/01_ARCHITECTURE_OVERVIEW.md` (En inglés).
 
-### Fase 2: Dominio 1, 2 y 3 - Gestión de Usuarios, Compradores y Vendedores
-*Objetivo: Modelar el núcleo de autenticación y los perfiles de los participantes.*
+### Fase 2: Modelado del Dominio - Estructura y Reglas (Entregable 2)
+_Objetivo: Diseñar el núcleo del negocio sin dependencias tecnológicas, dividido en sus respectivos subpaquetes (`domain.model`, `domain.exception`, `domain.repository`)._
 
-- [ ] 2.1. Definir Value Objects: `Email`, `DocumentId` (Único), `Role` (BUYER, SELLER, LOGISTICS_OPERATOR, ADMIN, SUPERVISOR), `UserStatus`.
-- [ ] 2.2. Construir Entidades: 
-  - [ ] 2.2.1. `User` (Raíz).
-  - [ ] 2.2.2. `BuyerProfile` (Contiene dirección principal y direcciones adicionales).
-- [ ] 2.3. Implementar reglas de negocio:
-  - [ ] 2.3.1. Validar unicidad de correo y documento de identidad (vía Domain Services).
-  - [ ] 2.3.2. Restricción: Vendedores solo pueden ser registrados por el Administrador.
-- [ ] 2.4. Documentar el modelo de usuarios en `SDD/02_USER_DOMAIN.md`.
+- [ ] 2.1. **Value Objects (`domain.model.valueobject`):**
+  - [ ] 2.1.1. `Money` (Manejo seguro de moneda), `Email`, `DocumentId`.
+  - [ ] 2.1.2. `StockQuantity` (Validación de enteros no negativos).
+  - [ ] 2.1.3. Enums: `UserRole` (BUYER, SELLER, LOGISTICS, ADMIN, SUPERVISOR), `UserStatus`, `ProductType` (PHYSICAL, DIGITAL), `ProductStatus`, `OrderStatus`, `MovementType`.
+- [ ] 2.2. **Entities y Aggregates (`domain.model.entity` y `domain.model.aggregate`):**
+  - [ ] 2.2.1. `User` (Raíz) y `BuyerProfile` (Entidad).
+  - [ ] 2.2.2. `Category` y `AuditLog` (Entidades).
+  - [ ] 2.2.3. `Warehouse` y `InventoryMovement` (Entidades - Rastreo transaccional de inventario).
+  - [ ] 2.2.4. `Product` (Agregado Raíz) e `InventoryItem` (Asociación Bodega-Producto).
+  - [ ] 2.2.5. `Order` (Agregado Raíz) y `OrderItem` (Entidad).
+- [ ] 2.3. **Exceptions (`domain.exception`):** `DomainValidationException`, `NegativeStockException`, `InvalidReservationException`, `PaymentRejectedException`.
+- [ ] 2.4. **Domain Repositories (`domain.repository`):** (Puertos de salida a nivel de dominio) `UserRepository`, `ProductRepository`, `OrderRepository`, `WarehouseRepository`.
+- [ ] 2.5. Documentar el modelo de dominio en `SDD/02_DOMAIN_LAYER.md`.
 
-### Fase 3: Dominio 4, 5 y 6 - Bodegas, Catálogo e Inventario
-*Objetivo: Estructurar la lógica de productos físicos/digitales y el control estricto de existencias.*
+### Fase 3: Servicios y Eventos de Dominio (Entregable 3)
+_Objetivo: Implementar las reglas de negocio complejas que cruzan múltiples agregados, ubicadas en `domain.service`._
 
-- [ ] 3.1. Definir Value Objects: `ProductType` (PHYSICAL, DIGITAL), `ProductStatus` (PUBLISHED, SUSPENDED, DISCONTINUED), `StockQuantity` (No negativos), `MovementType`.
-- [ ] 3.2. Construir Entidades y Agregados:
-  - [ ] 3.2.1. `Warehouse` (Bodegas del marketplace y de vendedores).
-  - [ ] 3.2.2. `Product` (Agregado Raíz) con soporte para variantes (Talla, Color, Modelo).
-  - [ ] 3.2.3. `InventoryItem` (Asociación Producto-Bodega).
-  - [ ] 3.2.4. `InventoryMovement` (Registro inmutable para trazabilidad de ajustes, reservas y ventas).
-- [ ] 3.3. Implementar reglas de negocio críticas:
-  - [ ] 3.3.1. Excepción: `NegativeStockException` (Bloquear existencias negativas).
-  - [ ] 3.3.2. Excepción: `InvalidReservationException` (No reservar stock dañado o inexistente).
-- [ ] 3.4. Documentar el modelo de catálogo e inventario en `SDD/03_CATALOG_INVENTORY_DOMAIN.md`.
+- [ ] 3.1. Definir Eventos de Dominio (`DomainEvent`):
+  - [ ] 3.1.1. `OrderCreatedEvent`, `OrderPaidEvent`, `OrderPaymentFailedEvent`, `StockDepletedEvent`.
+- [ ] 3.2. **Domain Services (`domain.service`):**
+  - [ ] 3.2.1. `PaymentSimulationDomainService` (Lógica que evalúa aleatoriamente el pago forzando reintentos).
+  - [ ] 3.2.2. `InventoryDomainService` (Manejo de reservas, deducciones, trazabilidad en `InventoryMovement` y diferencia Físico vs Digital).
+  - [ ] 3.2.3. `OrderCheckoutDomainService` (Lógica de transición de estados invocando simulación y reserva).
 
-### Fase 4: Dominio 7 - Gestión de Pedidos (Core Flow)
-*Objetivo: Modelar el ciclo de vida central de las compras.*
+### Fase 4: Capa de Aplicación - Casos de Uso y Puertos
+_Objetivo: Orquestar el dominio mediante los flujos de negocio en el paquete `application`._
 
-- [ ] 4.1. Definir Value Objects: `OrderStatus` (CART, PENDING_PAYMENT, PAID, SHIPPED, DELIVERED/FINALIZED).
-- [ ] 4.2. Construir Entidades y Agregados:
-  - [ ] 4.2.1. `Order` (Agregado Raíz) y `OrderItem`.
-- [ ] 4.3. Implementar lógica de transición de estados y servicios de dominio:
-  - [ ] 4.3.1. Flujo Físico: Pago -> Reserva de Inventario -> Despacho -> Entrega.
-  - [ ] 4.3.2. Flujo Digital: Pago -> Entrega inmediata (omite logística).
-  - [ ] 4.3.3. Restricción: Inmutabilidad de pedidos finalizados.
-- [ ] 4.4. Documentar el modelo de pedidos en `SDD/04_ORDER_DOMAIN.md`.
+- [ ] 4.1. **DTOs (`application.dto`):** Records de request/response para cada entidad.
+- [ ] 4.2. **Input Ports (`application.port.input`):** `UserInputPort`, `ProductInputPort`, `OrderInputPort`, `InventoryInputPort`.
+- [ ] 4.3. **Output Ports (`application.port.output`):** `UserRepositoryPort`, `ProductRepositoryPort`, `OrderRepositoryPort`, `EmailNotificationPort`.
+- [ ] 4.4. **Use Cases (`application.usecase`):**
+  - [ ] 4.4.1. `UserUseCase` (Registro validando roles).
+  - [ ] 4.4.2. `ProductUseCase` y `InventoryUseCase`.
+  - [ ] 4.4.3. `OrderUseCase` (Checkout, reintentar pago).
+- [ ] 4.5. Documentar los casos de uso en `SDD/03_APPLICATION_LAYER.md`.
 
-### Fase 5: Capa de Aplicación (Casos de Uso y Puertos)
-*Objetivo: Conectar los flujos de negocio mediante servicios de orquestación y DTOs.*
+### Fase 5: Persistencia e Infraestructura (Adaptadores de Salida)
+_Objetivo: Conectar el dominio con MySQL y envío de correos en `adapter.out.persistence`._
 
-- [ ] 5.1. Definir Input Ports y Casos de Uso (`UserUseCase`, `CatalogUseCase`, `InventoryUseCase`, `OrderUseCase`).
-- [ ] 5.2. Definir Output Ports (`Repositories` y `NotificationPorts`).
-- [ ] 5.3. Implementar DTOs para Request/Response.
-- [ ] 5.4. Documentar los flujos de Casos de Uso en `SDD/05_APPLICATION_USE_CASES.md`.
+- [ ] 5.1. Implementar `EmailNotificationAdapter` que consuma `JavaMailSender` y cumpla con el puerto de salida.
+- [ ] 5.2. **JPA Entities (`adapter.out.persistence.entity`):** `UserJpaEntity`, `ProductJpaEntity`, `OrderJpaEntity`, `InventoryMovementJpaEntity`, etc.
+- [ ] 5.3. **Spring Data Repositories (`adapter.out.persistence.repository`):** `UserJpaRepository`, etc.
+- [ ] 5.4. **Mappers (`adapter.out.persistence.mapper`):** Clases explícitas para convertir entre Entidades de Dominio y Entidades JPA.
+- [ ] 5.5. **Persistence Adapters (`adapter.out.persistence`):** Clases que implementan los `OutputPorts` inyectando repositorios JPA.
+- [ ] 5.6. Documentar persistencia en `SDD/04_PERSISTENCE_LAYER.md`.
 
-### Fase 6: Adaptadores de Infraestructura (Persistencia JPA)
-*Objetivo: Implementar los puertos de salida hacia la base de datos MySQL.*
+### Fase 6: Controladores REST y Seguridad (Adaptadores de Entrada)
+_Objetivo: Exponer la API hacia el exterior de forma segura en `adapter.in.web`._
 
-- [ ] 6.1. Crear Entidades JPA (`UserJpaEntity`, `ProductJpaEntity`, `OrderJpaEntity`, `InventoryJpaEntity`).
-- [ ] 6.2. Desarrollar Repositorios Spring Data JPA.
-- [ ] 6.3. Implementar Mappers de conversión (Domain <-> JPA).
-- [ ] 6.4. Implementar las clases Adapter que cumplen con las interfaces de Output Ports.
+- [ ] 6.1. Configuración de Spring Security en la capa `config`:
+  - [ ] 6.1.1. `JwtTokenProvider` y `JwtAuthenticationFilter`.
+  - [ ] 6.1.2. `SecurityConfig` aplicando la matriz de responsabilidades estricta.
+- [ ] 6.2. **Controllers (`adapter.in.web.controller`):**
+  - [ ] 6.2.1. `AuthController`, `UserController`, `ProductController`, `OrderController`, `InventoryController`.
+- [ ] 6.3. Integrar Swagger/OpenAPI UI para documentar automáticamente los endpoints.
 
-### Fase 7: Seguridad y Adaptadores Web (REST Controllers)
-*Objetivo: Exponer la funcionalidad de forma segura al exterior.*
+### Fase 7: Schedulers y Refinamientos Finales
+_Objetivo: Añadir automatizaciones de negocio y pulir detalles (Ubicado en `adapter.in.scheduler`)._
 
-- [ ] 7.1. Configurar JWT y Spring Security (`SecurityConfig`, `JwtFilter`).
-- [ ] 7.2. Implementar Controladores REST:
-  - [ ] 7.2.1. `/api/auth` (Registro y Login).
-  - [ ] 7.2.2. `/api/users`, `/api/products`, `/api/inventory`, `/api/orders`.
-- [ ] 7.3. Implementar validaciones de seguridad basadas en la "Matriz de Responsabilidades" (ej. Solo Operador Logístico o Vendedor administran inventario; Comprador solo ve sus propios pedidos).
-- [ ] 7.4. Configurar manejo global de excepciones (`GlobalExceptionHandler`).
-
-### Fase 8: Refinamientos, Facturación y SDD Final
-*Objetivo: Ajustes finales, requerimientos adicionales y consolidación documental.*
-
-- [ ] 8.1. Implementar Módulo de Devoluciones y Reembolsos básicos.
-- [ ] 8.2. Generar documentación de la API Swagger/OpenAPI.
-- [ ] 8.3. Finalizar y revisar todos los documentos en el directorio `SDD/` asegurando alta calidad técnica en inglés.
+- [ ] 7.1. Implementar `OrderExpirationScheduler` (Cancelar órdenes no pagadas en X minutos y restaurar stock).
+- [ ] 7.2. Implementar módulo de Auditoría (Anotaciones o AOP para alimentar la entidad `AuditLog`).
+- [ ] 7.3. Carga inicial de datos de prueba (`DataSeeder` para un usuario `ADMIN` por defecto que pueda registrar a los vendedores).
+- [ ] 7.4. Revisión final y pulido de toda la documentación SDD en inglés.
