@@ -26,4 +26,7 @@ public class InventoryMovement {
     public Long getId() { return id; }
     /** @param id The InventoryMovement ID to set */
     public void setId(Long id) { this.id = id; }
+    
+    /** @return The movement type */
+    public MovementType getType() { return type; }
 }
