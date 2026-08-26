@@ -7,9 +7,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/**
+ * Jackson JSON Mapper configuration.
+ * Ensures Java 8 Date and Time API classes are handled correctly.
+ */
 @Configuration
 public class JacksonConfig {
 
+    /**
+     * Creates and customizes the primary ObjectMapper bean.
+     * @return The configured ObjectMapper instance.
+     */
     @Bean
     @Primary
     public ObjectMapper objectMapper() {

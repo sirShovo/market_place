@@ -1,2 +1,13 @@
 package domain.model.valueobject;
-public enum ProductStatus { PUBLISHED, SUSPENDED, DISCONTINUED }
+
+/**
+ * Enumeration representing ProductStatus states/types.
+ */
+public enum ProductStatus {
+    /** Visible in the catalog */
+    PUBLISHED,
+    /** Hidden from the catalog */
+    SUSPENDED,
+    /** No longer sold */
+    DISCONTINUED
+}
