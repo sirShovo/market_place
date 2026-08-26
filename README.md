@@ -133,5 +133,6 @@ Detailed architectural decisions and layer-specific documentation are maintained
 - **[01. Architecture Overview](SDD/01_ARCHITECTURE_OVERVIEW.md):** Deep dive into the Hexagonal layers and dependency rules.
 - **[02. Domain Layer](SDD/02_DOMAIN_LAYER.md):** Documentation of the business aggregates, entities, and value objects.
 - **[03. Domain Services and Events](SDD/03_DOMAIN_SERVICES_AND_EVENTS.md):** Explanation of cross-aggregate logic, payment simulation, and domain events.
+- **[04. Application Layer](SDD/04_APPLICATION_LAYER.md):** Details on Use Cases, DTOs, Input, and Output Ports.
 
 *(More documents will be added as implementation phases progress).*
