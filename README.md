@@ -16,7 +16,8 @@ A robust, enterprise-grade RESTful API for a digital and physical Market Place. 
 4. [Current Progress](#current-progress)
 5. [Getting Started](#getting-started)
 6. [Usage](#usage)
-7. [Documentation (SDD)](#documentation-sdd)
+7. [Testing](#testing)
+8. [Documentation (SDD)](#documentation-sdd)
 
 ---
 
@@ -108,6 +109,20 @@ At the current development stage, the core business logic is encapsulated in the
 - Look at `src/main/java/domain/service/InventoryDomainService.java` to see how transactional movements (`RESERVE`, `SALE`) are logged purely via Domain Services without Database coupling.
 
 Once **Phase 6** is completed, you will be able to run the application using `./mvnw spring-boot:run` and access the Swagger UI at `http://localhost:8080/swagger-ui.html`.
+
+---
+
+## Testing
+
+Even though the API endpoints are not yet exposed, the core Domain logic is fully testable in isolation thanks to the Hexagonal Architecture. 
+
+To execute the domain simulation test (`DomainExecutionTest.java`) which validates the checkout flow, inventory reservation, and payment simulation, run:
+
+```bash
+./mvnw test -Dtest=DomainExecutionTest
+```
+
+*More integration and unit tests will be documented here as development progresses.*
 
 ---
 
