@@ -30,4 +30,7 @@ public class InventoryItem {
     
     /** @return The stock quantity object */
     public StockQuantity getStock() { return stock; }
+    
+    /** @param stock The stock quantity object to set */
+    public void setStock(StockQuantity stock) { this.stock = stock; }
 }
