@@ -16,7 +16,8 @@ A robust, enterprise-grade RESTful API for a digital and physical Market Place. 
 4. [Current Progress](#current-progress)
 5. [Getting Started](#getting-started)
 6. [Usage](#usage)
-7. [Documentation (SDD)](#documentation-sdd)
+7. [Testing](#testing)
+8. [Documentation (SDD)](#documentation-sdd)
 
 ---
 
@@ -111,11 +112,27 @@ Once **Phase 6** is completed, you will be able to run the application using `./
 
 ---
 
+## Testing
+
+Even though the API endpoints are not yet exposed, the core Domain logic is fully testable in isolation thanks to the Hexagonal Architecture. 
+
+To execute the domain simulation test (`DomainExecutionTest.java`) which validates the checkout flow, inventory reservation, and payment simulation, run:
+
+```bash
+./mvnw test -Dtest=DomainExecutionTest
+```
+
+*More integration and unit tests will be documented here as development progresses.*
+
+---
+
 ## Documentation (SDD)
 
 Detailed architectural decisions and layer-specific documentation are maintained in the Software Design Document (`SDD/`) directory.
 
-- **[01. Architecture Overview](market_place/SDD/01_ARCHITECTURE_OVERVIEW.md):** Deep dive into the Hexagonal layers and dependency rules.
-- **[02. Domain Layer](market_place/SDD/02_DOMAIN_LAYER.md):** Documentation of the business aggregates, entities, and value objects.
+- **[01. Architecture Overview](SDD/01_ARCHITECTURE_OVERVIEW.md):** Deep dive into the Hexagonal layers and dependency rules.
+- **[02. Domain Layer](SDD/02_DOMAIN_LAYER.md):** Documentation of the business aggregates, entities, and value objects.
+- **[03. Domain Services and Events](SDD/03_DOMAIN_SERVICES_AND_EVENTS.md):** Explanation of cross-aggregate logic, payment simulation, and domain events.
+- **[04. Application Layer](SDD/04_APPLICATION_LAYER.md):** Details on Use Cases, DTOs, Input, and Output Ports.
 
 *(More documents will be added as implementation phases progress).*
