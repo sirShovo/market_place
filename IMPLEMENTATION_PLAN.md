@@ -1,6 +1,13 @@
-# Plan de Implementación: API Market Place (Hexagonal + DDD)
+# Plan de Implementación: API NexusMarket (Hexagonal + DDD)
 
-Este documento detalla el plan de acción exhaustivo para construir la API del Market Place en Spring Boot. Combina la rigurosidad arquitectónica (Hexagonal + DDD) basada en el proyecto de referencia de Santiago, las decisiones de negocio previas, y las nuevas directrices de la Especificación Funcional oficial (PDF).
+Este documento detalla el plan de acción exhaustivo para construir la API de NexusMarket en Spring Boot. Combina la rigurosidad arquitectónica (Hexagonal + DDD) basada en el proyecto de referencia, las decisiones de negocio previas, y las directrices de la Especificación Funcional oficial ([`SPECS.md`](SPECS.md)).
+
+> **Nota de alineación (en curso):** el repositorio se está alineando con las
+> convenciones del proyecto de referencia. Ver [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md)
+> para el plan por fases y el estado actual. La documentación SDD vive ahora en
+> `SDD/Software Architecture/` y `SDD/domain/` (Domain Model, Domain Value Objects,
+> Domain Services, Output Ports, Input Ports, y `services/*` por subdominio); las
+> referencias a `SDD/0X_*.md` de abajo quedan obsoletas.
 
 ## Decisiones y Acuerdos de Diseño
 - **Estructura Estricta (SantiagoMacias):** Se respetará exactamente la misma separación de paquetes: `adapter.in`, `adapter.out.persistence` (con sus `entity`, `repository`, `mapper`), `application.port.input`, `application.port.output`, `application.usecase`, `domain.repository`, `domain.service`.
