@@ -24,9 +24,23 @@ public abstract class DomainCatalog {
 }
 ```
 
-* Immutable.
-* Equality and hash code are based solely on `code`.
-* Concrete catalogs expose their allowed values as `public static final` instances.
+### Characteristics
+
+* **Immutable** — all fields `final`, set once through the protected constructor.
+* **Value equality by `code`** — `equals` / `hashCode` consider only `code`
+  (`@EqualsAndHashCode(onlyExplicitlyIncluded = true)`), so two references to
+  `UserRole.ADMIN` are always equal and services compare with `.equals(...)`.
+* **Closed set** — each concrete catalog is `final`, has a `private` constructor and
+  publishes every allowed value as a `public static final` constant. New values are a
+  code change, never arbitrary strings.
+* **`toString()` returns the `code`**, which keeps audit `details` maps readable.
+
+### Why not a Java `enum`?
+
+`DomainCatalog` carries a business `code`, a display `name` and a `description`, and
+several catalogs are surfaced in reports. A plain `enum` cannot hold that metadata
+cleanly and tends to leak `name()` strings across layers. Plain enums are reserved for
+fixed *technical* values with no business metadata (see the end of this document).
 
 ---
 

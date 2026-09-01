@@ -321,6 +321,53 @@ operation was performed.
 
 Marker implemented by entities that can be the subject of an `Operation` /
 `AuditLog`. Exposes `auditableType()` and `auditableId()` for traceability.
+Implemented by `User`, `Buyer`, `Seller`, `Warehouse`, `Product`, `InventoryItem`,
+`Cart` and `Order`.
+
+---
+
+# Domain Lifecycle Relationship
+
+The general shape of every significant business action:
+
+```text
+AuditableEntity
+      │
+      │ significant business action
+      ▼
+  Operation            operationType, performedBy, executionDate
+      │
+      │ audit registration
+      ▼
+  AuditLog             + userRole (at execution time), severity, details
+```
+
+For example, when an order is dispatched:
+
+```text
+Order
+   │  status changes  PAID → DISPATCHED
+   ▼
+DISPATCHED
+   │
+   ├── Operation   operationType = ORDER_DISPATCH,  performedBy = LOGISTICS_OPERATOR
+   │
+   └── AuditLog    operationType = ORDER_DISPATCH,  affectedEntity = Order,
+                   userRole = LOGISTICS_OPERATOR,   severity = INFO,
+                   details = { order }
+```
+
+## Examples of Generated Operations
+
+| Entity | Operations |
+| ------ | ---------- |
+| `User` | `USER_REGISTRATION`, `USER_STATUS_CHANGE` |
+| `Buyer` | `USER_REGISTRATION` |
+| `Seller` | `SELLER_ONBOARDING` |
+| `Warehouse` | `WAREHOUSE_REGISTRATION` |
+| `Product` | `PRODUCT_PUBLICATION`, `PRODUCT_STATUS_CHANGE` |
+| `InventoryItem` | `INVENTORY_ENTRY`, `INVENTORY_RESERVATION`, `INVENTORY_RELEASE`, `INVENTORY_ADJUSTMENT`, `INVENTORY_RETURN` |
+| `Order` | `CART_CHECKOUT`, `ORDER_PAYMENT`, `ORDER_DISPATCH`, `ORDER_DELIVERY` |
 
 ---
 

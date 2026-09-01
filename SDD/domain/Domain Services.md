@@ -2,21 +2,14 @@
 
 ## Introduction
 
-Domain services hold business logic that does not belong to a single entity. In
-NexusMarket each **use case** is one service class, grouped by subdomain, exposing a
-single `execute(...)` method. Services:
+Domain services hold business logic that does not naturally belong to a single entity.
+In NexusMarket each **use case** is one service class, grouped by subdomain, exposing a
+single `execute(...)` (or verb-named) method.
 
-* validate business rules using information already in the Domain Models;
-* reach outside only through Output Ports;
-* compose the `authorization/` services for access control (spec RG01, RG03, §12);
-* compose `RegisterOperationAndAuditService` so every significant action produces an
-  `Operation` and an `AuditLog` record (spec traceability requirements).
-
-Location: `application.domain.services.<subdomain>`. Wiring: `@Service` +
-`@RequiredArgsConstructor`. Each service is unit-testable by direct instantiation with
-test-double ports.
-
-Detailed specs per subdomain:
+This document is the **high-level catalogue**. The detailed specification of each
+service — inputs, authorization, domain validations, effects, persistence,
+operation/audit and flows — lives in one Markdown file per subdomain under
+`services/`.
 
 ```
 services/
@@ -34,68 +27,80 @@ services/
 
 ---
 
-# High-level catalogue
+## Shared Design Principles
 
-## User (`services/user`)
-- **RegisterUserService** — registers a system user; a `SELLER` user may only be
-  created by an `ADMIN` (spec Domain 3); document and e-mail are unique (spec §11).
-- **ChangeUserStatusService** — activates / blocks / deactivates a user (`ADMIN`).
-- **ConsultUserService** — returns a user, subject to the requester's permissions.
+1. **Domain Models only.** Every service method and Input Port receives Domain Models
+   or Value Objects — never DTOs, persistence entities or bare primitive identifiers.
+2. **Ports for the outside.** A service reaches external resources only through Output
+   Ports. It never touches JPA, MongoDB, SQL, HTTP, a payment SDK, a JWT library or a
+   password-hashing library directly.
+3. **Composition over inheritance.** A use-case service composes the small
+   `authorization/` guards and the `operation/` audit collaborator rather than
+   duplicating those rules.
+4. **Rules from models stay in the domain.** If an authorization or business decision
+   can be evaluated from the supplied Domain Models, it is evaluated in the domain, not
+   delegated to a port.
+5. **Wiring.** `@Service` + `@RequiredArgsConstructor` (Lombok). Despite the Spring
+   annotation, every service must remain unit-testable by direct instantiation with
+   test-double ports — no Spring context.
 
-## Buyer (`services/buyer`)
-- **RegisterBuyerService** — self-service buyer registration (spec Domain 2).
-- **UpdateBuyerService** — updates addresses / data; a buyer may only update itself
-  (spec RG03).
-- **ConsultBuyerService** — returns a buyer; a buyer can only read its own data.
+---
 
-## Seller (`services/seller`)
-- **OnboardSellerService** — `ADMIN` registers a seller **and its first warehouse** in
-  one flow (spec flow 6.1.1).
-- **ConsultSellerService** — returns a seller (`ADMIN` / `SUPERVISOR`).
+## Cross-cutting Concerns
 
-## Warehouse (`services/warehouse`)
-- **RegisterWarehouseService** — `ADMIN` registers an additional warehouse
-  (MARKETPLACE or SELLER).
-- **ConsultWarehouseService** — returns a warehouse.
+### Authorization (spec RG01, RG03, §12)
 
-## Catalog (`services/catalog`)
-- **PublishProductService** — a `SELLER` publishes a product (physical or digital).
-- **UpdateProductService** — a seller updates its own product.
-- **ChangeProductStatusService** — PUBLISHED / SUSPENDED / DISCONTINUED.
-- **ConsultCatalogService** — lists published products.
+Every command service runs, in order:
 
-## Inventory (`services/inventory`)
-- **RegisterInventoryEntryService** — records an `ENTRY` movement, increasing stock.
-- **ReserveInventoryService** — reserves stock for an order; rejects non-existent or
-  `DAMAGED` inventory and any move that would go negative (spec Domain 6, §11).
-- **ReleaseReservationService** — returns previously reserved stock.
-- **AdjustInventoryService** — manual `ADJUSTMENT` to a new quantity.
-- **ConsultInventoryService** — stock of a product across warehouses.
+```text
+ValidateUserStatusService        (requester is ACTIVE)            — for User-driven services
+ValidateBuyerCanPurchaseService  (buyer commercialStatus ACTIVE)  — for Buyer-driven services
+ValidateRoleAuthorizationService (role ∈ allowed)                 — responsibility matrix
+Validate<X>OwnershipService      (BUYER/SELLER touches only its own)
+```
 
-## Cart (`services/cart`)
-- **AddCartItemService**, **RemoveCartItemService**, **ClearCartService**,
-  **ConsultCartService** — manage the buyer's single active cart.
+See [authorization-services.md](services/authorization-services.md).
 
-## Order (`services/order`)
-- **CheckoutCartService** — converts the active cart into an `Order`
-  (`CART → PENDING_PAYMENT`), capturing unit prices.
-- **ProcessOrderPaymentService** — calls `PaymentGatewayPort`; on approval the order
-  becomes `PAID`; a digital-only order goes straight to `DELIVERED`; on rejection it
-  stays `PENDING_PAYMENT` and the buyer may retry.
-- **DispatchOrderService** — `LOGISTICS_OPERATOR` moves `PAID → DISPATCHED` and emits
-  `SALE_EXIT` inventory movements.
-- **ConfirmDeliveryService** — `LOGISTICS_OPERATOR` moves `DISPATCHED → DELIVERED`
-  (finalized, immutable).
-- **ConsultOrderService** — returns an order; a buyer only sees its own.
+### Operation & Audit (spec traceability)
 
-## Authorization (`services/authorization`)
-- **ValidateRoleAuthorizationService** — requester holds one of the allowed roles.
-- **ValidateUserStatusService** — requester is `ACTIVE` (spec RG01).
-- **ValidateBuyerOwnershipService** — a buyer only touches its own data (spec RG03).
+Every significant state change ends with:
 
-## Operation & Audit (`services/operation`)
-- **RegisterOperationService** — persists an `Operation`.
-- **RegisterAuditLogService** — persists an `AuditLog` record.
-- **RegisterOperationAndAuditService** — composes the two; called by every command
-  service.
-- **ConsultAuditLogService** — reads audit history (`ADMIN` / `SUPERVISOR`).
+```text
+RegisterOperationAndAuditService.execute(operation, severity, details)
+        ├── OperationRepositoryPort.save(operation)
+        └── AuditLogRepositoryPort.save(auditLog)   // append-only, MongoDB expected
+```
+
+See [operation-audit-services.md](services/operation-audit-services.md).
+
+### Order lifecycle integrity (spec Domain 7, §11)
+
+State transitions and the immutability of a finalized (`DELIVERED`) order are enforced
+by the `Order` aggregate itself (`Order.transitionTo`, `Order.addItem`), so no service
+can move an order through an illegal path.
+
+---
+
+## High-level Catalogue
+
+| Subdomain | Services |
+| --------- | -------- |
+| **user** | RegisterUser, ChangeUserStatus, ConsultUser |
+| **buyer** | RegisterBuyer *(self-service)*, UpdateBuyer, ConsultBuyer |
+| **seller** | OnboardSeller *(admin: seller + first warehouse)*, ConsultSeller |
+| **warehouse** | RegisterWarehouse, ConsultWarehouse |
+| **catalog** | PublishProduct, UpdateProduct, ChangeProductStatus, ConsultCatalog |
+| **inventory** | RegisterInventoryEntry, ReserveInventory *(spec §11 validations)*, ReleaseReservation, AdjustInventory, ConsultInventory |
+| **cart** | AddCartItem, RemoveCartItem, ClearCart, ConsultCart |
+| **order** | CheckoutCart, ProcessOrderPayment *(PaymentGatewayPort, retry on rejection)*, DispatchOrder, ConfirmDelivery, ConsultOrder |
+| **authorization** | ValidateRoleAuthorization, ValidateUserStatus, ValidateBuyerOwnership, ValidateProductOwnership, ValidateOrderAccess, ValidateBuyerCanPurchase |
+| **operation** | RegisterOperation, RegisterAuditLog, RegisterOperationAndAudit, ConsultAuditLog |
+
+---
+
+## Consult / read services
+
+`ConsultUser`, `ConsultBuyer`, `ConsultSeller`, `ConsultWarehouse`,
+`ConsultCatalog`, `ConsultInventory`, `ConsultCart`, `ConsultOrder` and
+`ConsultAuditLog` are read-only: they validate access where applicable and return
+Domain Models, but they do **not** generate an `Operation` or an `AuditLog` record.
