@@ -1,6 +1,6 @@
 package application.dto;
 
-import domain.model.valueobject.ProductType;
+import application.domain.model.valueobject.ProductType;
 import java.math.BigDecimal;
 
 /**

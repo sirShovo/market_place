@@ -2,12 +2,12 @@ package application.usecase;
 
 import application.dto.UserDto;
 import application.port.input.UserInputPort;
-import domain.exception.DomainValidationException;
-import domain.model.entity.User;
-import domain.model.valueobject.DocumentId;
-import domain.model.valueobject.Email;
-import domain.model.valueobject.UserRole;
-import domain.repository.UserRepository;
+import application.domain.exception.DomainValidationException;
+import application.domain.model.entity.User;
+import application.domain.model.valueobject.DocumentId;
+import application.domain.model.valueobject.Email;
+import application.domain.model.valueobject.UserRole;
+import application.domain.repository.UserRepository;
 
 /**
  * Use Case implementation for User operations.

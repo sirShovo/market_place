@@ -2,10 +2,10 @@ package application.usecase;
 
 import application.dto.ProductDto;
 import application.port.input.ProductInputPort;
-import domain.model.aggregate.Product;
-import domain.model.valueobject.Money;
-import domain.model.valueobject.ProductType;
-import domain.repository.ProductRepository;
+import application.domain.model.aggregate.Product;
+import application.domain.model.valueobject.Money;
+import application.domain.model.valueobject.ProductType;
+import application.domain.repository.ProductRepository;
 import java.math.BigDecimal;
 
 /**

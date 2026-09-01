@@ -1,6 +1,6 @@
 package application.port.output;
 
-import domain.event.DomainEvent;
+import application.domain.event.DomainEvent;
 
 /**
  * Output Port for sending notifications via external services (e.g., Email).

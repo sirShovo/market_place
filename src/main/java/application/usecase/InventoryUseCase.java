@@ -2,10 +2,10 @@ package application.usecase;
 
 import application.dto.InventoryDto;
 import application.port.input.InventoryInputPort;
-import domain.model.entity.InventoryItem;
-import domain.model.valueobject.StockQuantity;
-import domain.repository.ProductRepository;
-import domain.repository.WarehouseRepository;
+import application.domain.model.entity.InventoryItem;
+import application.domain.model.valueobject.StockQuantity;
+import application.domain.repository.ProductRepository;
+import application.domain.repository.WarehouseRepository;
 // Note: Normally we'd also have an InventoryRepository to save the item. 
 // For this scaffolding, we'll create the structure.
 

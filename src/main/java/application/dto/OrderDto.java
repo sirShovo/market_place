@@ -1,6 +1,6 @@
 package application.dto;
 
-import domain.model.valueobject.OrderStatus;
+import application.domain.model.valueobject.OrderStatus;
 
 /**
  * Data Transfer Object for Order representation.

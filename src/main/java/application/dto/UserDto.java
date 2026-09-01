@@ -1,7 +1,7 @@
 package application.dto;
 
-import domain.model.valueobject.UserRole;
-import domain.model.valueobject.UserStatus;
+import application.domain.model.valueobject.UserRole;
+import application.domain.model.valueobject.UserStatus;
 
 /**
  * Data Transfer Object for User representation.

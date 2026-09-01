@@ -2,10 +2,10 @@ package application.usecase;
 
 import application.dto.OrderDto;
 import application.port.input.OrderInputPort;
-import domain.exception.ResourceNotFoundException;
-import domain.model.aggregate.Order;
-import domain.repository.OrderRepository;
-import domain.service.OrderCheckoutDomainService;
+import application.domain.exception.ResourceNotFoundException;
+import application.domain.model.aggregate.Order;
+import application.domain.repository.OrderRepository;
+import application.domain.service.OrderCheckoutDomainService;
 
 /**
  * Use Case implementation for Order operations.

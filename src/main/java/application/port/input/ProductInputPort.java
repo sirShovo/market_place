@@ -1,7 +1,7 @@
 package application.port.input;
 
 import application.dto.ProductDto;
-import domain.model.valueobject.ProductType;
+import application.domain.model.valueobject.ProductType;
 import java.math.BigDecimal;
 
 /**

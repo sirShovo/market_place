@@ -1,7 +1,7 @@
 package application.port.input;
 
 import application.dto.UserDto;
-import domain.model.valueobject.UserRole;
+import application.domain.model.valueobject.UserRole;
 
 /**
  * Input Port for User operations.
