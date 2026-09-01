@@ -15,9 +15,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Buyer extends Person {
+public class Buyer extends Person implements AuditableEntity {
 
     private BuyerCommercialStatus commercialStatus;
     private String mainAddress;
     private List<String> additionalAddresses = new ArrayList<>();
+
+    @Override
+    public String auditableType() {
+        return "Buyer";
+    }
+
+    @Override
+    public String auditableId() {
+        return getIdentification() != null ? getIdentification().value() : null;
+    }
 }

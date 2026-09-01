@@ -13,6 +13,24 @@ Se mantiene el trabajo **por fases**. El orden dentro de cada fase es: **primero
 SDD objetivo, luego el código que lo implementa** (igual que construyó el profe:
 commits de documentación antes que los de código).
 
+## Estado
+
+- [x] **Fase 1** — pom limpio, paquetes con raíz `application`, `infrastructure/config`,
+  `NexusMarketApplication`, `SDD/Software Architecture/Software Architecture.md`.
+- [x] **Fase 2** — `DomainCatalog` + catálogos + enums + VOs (records) + jerarquía de
+  modelos + excepciones; `SDD/domain/Domain Model.md` y `Domain Value Objects.md`.
+- [x] **Fase 3** — servicios por subdominio (`user`, `buyer`, `seller`, `warehouse`,
+  `catalog`, `inventory`, `cart`, `order`, `authorization`, `operation`) con
+  Operation/Audit y autorización; `SDD/domain/Domain Services.md` + `services/*.md`.
+- [x] **Fase 4** — `ports/out` (16) y `ports/in` (28) con firmas de modelo de dominio;
+  retiro de la capa legacy `dto/usecase/port/event`; `SDD/domain/Output Ports.md` e
+  `Input Ports.md`. Wiring automático por `@Service`.
+- [ ] **Fase 5+** — persistencia (adapters de los puertos), simulación de pago,
+  auditoría Mongo, REST + seguridad, schedulers.
+
+Build verde en cada fase (`./mvnw clean test`); `@SpringBootTest` `@Disabled` hasta
+fase 5.
+
 ---
 
 ## Decisiones tomadas

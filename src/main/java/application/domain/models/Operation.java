@@ -20,4 +20,14 @@ public class Operation {
     private LocalDateTime executionDate;
     private User performedBy;
     private AuditableEntity affectedEntity;
+
+    /** Convenience factory for the common case. */
+    public static Operation of(OperationType type, User performedBy, AuditableEntity affectedEntity) {
+        Operation operation = new Operation();
+        operation.setOperationType(type);
+        operation.setPerformedBy(performedBy);
+        operation.setAffectedEntity(affectedEntity);
+        operation.setExecutionDate(LocalDateTime.now());
+        return operation;
+    }
 }

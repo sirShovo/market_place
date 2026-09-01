@@ -78,10 +78,10 @@ The project follows a phased implementation plan
 alignment pass so phases 1–4 match the reference conventions and the SDD is brought to
 full detail — see [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md).
 
-- [ ] **Phase 1:** Base structure, build, `application`-rooted packages, architecture SDD.
-- [ ] **Phase 2:** Domain model — `DomainCatalog` value objects, entity hierarchy, exceptions.
-- [ ] **Phase 3:** Domain services (per subdomain) + Operation/Audit + authorization.
-- [ ] **Phase 4:** Input/Output ports; retire the legacy `dto` / `usecase` / `port` layer.
+- [x] **Phase 1:** Base structure, build, `application`-rooted packages, architecture SDD.
+- [x] **Phase 2:** Domain model — `DomainCatalog` value objects, entity hierarchy, exceptions.
+- [x] **Phase 3:** Domain services (per subdomain) + Operation/Audit + authorization.
+- [x] **Phase 4:** Input/Output ports; retire the legacy `dto` / `usecase` / `port` layer.
 - [ ] **Phase 5:** Persistence adapters (MySQL + MongoDB), payment simulation adapter.
 - [ ] **Phase 6:** REST controllers + Spring Security.
 - [ ] **Phase 7:** Schedulers and final refinements.
