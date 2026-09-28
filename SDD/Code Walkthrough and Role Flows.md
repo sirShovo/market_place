@@ -135,14 +135,38 @@ validateRoleAuthorizationService.execute(requester, ...);   // does it have the 
 ```
 
 Two output ports already exist for this reason, but have **no implementation and no
-consumer yet**:
+login consumer yet**:
 
 - `PasswordServicePort` — `encrypt(raw)` / `matches(raw, encoded)`.
 - `JwtServicePort` — `generateToken(User user)`.
 
-`RegisterUserService` already calls `PasswordServicePort.encrypt(...)` when creating a
-user, so a password is hashed at registration time — but nothing today verifies a
-password back, because there is no login endpoint.
+`RegisterUserService`, `RegisterBuyerService` and `OnboardSellerService` already call
+`PasswordServicePort.encrypt(...)` when creating a user, so a password is hashed at
+registration time — but nothing today verifies a password back, because there is no
+login endpoint.
+
+### The `User` ↔ `Buyer`/`Seller` identity bridge
+
+`User`, `Buyer` and `Seller` all extend `Person` independently — none references
+another. Early on, only `RegisterUserService` created a `User`; `RegisterBuyerService`
+and `OnboardSellerService` created only a `Buyer`/`Seller`, with no login credentials
+at all. That was fixed: **both now also create a `User`** (via `UserRepositoryPort` +
+`PasswordServicePort`), copying the buyer's/seller's identity onto it, so every
+participant that can act in the system also has a login row. The join key is
+`DocumentId` — the same `identification` value on both rows — which is safe to rely on
+because `ValidatePlatformUniquenessService` (see below) guarantees it is unique across
+`User`, `Buyer` and `Seller` combined. Phase 6's login flow will authenticate the
+`User` first, then resolve the matching `Buyer`/`Seller` profile via
+`findByIdentification` when the endpoint needs one.
+
+### Platform-wide uniqueness (spec §11)
+
+Document and e-mail uniqueness used to be checked **per repository** — a
+`RegisterUserService` call only asked `UserRepositoryPort`, so the same document could
+be registered as a `User`, a `Buyer` **and** a `Seller` without collision. This is now
+enforced by `ValidatePlatformUniquenessService` (`application.domain.services.identity`),
+which every registration/onboarding service calls before persisting: it checks
+`UserRepositoryPort`, `BuyerRepositoryPort` **and** `SellerRepositoryPort` together.
 
 ### The planned login flow (Phase 6 — not implemented)
 
@@ -230,9 +254,10 @@ sequenceDiagram
     participant Pay as ProcessOrderPaymentService
     participant Ord as ConsultOrderService
 
-    B->>Reg: RegisterBuyerUseCase.register(buyer)
-    Note right of Reg: mainAddress required, document/email unique (spec §11)
-    Note right of Reg: role=BUYER, commercialStatus=ACTIVE
+    B->>Reg: RegisterBuyerUseCase.register(buyer, account)
+    Note right of Reg: mainAddress + credentials required
+    Note right of Reg: ValidatePlatformUniquenessService (User+Buyer+Seller, spec §11)
+    Note right of Reg: creates Buyer (BUYER, ACTIVE) and a linked login User
     Note over B: (planned) Login -> JWT role BUYER
     B->>Cat: ConsultCatalogUseCase.consultPublished()
     Note right of Cat: public, no auth
@@ -242,9 +267,11 @@ sequenceDiagram
     B->>Cart: RemoveCartItemUseCase / ClearCartUseCase / ConsultCartUseCase
     B->>Chk: CheckoutCartUseCase.checkout(buyer)
     Note right of Chk: cart becomes an Order, CART to PENDING_PAYMENT
+    Note right of Chk: physical lines reserve inventory (spec §11)
     Note right of Chk: cart marked CONVERTED, Operation(CART_CHECKOUT)
     loop until approved
         B->>Pay: ProcessOrderPaymentUseCase.pay(buyer, order)
+        Note right of Pay: ValidateBuyerOwnsOrderService: only the owning buyer may pay
         alt rejected
             Pay-->>B: PaymentRejectedException (retry)
         else approved
@@ -257,11 +284,15 @@ sequenceDiagram
 
 **Step by step**
 
-1. **Register** — `RegisterBuyerUseCase.register(buyer)` → `RegisterBuyerService`.
-   Validates `mainAddress`, checks document/e-mail uniqueness
-   (`DuplicateUserException` otherwise), sets `role = BUYER`,
-   `commercialStatus = ACTIVE`. No authentication needed — this *creates* the
-   identity that will later log in.
+1. **Register** — `RegisterBuyerUseCase.register(buyer, account)` →
+   `RegisterBuyerService`. Validates `mainAddress` and that `account` carries a
+   username/password; `ValidatePlatformUniquenessService` checks the document and
+   e-mail are unique **across `User`, `Buyer` and `Seller` combined**
+   (`DuplicateUserException` otherwise, spec §11); sets `role = BUYER`,
+   `commercialStatus = ACTIVE`; persists the `Buyer`, then persists `account` as a
+   `User` sharing the same identity (password encrypted via `PasswordServicePort`) —
+   this is the identity that will later log in. No authentication needed for this
+   step itself.
 2. **(Planned) Login** → obtains a JWT with `role = BUYER`.
 3. **Browse the catalog** — `ConsultCatalogUseCase.consultPublished()` →
    `ConsultCatalogService`. Public; no requester, no authorization check.
@@ -273,10 +304,15 @@ sequenceDiagram
    `ConsultCartUseCase`. Not audited (low-significance, provisional data).
 6. **Checkout** — `CheckoutCartUseCase.checkout(buyer)` → `CheckoutCartService`.
    Builds an `Order` from the cart lines, capturing `unitPrice` from each product at
-   that moment; `CART → PENDING_PAYMENT`; the cart is marked `CONVERTED`; records
-   `Operation(CART_CHECKOUT)`.
+   that moment. For every **physical** line, `ReserveStockForOrderItemService` picks
+   a warehouse with enough `AVAILABLE` stock, decrements it, and records the
+   reservation (`InvalidReservationException` aborts checkout if none has enough —
+   spec §11); digital lines need no reservation. Then `CART → PENDING_PAYMENT`; the
+   cart is marked `CONVERTED`; records `Operation(CART_CHECKOUT)`.
 7. **Pay** — `ProcessOrderPaymentUseCase.pay(buyer, order)` →
-   `ProcessOrderPaymentService`. Calls `PaymentGatewayPort.process(order)` (the
+   `ProcessOrderPaymentService`. `ValidateBuyerOwnsOrderService` first confirms the
+   order belongs to the paying buyer (`UnauthorizedOperationException` otherwise —
+   this used to be unchecked). Then calls `PaymentGatewayPort.process(order)` (the
    probabilistic approve/reject simulation will live in the Phase 5 adapter, not in
    this service). On rejection the order stays `PENDING_PAYMENT` and
    `PaymentRejectedException` is thrown so the buyer can retry step 7. On approval:
@@ -308,9 +344,11 @@ sequenceDiagram
     participant Stat as ChangeProductStatusService
     participant Inv as Inventory services
 
-    A->>Onb: OnboardSellerUseCase.onboard(admin, seller, firstWarehouse)
+    A->>Onb: OnboardSellerUseCase.onboard(admin, seller, firstWarehouse, sellerAccount)
+    Note right of Onb: ValidatePlatformUniquenessService (User+Buyer+Seller, spec §11)
     Note right of Onb: role=SELLER, status=ACTIVE, onboardedBy=admin
     Note right of Onb: warehouse forced type=SELLER, owner=seller
+    Note right of Onb: creates a linked login User for the seller
     Note right of Onb: Operation(SELLER_ONBOARDING)
     Note over S: (planned) Login -> JWT role SELLER
     S->>Pub: PublishProductUseCase.publish(seller, product)
@@ -328,11 +366,14 @@ sequenceDiagram
 **Step by step**
 
 1. **Onboarding (performed by an Admin, not the seller)** —
-   `OnboardSellerUseCase.onboard(admin, seller, firstWarehouse)` →
-   `OnboardSellerService`. Requires an `ADMIN` requester; checks document
-   uniqueness; sets `role = SELLER`, `status = ACTIVE`, `onboardedBy = admin`; forces
-   the warehouse to `type = SELLER` with `owner = seller`; records
-   `Operation(SELLER_ONBOARDING)`.
+   `OnboardSellerUseCase.onboard(admin, seller, firstWarehouse, sellerAccount)` →
+   `OnboardSellerService`. Requires an `ADMIN` requester; `sellerAccount` must carry
+   credentials; `ValidatePlatformUniquenessService` checks the document and e-mail are
+   unique **across `User`, `Buyer` and `Seller` combined** (spec §11); sets
+   `role = SELLER`, `status = ACTIVE`, `onboardedBy = admin`; forces the warehouse to
+   `type = SELLER` with `owner = seller`; persists `sellerAccount` as a `User` sharing
+   the seller's identity — this is the identity the seller will later log in with;
+   records `Operation(SELLER_ONBOARDING)`.
 2. **(Planned) Login** → JWT with `role = SELLER`.
 3. **Publish a product** — `PublishProductUseCase.publish(seller, product)` →
    `PublishProductService`. Requires role `SELLER`; the caller decides
@@ -509,7 +550,26 @@ order through an illegal path or mutate a `DELIVERED` order.
 ## 8. Known Gaps
 
 Things a reader should know are **intentionally incomplete** at this stage, so they
-are not mistaken for bugs:
+are not mistaken for bugs.
+
+**Fixed since the first version of this document** (a closer review of every service
+surfaced these; see the updated `buyer-services.md`, `seller-services.md`,
+`order-services.md`, `inventory-services.md`, `authorization-services.md` and
+`Output Ports.md` for the detail):
+
+- Document/e-mail uniqueness (spec §11) is now checked **across `User`, `Buyer` and
+  `Seller` together** via `ValidatePlatformUniquenessService`, not per-repository.
+  `SellerRepositoryPort` also gained the `existsByEmail` check it was missing.
+- `RegisterBuyerService` and `OnboardSellerService` now also create a linked login
+  `User` (§5 above), closing the identity-bridge gap this document used to flag.
+- `ProcessOrderPaymentService` now calls `ValidateBuyerOwnsOrderService` — a buyer can
+  no longer pay for another buyer's order.
+- `CheckoutCartService` now reserves inventory for every physical line through the new
+  `ReserveStockForOrderItemService`, and `OrderItem` gained a `warehouse` field to
+  record which one fulfills it. Previously nothing in the order flow reserved stock at
+  all.
+
+**Still open:**
 
 1. **No login at all.** No `LoginService`, no `SecurityConfig`, no JWT filter, no
    controllers. `PasswordServicePort` and `JwtServicePort` exist as contracts only.
@@ -524,9 +584,14 @@ are not mistaken for bugs:
    payment, notification, password, JWT, configuration) have no adapter. Nothing
    persists; everything is proven via unit tests with hand-written fakes
    (`application.domain.support.Fakes`).
-6. **`DispatchOrderService` doesn't emit per-item `SALE_EXIT` inventory movements**
-   yet — that needs a warehouse-selection strategy not yet designed.
-7. **`@SpringBootTest` is `@Disabled`** (`NexusMarketApplicationTests`) because the
+6. **`DispatchOrderService` still doesn't emit per-item `SALE_EXIT` movements.** The
+   blocker is smaller now — `OrderItem.warehouse` is set at checkout, so dispatch has
+   the information it needs — but the wiring itself isn't done.
+7. **Checkout's inventory reservation isn't transactional.** If a later physical line
+   in the same checkout fails to reserve, earlier reservations from that same checkout
+   call are not rolled back at this layer. Phase 5 wraps checkout in a transaction at
+   the adapter boundary.
+8. **`@SpringBootTest` is `@Disabled`** (`NexusMarketApplicationTests`) because the
    Spring context cannot wire the `@Service` beans without their output-port
    adapters.
 

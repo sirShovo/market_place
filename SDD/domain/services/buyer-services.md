@@ -72,14 +72,17 @@ instantiation with test-double ports.
 
 Self-service registration of a `Buyer` (spec Domain 2). Unlike sellers, buyers do not
 require onboarding by an administrator, so this service has no requester. This is a
-bootstrap action.
+bootstrap action. A login `User` is created alongside the `Buyer` profile — sharing
+its identity — so the buyer can authenticate once Phase 6 exists (see
+[Input Ports § Login credentials at registration time](../Input%20Ports.md)).
 
-Input Port: `RegisterBuyerUseCase` — `Buyer register(Buyer buyer)`.
+Input Port: `RegisterBuyerUseCase` — `Buyer register(Buyer buyer, User account)`.
 
 ### Input
 
 ```text
 Buyer   (carries identification, fullName, email, mainAddress)
+User    (account — carries only username and the raw password)
 ```
 
 ### Authorization
@@ -89,37 +92,47 @@ None — self-service.
 ### Domain Validations
 
 * `mainAddress` must be present and non-blank (`DomainException`).
-* `BuyerRepositoryPort.existsByIdentification(buyer)` must be `false`
-  (`DuplicateUserException`, spec §11).
-* `BuyerRepositoryPort.existsByEmail(buyer)` must be `false` (`DuplicateUserException`).
+* `account.username` and `account.password` must be present and non-blank
+  (`DomainException`).
+* `ValidatePlatformUniquenessService.execute(buyer.identification, buyer.email)` must
+  pass — document and e-mail are unique **across the whole platform**
+  (`User`, `Buyer` and `Seller`), not just among buyers (`DuplicateUserException`,
+  spec §11).
+* `UserRepositoryPort.findByUsername(account)` must be empty
+  (`DuplicateUserException`).
 
 ### Effect / State Change
 
-* `role` is set to `BUYER`.
-* `commercialStatus` is set to `ACTIVE`.
-* The buyer is persisted.
+* `buyer.role` is set to `BUYER`, `buyer.commercialStatus` to `ACTIVE`; the buyer is
+  persisted.
+* `account` is populated with the buyer's identity fields (`identification`, `email`,
+  `fullName`, `phoneNumber`, `address`), `role = BUYER`, `status = ACTIVE`, and its
+  password encrypted through `PasswordServicePort`; then persisted as a `User`.
 
 ### Persistence
 
 ```text
-BuyerRepositoryPort.existsByIdentification(buyer)
-BuyerRepositoryPort.existsByEmail(buyer)
+ValidatePlatformUniquenessService.execute(...)   (UserRepositoryPort + BuyerRepositoryPort + SellerRepositoryPort)
+UserRepositoryPort.findByUsername(account)
 BuyerRepositoryPort.save(buyer)
+UserRepositoryPort.save(account)
 ```
 
 ### Operation and Audit
 
 Operation type: `USER_REGISTRATION`, severity `INFO`, `performedBy = null` (bootstrap),
-details `{ buyer }`.
+details `{ buyer, username }`.
 
 ```text
-Buyer
+Buyer, User account
   │
   ▼
 RegisterBuyerService
-  ├── validate mainAddress
-  ├── uniqueness checks
+  ├── validate mainAddress + credentials
+  ├── ValidatePlatformUniquenessService (User + Buyer + Seller)
+  ├── UserRepositoryPort.findByUsername
   ├── BuyerRepositoryPort.save
+  ├── UserRepositoryPort.save (account, password encrypted)
   └── Operation (USER_REGISTRATION) ──► AuditLog
 ```
 
@@ -209,10 +222,12 @@ Not an audited operation (read-only).
 interface BuyerRepositoryPort {
     Buyer save(Buyer buyer);
     Optional<Buyer> findByIdentification(Buyer buyer);
-    boolean existsByIdentification(Buyer buyer);
-    boolean existsByEmail(Buyer buyer);
+    boolean existsByIdentification(DocumentId identification);
+    boolean existsByEmail(Email email);
     void update(Buyer buyer);
 }
+
+interface UserRepositoryPort { /* used here only via ValidatePlatformUniquenessService and for account creation — see Output Ports.md */ }
 
 interface OperationRepositoryPort { Operation save(Operation operation); /* ... */ }
 interface AuditLogRepositoryPort  { AuditLog  save(AuditLog auditLog);   /* ... */ }
@@ -225,7 +240,7 @@ See [Output Ports](../Output%20Ports.md) for the full contracts.
 ## Input Ports
 
 ```java
-interface RegisterBuyerUseCase { Buyer register(Buyer buyer); }
+interface RegisterBuyerUseCase { Buyer register(Buyer buyer, User account); }
 interface UpdateBuyerUseCase   { Buyer update(User requester, Buyer buyer); }
 interface ConsultBuyerUseCase  { Buyer consult(User requester, Buyer probe); }
 ```

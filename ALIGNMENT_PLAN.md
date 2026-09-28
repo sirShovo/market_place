@@ -27,6 +27,24 @@ commits de documentación antes que los de código).
   `Input Ports.md`. Wiring automático por `@Service`.
 - [ ] **Fase 5+** — persistencia (adapters de los puertos), simulación de pago,
   auditoría Mongo, REST + seguridad, schedulers.
+- [x] **Endurecimiento post-fase-4** — una revisión crítica de los 35 servicios
+  encontró y corrigió 4 problemas reales antes de pasar a fase 5:
+  1. Unicidad de documento/correo (§11) ahora se valida **entre `User`, `Buyer` y
+     `Seller` a la vez** vía `ValidatePlatformUniquenessService`
+     (`application.domain.services.identity`), no por repositorio aislado.
+  2. `RegisterBuyerService` y `OnboardSellerService` ahora también crean el `User`
+     de login enlazado por `identification`, cerrando el vacío de que un
+     comprador/vendedor no tenía cómo autenticarse.
+  3. `ProcessOrderPaymentService` valida con `ValidateBuyerOwnsOrderService` que la
+     orden pertenezca al comprador que paga (antes no se verificaba).
+  4. `CheckoutCartService` ahora reserva inventario para cada línea física vía
+     `ReserveStockForOrderItemService` (nuevo colaborador interno); `OrderItem` ganó
+     el campo `warehouse`. Antes `ReserveInventoryUseCase` existía pero nada del
+     flujo de la orden lo invocaba.
+
+  Se agregaron tests de regresión para las 4 correcciones
+  (`RegisterBuyerServiceTest`, `OnboardSellerServiceTest`, `CheckoutCartServiceTest`,
+  `ProcessOrderPaymentServiceTest`). 32 tests en verde.
 
 Build verde en cada fase (`./mvnw clean test`); `@SpringBootTest` `@Disabled` hasta
 fase 5.

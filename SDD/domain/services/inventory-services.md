@@ -217,6 +217,63 @@ ReserveInventoryService
 
 ---
 
+## Checkout-Time Reservation — `ReserveStockForOrderItemService`
+
+### Description
+
+A **second** entry point to the same stock-decrementing logic as "Reserve Inventory"
+above, but triggered automatically as a side effect of `CheckoutCartService`
+(order subdomain) rather than manually by staff. It has **no Input Port** — it is an
+internal collaborator, the same way `RegisterOperationAndAuditService` is.
+
+The staff-driven `ReserveInventoryUseCase` is restricted to `SELLER` /
+`LOGISTICS_OPERATOR` (spec §12: inventory administration is a staff responsibility).
+But checkout is buyer-initiated, and the buyer is never a `SELLER` or
+`LOGISTICS_OPERATOR` — so reusing `ReserveInventoryService` directly at checkout would
+be a role mismatch. `ReserveStockForOrderItemService` performs no role check (the
+buyer was already validated by `ValidateBuyerCanPurchaseService` in
+`CheckoutCartService`) and additionally **chooses the warehouse itself**, since a cart
+line only names a product, not a warehouse.
+
+### Input
+
+```text
+OrderItem   (mutated in place: sets item.warehouse)
+```
+
+### Domain Validations
+
+* Among the warehouses holding stock for `item.product`
+  (`InventoryRepositoryPort.findByProduct`), at least one must be `AVAILABLE` with
+  `stock >= item.quantity` — otherwise `InvalidReservationException` (spec §11).
+
+### Effect / State Change
+
+* The first matching warehouse's `stock -= item.quantity`.
+* A `RESERVATION` movement is appended, `performedBy = null` (system action, not a
+  staff action).
+* `item.warehouse` is set to the chosen warehouse, so later dispatch/delivery know
+  where the line ships from.
+
+### Persistence
+
+```text
+InventoryRepositoryPort.findByProduct(item.product)
+InventoryRepositoryPort.update(chosenItem)
+InventoryRepositoryPort.saveMovement(RESERVATION)
+```
+
+### Operation and Audit
+
+Operation type: `INVENTORY_RESERVATION`, severity `INFO`, `performedBy = null`,
+details `{ product, quantity, warehouse }`.
+
+> **Not transactional at this layer.** Called once per physical line inside
+> `CheckoutCartService`'s loop; a failure on a later line does not roll back earlier
+> reservations from the same checkout (see [order-services.md](order-services.md)).
+
+---
+
 ## 3. Release Reservation
 
 ### Description

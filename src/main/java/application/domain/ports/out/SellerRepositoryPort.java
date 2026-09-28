@@ -1,6 +1,8 @@
 package application.domain.ports.out;
 
 import application.domain.models.Seller;
+import application.domain.valueobjects.DocumentId;
+import application.domain.valueobjects.Email;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +13,11 @@ public interface SellerRepositoryPort {
 
     Optional<Seller> findByIdentification(Seller seller);
 
-    boolean existsByIdentification(Seller seller);
+    /** Platform-wide uniqueness check (spec §11). */
+    boolean existsByIdentification(DocumentId identification);
+
+    /** Platform-wide uniqueness check (spec §11). */
+    boolean existsByEmail(Email email);
 
     List<Seller> findAll();
 

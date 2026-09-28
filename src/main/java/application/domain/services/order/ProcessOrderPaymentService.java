@@ -14,6 +14,7 @@ import application.domain.ports.out.NotificationPort;
 import application.domain.ports.out.OrderRepositoryPort;
 import application.domain.ports.out.PaymentGatewayPort;
 import application.domain.services.authorization.ValidateBuyerCanPurchaseService;
+import application.domain.services.authorization.ValidateBuyerOwnsOrderService;
 import application.domain.services.operation.RegisterOperationAndAuditService;
 import application.domain.valueobjects.OperationType;
 import application.domain.valueobjects.OrderStatus;
@@ -35,6 +36,7 @@ public class ProcessOrderPaymentService implements ProcessOrderPaymentUseCase {
     private final PaymentGatewayPort paymentGatewayPort;
     private final NotificationPort notificationPort;
     private final ValidateBuyerCanPurchaseService validateBuyerCanPurchaseService;
+    private final ValidateBuyerOwnsOrderService validateBuyerOwnsOrderService;
     private final RegisterOperationAndAuditService registerOperationAndAuditService;
 
     @Override
@@ -43,6 +45,7 @@ public class ProcessOrderPaymentService implements ProcessOrderPaymentUseCase {
 
         Order stored = orderRepositoryPort.findByIdentifier(order)
                 .orElseThrow(() -> new EntityNotFoundException("Order"));
+        validateBuyerOwnsOrderService.execute(buyer, stored);
 
         PaymentResult result = paymentGatewayPort.process(stored);
         if (result == PaymentResult.REJECTED) {

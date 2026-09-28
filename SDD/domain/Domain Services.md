@@ -85,16 +85,22 @@ can move an order through an illegal path.
 
 | Subdomain | Services |
 | --------- | -------- |
+| **identity** | ValidatePlatformUniqueness *(internal; checks User+Buyer+Seller together, spec §11)* |
 | **user** | RegisterUser, ChangeUserStatus, ConsultUser |
-| **buyer** | RegisterBuyer *(self-service)*, UpdateBuyer, ConsultBuyer |
-| **seller** | OnboardSeller *(admin: seller + first warehouse)*, ConsultSeller |
+| **buyer** | RegisterBuyer *(self-service; also creates the buyer's login `User`)*, UpdateBuyer, ConsultBuyer |
+| **seller** | OnboardSeller *(admin: seller + first warehouse + the seller's login `User`)*, ConsultSeller |
 | **warehouse** | RegisterWarehouse, ConsultWarehouse |
 | **catalog** | PublishProduct, UpdateProduct, ChangeProductStatus, ConsultCatalog |
-| **inventory** | RegisterInventoryEntry, ReserveInventory *(spec §11 validations)*, ReleaseReservation, AdjustInventory, ConsultInventory |
+| **inventory** | RegisterInventoryEntry, ReserveInventory *(spec §11 validations)*, ReserveStockForOrderItem *(internal; used by checkout)*, ReleaseReservation, AdjustInventory, ConsultInventory |
 | **cart** | AddCartItem, RemoveCartItem, ClearCart, ConsultCart |
-| **order** | CheckoutCart, ProcessOrderPayment *(PaymentGatewayPort, retry on rejection)*, DispatchOrder, ConfirmDelivery, ConsultOrder |
-| **authorization** | ValidateRoleAuthorization, ValidateUserStatus, ValidateBuyerOwnership, ValidateProductOwnership, ValidateOrderAccess, ValidateBuyerCanPurchase |
+| **order** | CheckoutCart *(also reserves inventory for physical lines)*, ProcessOrderPayment *(PaymentGatewayPort, retry on rejection, validates order ownership)*, DispatchOrder, ConfirmDelivery, ConsultOrder |
+| **authorization** | ValidateRoleAuthorization, ValidateUserStatus, ValidateBuyerOwnership, ValidateProductOwnership, ValidateOrderAccess, ValidateBuyerOwnsOrder, ValidateBuyerCanPurchase |
 | **operation** | RegisterOperation, RegisterAuditLog, RegisterOperationAndAudit, ConsultAuditLog |
+
+The **identity** subdomain has no per-subdomain doc of its own (it is a single,
+narrowly-scoped collaborator); it is documented inline in
+[Output Ports.md](Output%20Ports.md) and in the buyer/seller/user service docs that
+consume it.
 
 ---
 

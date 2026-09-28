@@ -79,20 +79,26 @@ partially populated model — is passed rather than two `String` ids.
 
 ## 1. UserRepositoryPort
 
-**Responsibility:** persistence and queries for `User`.
+**Responsibility:** persistence and queries for `User`. The two `existsBy*` methods
+take the raw Value Object (`DocumentId`/`Email`) rather than a probe entity, because
+they are consumed by `ValidatePlatformUniquenessService` — a collaborator that checks
+uniqueness across `User`, `Buyer` **and** `Seller` before any of the three
+registration flows commits (spec §11 requires uniqueness *"en la plataforma"*, not
+just within one participant type).
 
 ```java
 public interface UserRepositoryPort {
     User save(User user);
     Optional<User> findByUsername(User user);
     Optional<User> findByIdentification(User user);
-    boolean existsByIdentification(User user);   // platform-wide uniqueness (spec §11)
-    boolean existsByEmail(User user);            // platform-wide uniqueness (spec §11)
+    boolean existsByIdentification(DocumentId identification);   // platform-wide uniqueness (spec §11)
+    boolean existsByEmail(Email email);                          // platform-wide uniqueness (spec §11)
     void update(User user);
 }
 ```
 
-**Main consumers:** `RegisterUserService`, `ChangeUserStatusService`,
+**Main consumers:** `RegisterUserService`, `RegisterBuyerService`, `OnboardSellerService`
+(all three via `ValidatePlatformUniquenessService`), `ChangeUserStatusService`,
 `ConsultUserService`.
 
 ## 2. BuyerRepositoryPort
@@ -103,14 +109,15 @@ public interface UserRepositoryPort {
 public interface BuyerRepositoryPort {
     Buyer save(Buyer buyer);
     Optional<Buyer> findByIdentification(Buyer buyer);
-    boolean existsByIdentification(Buyer buyer);
-    boolean existsByEmail(Buyer buyer);
+    boolean existsByIdentification(DocumentId identification);   // platform-wide uniqueness (spec §11)
+    boolean existsByEmail(Email email);                          // platform-wide uniqueness (spec §11)
     void update(Buyer buyer);
 }
 ```
 
 **Main consumers:** `RegisterBuyerService`, `UpdateBuyerService`,
-`ConsultBuyerService`.
+`ConsultBuyerService`, and `ValidatePlatformUniquenessService` on behalf of the other
+two registration services.
 
 ## 3. SellerRepositoryPort
 
@@ -120,13 +127,15 @@ public interface BuyerRepositoryPort {
 public interface SellerRepositoryPort {
     Seller save(Seller seller);
     Optional<Seller> findByIdentification(Seller seller);
-    boolean existsByIdentification(Seller seller);
+    boolean existsByIdentification(DocumentId identification);   // platform-wide uniqueness (spec §11)
+    boolean existsByEmail(Email email);                          // platform-wide uniqueness (spec §11)
     List<Seller> findAll();
     void update(Seller seller);
 }
 ```
 
-**Main consumers:** `OnboardSellerService`, `ConsultSellerService`.
+**Main consumers:** `OnboardSellerService`, `ConsultSellerService`, and
+`ValidatePlatformUniquenessService` on behalf of the other two registration services.
 
 ## 4. WarehouseRepositoryPort
 

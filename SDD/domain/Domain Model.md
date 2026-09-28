@@ -281,6 +281,7 @@ Formal commercial commitment; its lifecycle is the central process of the system
 | variant   | ProductVariant? |                                        |
 | quantity  | int             | Positive.                              |
 | unitPrice | Money           | Price captured at checkout time.       |
+| warehouse | Warehouse?      | Set by `ReserveStockForOrderItemService` for physical lines at checkout; `null` for digital lines (spec Domain 6). |
 | subtotal  | Money (derived) | `unitPrice × quantity`.                |
 
 ## Operation

@@ -7,6 +7,9 @@ import lombok.Setter;
 
 /**
  * A line within an {@link Order}. {@code unitPrice} is captured at checkout time.
+ * {@code warehouse} identifies which warehouse fulfills the line and is set by
+ * {@code ReserveStockForOrderItemService} for physical products; it stays {@code null}
+ * for digital products, which carry no inventory.
  */
 @Getter
 @Setter
@@ -17,6 +20,7 @@ public class OrderItem {
     private ProductVariant variant;
     private int quantity;
     private Money unitPrice;
+    private Warehouse warehouse;
 
     /** @return {@code unitPrice × quantity}. */
     public Money getSubtotal() {

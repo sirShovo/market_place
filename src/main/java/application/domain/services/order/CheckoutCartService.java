@@ -13,10 +13,12 @@ import application.domain.ports.in.CheckoutCartUseCase;
 import application.domain.ports.out.CartRepositoryPort;
 import application.domain.ports.out.OrderRepositoryPort;
 import application.domain.services.authorization.ValidateBuyerCanPurchaseService;
+import application.domain.services.inventory.ReserveStockForOrderItemService;
 import application.domain.services.operation.RegisterOperationAndAuditService;
 import application.domain.valueobjects.CartStatus;
 import application.domain.valueobjects.OperationType;
 import application.domain.valueobjects.OrderStatus;
+import application.domain.valueobjects.ProductType;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -26,7 +28,7 @@ import org.springframework.stereotype.Service;
 /**
  * Converts the buyer's active cart into an {@code Order}
  * ({@code CART -> PENDING_PAYMENT}), capturing each line's unit price at checkout time
- * (spec Domain 7).
+ * and reserving inventory for every physical line (spec Domain 7, §11).
  */
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class CheckoutCartService implements CheckoutCartUseCase {
     private final CartRepositoryPort cartRepositoryPort;
     private final OrderRepositoryPort orderRepositoryPort;
     private final ValidateBuyerCanPurchaseService validateBuyerCanPurchaseService;
+    private final ReserveStockForOrderItemService reserveStockForOrderItemService;
     private final RegisterOperationAndAuditService registerOperationAndAuditService;
 
     @Override
@@ -57,6 +60,12 @@ public class CheckoutCartService implements CheckoutCartUseCase {
             orderItem.setVariant(cartItem.getVariant());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setUnitPrice(cartItem.getProduct().getPrice());
+
+            // Physical lines must hold a reservation before the order can proceed to
+            // payment; digital lines carry no inventory (spec Domain 5).
+            if (ProductType.PHYSICAL.equals(cartItem.getProduct().getType())) {
+                reserveStockForOrderItemService.reserve(orderItem);
+            }
             order.addItem(orderItem);
         }
         order.transitionTo(OrderStatus.PENDING_PAYMENT);

@@ -79,7 +79,10 @@ An `ADMIN` incorporates a new seller and creates its first warehouse in one
 transaction-shaped flow (spec flow 6.1.1). The seller starts `ACTIVE`.
 
 Input Port: `OnboardSellerUseCase` —
-`Seller onboard(User requester, Seller seller, Warehouse firstWarehouse)`.
+`Seller onboard(User requester, Seller seller, Warehouse firstWarehouse, User sellerAccount)`.
+A login `User` is created alongside the `Seller` profile — sharing its identity — so
+the seller can authenticate once Phase 6 exists (see
+[Input Ports § Login credentials at registration time](../Input%20Ports.md)).
 
 ### Input
 
@@ -87,6 +90,7 @@ Input Port: `OnboardSellerUseCase` —
 User        (requester)
 Seller      (carries identification, fullName, email)
 Warehouse   (firstWarehouse — carries name, location)
+User        (sellerAccount — carries only username and the raw password)
 ```
 
 ### Authorization
@@ -97,39 +101,53 @@ Warehouse   (firstWarehouse — carries name, location)
 ### Domain Validations
 
 * `firstWarehouse` must be provided (`DomainException`).
-* `SellerRepositoryPort.existsByIdentification(seller)` must be `false`
-  (`DuplicateUserException`, spec §11).
+* `sellerAccount.username` and `sellerAccount.password` must be present and non-blank
+  (`DomainException`).
+* `ValidatePlatformUniquenessService.execute(seller.identification, seller.email)`
+  must pass — document and e-mail are unique **across the whole platform**
+  (`User`, `Buyer` and `Seller`), not just among sellers (`DuplicateUserException`,
+  spec §11).
+* `UserRepositoryPort.findByUsername(sellerAccount)` must be empty
+  (`DuplicateUserException`).
 
 ### Effect / State Change
 
 * Seller: `role = SELLER`, `status = ACTIVE`, `onboardedBy = requester`; persisted.
 * Warehouse: `type = SELLER`, `owner = savedSeller`; persisted.
 * The warehouse is appended to `seller.warehouses` and the seller is updated.
+* `sellerAccount` is populated with the seller's identity fields, `role = SELLER`,
+  `status = ACTIVE`, and its password encrypted through `PasswordServicePort`; then
+  persisted as a `User`.
 
 ### Persistence
 
 ```text
-SellerRepositoryPort.existsByIdentification(seller)
+ValidatePlatformUniquenessService.execute(...)   (UserRepositoryPort + BuyerRepositoryPort + SellerRepositoryPort)
+UserRepositoryPort.findByUsername(sellerAccount)
 SellerRepositoryPort.save(seller)
 WarehouseRepositoryPort.save(firstWarehouse)
 SellerRepositoryPort.update(savedSeller)
+UserRepositoryPort.save(sellerAccount)
 ```
 
 ### Operation and Audit
 
 Operation type: `SELLER_ONBOARDING`, severity `INFO`, details
-`{ seller, firstWarehouse }`.
+`{ seller, firstWarehouse, username }`.
 
 ```text
-requester, seller, firstWarehouse
+requester, seller, firstWarehouse, sellerAccount
   │
   ▼
 OnboardSellerService
   ├── authorization (ADMIN, ACTIVE)
-  ├── validate firstWarehouse + seller uniqueness
+  ├── validate firstWarehouse + credentials
+  ├── ValidatePlatformUniquenessService (User + Buyer + Seller)
+  ├── UserRepositoryPort.findByUsername
   ├── SellerRepositoryPort.save
   ├── WarehouseRepositoryPort.save  (type SELLER, owner = seller)
   ├── SellerRepositoryPort.update   (link warehouse)
+  ├── UserRepositoryPort.save (sellerAccount, password encrypted)
   └── Operation (SELLER_ONBOARDING) ──► AuditLog
 ```
 
@@ -171,7 +189,8 @@ Not an audited operation (read-only).
 interface SellerRepositoryPort {
     Seller save(Seller seller);
     Optional<Seller> findByIdentification(Seller seller);
-    boolean existsByIdentification(Seller seller);
+    boolean existsByIdentification(DocumentId identification);
+    boolean existsByEmail(Email email);
     List<Seller> findAll();
     void update(Seller seller);
 }
@@ -194,7 +213,7 @@ See [Output Ports](../Output%20Ports.md) for the full contracts.
 ## Input Ports
 
 ```java
-interface OnboardSellerUseCase { Seller onboard(User requester, Seller seller, Warehouse firstWarehouse); }
+interface OnboardSellerUseCase { Seller onboard(User requester, Seller seller, Warehouse firstWarehouse, User sellerAccount); }
 interface ConsultSellerUseCase { Seller consult(User requester, Seller probe); }
 ```
 

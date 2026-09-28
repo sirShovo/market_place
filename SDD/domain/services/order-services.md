@@ -123,6 +123,9 @@ CART ─────────────► PENDING_PAYMENT
 Converts the buyer's active cart into an `Order`, moving it from `CART` to
 `PENDING_PAYMENT`. Each cart line becomes an `OrderItem` whose `unitPrice` is captured
 from the product at checkout time, so later price changes do not affect the order.
+**Every physical line reserves inventory before the order is persisted** — checkout is
+the moment stock actually leaves the "available" pool (spec Domain 6, §11); digital
+lines carry no inventory and are skipped.
 
 Input Port: `CheckoutCartUseCase` — `Order checkout(Buyer buyer)`.
 
@@ -141,32 +144,48 @@ Buyer
 
 * An active cart must exist for the buyer (`EntityNotFoundException`).
 * The cart must contain at least one line (`DomainException`).
+* For each **physical** line, `ReserveStockForOrderItemService` must find a warehouse
+  with `AVAILABLE` stock ≥ the requested quantity, otherwise
+  `InvalidReservationException` aborts the whole checkout (spec §11).
 
 ### Effect / State Change
 
 * A new `Order` is created with a generated `identifier` and `createdAt = now`.
 * One `OrderItem` per cart line: `product`, `variant`, `quantity`,
   `unitPrice = product.price`.
+* For each **physical** line: `ReserveStockForOrderItemService` picks a warehouse with
+  enough `AVAILABLE` stock, decrements it, appends a `RESERVATION` movement, and sets
+  `orderItem.warehouse` to the chosen warehouse. Digital lines leave `warehouse = null`.
 * `Order.total` is recomputed as the sum of subtotals.
 * `CART → PENDING_PAYMENT`.
 * The cart is marked `CONVERTED`.
 
+> **Not transactional at this layer.** If reservation fails for a later line, earlier
+> reservations in the same checkout are **not** rolled back here — Phase 5 wraps the
+> whole checkout in a transaction at the adapter boundary.
+
 ### Persistence
 
 ```text
+ReserveStockForOrderItemService.reserve(item)   (per physical line — see inventory-services.md)
 OrderRepositoryPort.save(order)
 CartRepositoryPort.update(cart)
 ```
 
 ### Operation and Audit
 
-Operation type: `CART_CHECKOUT`, severity `INFO`.
+Operation type: `CART_CHECKOUT`, severity `INFO`. Each physical-line reservation also
+registers its own `INVENTORY_RESERVATION` operation (see
+[inventory-services.md](inventory-services.md)) with `performedBy = null`, since the
+action is a system side effect of the buyer's own checkout rather than staff-driven.
 
 ```text
 Cart
   │
   ▼
 CheckoutCartService
+  ├── for each physical line: ReserveStockForOrderItemService.reserve
+  │        └── Operation (INVENTORY_RESERVATION) ──► AuditLog
   ├── persist Order
   ├── mark Cart CONVERTED
   └── Operation (CART_CHECKOUT)
@@ -196,11 +215,16 @@ Order
 
 ### Authorization
 
-`ValidateBuyerCanPurchaseService` — the buyer must be commercially `ACTIVE`.
+* `ValidateBuyerCanPurchaseService` — the buyer must be commercially `ACTIVE`.
+* `ValidateBuyerOwnsOrderService` — the order's `buyer.identification` must match the
+  paying buyer's; otherwise `UnauthorizedOperationException` (spec RG03). A buyer
+  cannot pay for, or trigger notifications/audit entries against, another buyer's
+  order.
 
 ### Domain Validations
 
 * The order must exist (`EntityNotFoundException`).
+* The order must belong to the paying buyer (see Authorization above).
 * The order must be in `PENDING_PAYMENT`; otherwise the transition to `PAID` raises
   `InvalidStatusTransitionException`.
 
@@ -377,6 +401,11 @@ interface CartRepositoryPort {
     // ...
 }
 
+interface InventoryRepositoryPort {
+    // consumed via ReserveStockForOrderItemService for every physical line —
+    // see inventory-services.md
+}
+
 interface PaymentGatewayPort {
     PaymentResult process(Order order);   // simulation + retry lives in the adapter
 }
@@ -425,6 +454,9 @@ CheckoutCartService
      ├── ValidateBuyerCanPurchaseService
      ├── CartRepositoryPort.findActiveByBuyer
      ├── build Order + OrderItems (capture unitPrice)
+     ├── for each physical line: ReserveStockForOrderItemService.reserve
+     │        ├── InventoryRepositoryPort.findByProduct / update / saveMovement
+     │        └── RegisterOperationAndAuditService  (INVENTORY_RESERVATION)
      ├── Order.transitionTo(PENDING_PAYMENT)
      ├── OrderRepositoryPort.save
      ├── CartRepositoryPort.update  (CONVERTED)
@@ -443,6 +475,7 @@ ProcessOrderPaymentUseCase
 ProcessOrderPaymentService
      ├── ValidateBuyerCanPurchaseService
      ├── OrderRepositoryPort.findByIdentifier
+     ├── ValidateBuyerOwnsOrderService
      ├── PaymentGatewayPort.process
      │        ├── REJECTED → AuditLog(ERROR) → PaymentRejectedException
      │        └── APPROVED

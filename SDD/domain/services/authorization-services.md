@@ -102,7 +102,23 @@ Used by `ConsultOrderService` (spec RG03).
 
 ---
 
-## 6. ValidateBuyerCanPurchaseService
+## 6. ValidateBuyerOwnsOrderService
+
+```java
+void execute(Buyer buyer, Order order)
+```
+
+Passes only if `order.buyer.identification` equals `buyer.identification`. This is
+the **buyer-actor** counterpart to `ValidateOrderAccessService` above (which takes a
+`User` requester): `ProcessOrderPaymentService` receives a `Buyer`, not a `User`, so it
+cannot reuse `ValidateOrderAccessService`. Without this check a buyer could pay for,
+and trigger notifications/audit entries against, another buyer's order (spec RG03).
+
+Used by `ProcessOrderPaymentService`.
+
+---
+
+## 7. ValidateBuyerCanPurchaseService
 
 ```java
 void execute(Buyer buyer)

@@ -21,11 +21,15 @@ import org.junit.jupiter.api.Test;
 class RegisterUserServiceTest {
 
     private FakeUserRepo repo;
+    private Fakes.NoopBuyerRepo buyerRepo;
+    private Fakes.NoopSellerRepo sellerRepo;
     private RegisterUserService service;
 
     @BeforeEach
     void setUp() {
         repo = new FakeUserRepo();
+        buyerRepo = new Fakes.NoopBuyerRepo();
+        sellerRepo = new Fakes.NoopSellerRepo();
         Fakes.OperationStore ops = new Fakes.OperationStore();
         Fakes.AuditStore audits = new Fakes.AuditStore();
         service = new RegisterUserService(
@@ -33,6 +37,7 @@ class RegisterUserServiceTest {
                 new Fakes.PlainPasswords(),
                 new ValidateUserStatusService(),
                 new ValidateRoleAuthorizationService(),
+                Fakes.uniquenessService(repo, buyerRepo, sellerRepo),
                 Fakes.auditService(ops, audits));
     }
 
@@ -70,8 +75,22 @@ class RegisterUserServiceTest {
     }
 
     @Test
-    void duplicateDocumentIsRejected() {
+    void duplicateDocumentWithinUserRepositoryIsRejected() {
         repo.existsByIdentification = true;
+        assertThrows(DuplicateUserException.class,
+                () -> service.register(admin(), newSeller()));
+    }
+
+    @Test
+    void documentAlreadyUsedByABuyerIsRejectedPlatformWide() {
+        buyerRepo.identificationTaken = true;
+        assertThrows(DuplicateUserException.class,
+                () -> service.register(admin(), newSeller()));
+    }
+
+    @Test
+    void emailAlreadyUsedBySellerIsRejectedPlatformWide() {
+        sellerRepo.emailTaken = true;
         assertThrows(DuplicateUserException.class,
                 () -> service.register(admin(), newSeller()));
     }
@@ -96,12 +115,12 @@ class RegisterUserServiceTest {
         }
 
         @Override
-        public boolean existsByIdentification(User user) {
+        public boolean existsByIdentification(DocumentId identification) {
             return existsByIdentification;
         }
 
         @Override
-        public boolean existsByEmail(User user) {
+        public boolean existsByEmail(Email email) {
             return existsByEmail;
         }
 

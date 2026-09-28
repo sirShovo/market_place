@@ -1,6 +1,8 @@
 package application.domain.ports.out;
 
 import application.domain.models.Buyer;
+import application.domain.valueobjects.DocumentId;
+import application.domain.valueobjects.Email;
 import java.util.Optional;
 
 /** Persistence contract for {@link Buyer}. */
@@ -10,9 +12,11 @@ public interface BuyerRepositoryPort {
 
     Optional<Buyer> findByIdentification(Buyer buyer);
 
-    boolean existsByIdentification(Buyer buyer);
+    /** Platform-wide uniqueness check (spec §11). */
+    boolean existsByIdentification(DocumentId identification);
 
-    boolean existsByEmail(Buyer buyer);
+    /** Platform-wide uniqueness check (spec §11). */
+    boolean existsByEmail(Email email);
 
     void update(Buyer buyer);
 }

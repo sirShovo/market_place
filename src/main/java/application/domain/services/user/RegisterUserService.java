@@ -1,7 +1,6 @@
 package application.domain.services.user;
 
 import application.domain.enums.AuditSeverity;
-import application.domain.exceptions.DuplicateUserException;
 import application.domain.models.Operation;
 import application.domain.models.User;
 import application.domain.ports.in.RegisterUserUseCase;
@@ -9,6 +8,7 @@ import application.domain.ports.out.PasswordServicePort;
 import application.domain.ports.out.UserRepositoryPort;
 import application.domain.services.authorization.ValidateRoleAuthorizationService;
 import application.domain.services.authorization.ValidateUserStatusService;
+import application.domain.services.identity.ValidatePlatformUniquenessService;
 import application.domain.services.operation.RegisterOperationAndAuditService;
 import application.domain.valueobjects.OperationType;
 import application.domain.valueobjects.UserRole;
@@ -30,19 +30,14 @@ public class RegisterUserService implements RegisterUserUseCase {
     private final PasswordServicePort passwordServicePort;
     private final ValidateUserStatusService validateUserStatusService;
     private final ValidateRoleAuthorizationService validateRoleAuthorizationService;
+    private final ValidatePlatformUniquenessService validatePlatformUniquenessService;
     private final RegisterOperationAndAuditService registerOperationAndAuditService;
 
     @Override
     public User register(User requester, User newUser) {
         validateUserStatusService.execute(requester);
         validateRoleAuthorizationService.execute(requester, UserRole.ADMIN);
-
-        if (userRepositoryPort.existsByIdentification(newUser)) {
-            throw new DuplicateUserException("A user with this document already exists.");
-        }
-        if (userRepositoryPort.existsByEmail(newUser)) {
-            throw new DuplicateUserException("A user with this e-mail already exists.");
-        }
+        validatePlatformUniquenessService.execute(newUser.getIdentification(), newUser.getEmail());
 
         newUser.setStatus(UserStatus.ACTIVE);
         newUser.setPassword(passwordServicePort.encrypt(newUser.getPassword()));

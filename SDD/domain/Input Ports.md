@@ -53,7 +53,7 @@ interface ConsultUserUseCase      { User consult(User requester, User probe); }
 ### Buyer
 
 ```java
-interface RegisterBuyerUseCase { Buyer register(Buyer buyer); }             // self-service
+interface RegisterBuyerUseCase { Buyer register(Buyer buyer, User account); }  // self-service; account = login credentials
 interface UpdateBuyerUseCase   { Buyer update(User requester, Buyer buyer); }
 interface ConsultBuyerUseCase  { Buyer consult(User requester, Buyer probe); }
 ```
@@ -61,7 +61,7 @@ interface ConsultBuyerUseCase  { Buyer consult(User requester, Buyer probe); }
 ### Seller
 
 ```java
-interface OnboardSellerUseCase { Seller onboard(User requester, Seller seller, Warehouse firstWarehouse); }
+interface OnboardSellerUseCase { Seller onboard(User requester, Seller seller, Warehouse firstWarehouse, User sellerAccount); }
 interface ConsultSellerUseCase { Seller consult(User requester, Seller probe); }
 ```
 
@@ -117,6 +117,16 @@ interface ConsultAuditLogUseCase { List<AuditLog> consult(User requester, Audita
 ```
 
 ---
+
+## Login credentials at registration time
+
+`RegisterBuyerUseCase` and `OnboardSellerUseCase` each take an extra `User account` /
+`User sellerAccount` parameter carrying only `username` and `password`. The service
+copies the rest of the identity (`identification`, `email`, `fullName`, …) from the
+`Buyer` / `Seller` model onto it before persisting, so the resulting `User` shares the
+same `identification` as the profile it belongs to. This is the join key Phase 6's
+login flow uses to resolve "which `Buyer`/`Seller` does this authenticated `User`
+represent" — see [Code Walkthrough & Role Flows](../Code%20Walkthrough%20and%20Role%20Flows.md#5-authentication-today-vs-the-planned-login-phase-6).
 
 ## `requester` vs `buyer` in the signatures
 

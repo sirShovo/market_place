@@ -143,7 +143,11 @@ src/main/java/application/
 src/test/java/application/domain/
 ├── models/OrderTest.java
 ├── services/user/RegisterUserServiceTest.java
+├── services/buyer/RegisterBuyerServiceTest.java
+├── services/seller/OnboardSellerServiceTest.java
 ├── services/inventory/ReserveInventoryServiceTest.java
+├── services/order/CheckoutCartServiceTest.java
+├── services/order/ProcessOrderPaymentServiceTest.java
 └── support/Fakes.java     # hand-written test-double ports
 ```
 
@@ -199,11 +203,15 @@ Current coverage (plain unit tests, direct instantiation with test-double ports)
 | Test | What it checks |
 | ---- | -------------- |
 | `OrderTest` | total = Σ subtotals; valid lifecycle; illegal transition → `InvalidStatusTransitionException`; finalized order immutable |
-| `RegisterUserServiceTest` | `ADMIN` registers `SELLER` + password encrypted; non-`ADMIN` rejected; duplicate document rejected |
+| `RegisterUserServiceTest` | `ADMIN` registers `SELLER` + password encrypted; non-`ADMIN` rejected; document/e-mail uniqueness enforced **across `User`/`Buyer`/`Seller`** |
+| `RegisterBuyerServiceTest` | self-registration creates a `Buyer` **and** a linked login `User`; missing address/credentials rejected; platform-wide uniqueness; duplicate username rejected |
+| `OnboardSellerServiceTest` | `ADMIN` onboarding creates `Seller` + first `Warehouse` + linked login `User`; non-`ADMIN` rejected; missing warehouse/credentials rejected; platform-wide uniqueness |
 | `ReserveInventoryServiceTest` | reservation decrements stock + logs movement; missing / `DAMAGED` inventory rejected; over-reservation → `NegativeStockException` |
+| `CheckoutCartServiceTest` | physical lines reserve stock and get a `warehouse` assigned; checkout fails when no warehouse has enough stock; digital lines need no reservation; empty cart rejected |
+| `ProcessOrderPaymentServiceTest` | approved digital-only order is delivered and notified; approved physical order stays `PAID`; rejection keeps the order payable again; **a buyer cannot pay another buyer's order** |
 
 ```
-Tests run: 12, Failures: 0, Errors: 0, Skipped: 1
+Tests run: 32, Failures: 0, Errors: 0, Skipped: 1
 ```
 
 > `NexusMarketApplicationTests` (`@SpringBootTest`) is **`@Disabled` until Phase 5**:
