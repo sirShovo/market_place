@@ -217,6 +217,7 @@ Tests run: 12, Failures: 0, Errors: 0, Skipped: 1
 The Software Design Document lives in [`SDD/`](SDD/).
 
 - **[Software Architecture](SDD/Software%20Architecture/Software%20Architecture.md)** — layers, dependency rules, constraints.
+- **[Code Walkthrough & Role Flows](SDD/Code%20Walkthrough%20and%20Role%20Flows.md)** — how the code calls together end to end, the planned login flow, and a step-by-step journey per role (Buyer, Seller, Logistics Operator, Administrator, Supervisor), with diagrams and known gaps.
 
 **Domain (`SDD/domain/`)**
 
