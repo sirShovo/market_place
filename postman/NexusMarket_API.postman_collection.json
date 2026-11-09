@@ -4,8 +4,8 @@
     "name": "NexusMarket API - Complete Collection",
     "description": "Complete end-to-end Postman Collection for NexusMarket API (Hexagonal Architecture + DDD in Spring Boot 4.1.0). Covers all 10 controllers and 29 endpoints across Auth, Users, Sellers, Warehouses, Products & Catalog, Inventory, Buyers, Cart, Orders, and Audit, with automatic JWT variable chaining and pm.test assertions.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "createdAt": "2026-11-09T04:12:43.000Z",
-    "updatedAt": "2026-11-09T04:12:43.000Z",
+    "createdAt": "2026-11-09T04:12:43Z",
+    "updatedAt": "2026-11-09T04:17:55Z",
     "lastUpdatedBy": "19932203",
     "uid": "19932203-17280f17-a88c-445a-8f18-e7ebd7ccc143"
   },
@@ -63,8 +63,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-70e3b4cf-7bfe-4a07-8331-6ccdf4c48ac0"
         },
         {
@@ -116,8 +116,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-2ccbfb54-3e95-41d1-ab7b-f46fcbca1ba2"
         },
         {
@@ -169,8 +169,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-44ca7822-4c2a-4612-89ce-639125ca7cd9"
         },
         {
@@ -222,8 +222,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-918ba687-dae9-480c-9303-014bed824dfe"
         },
         {
@@ -275,8 +275,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-688a0665-3005-41be-a716-ddaaf342d725"
         },
         {
@@ -326,15 +326,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-a4e38b02-5e7d-48c9-85e5-4b8260e78a17"
         }
       ],
       "id": "c44076e5-9a61-44c8-bbd1-93c05de7f8e7",
       "description": "Authentication endpoints (/api/auth). Run 1.1 first after starting the app to obtain adminToken, and run 1.2-1.5 after registering/onboarding the respective users.",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-c44076e5-9a61-44c8-bbd1-93c05de7f8e7"
     },
     {
@@ -393,8 +393,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-b43b4540-5f88-4511-8d62-a04cc78dc8fe"
         },
         {
@@ -450,8 +450,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-b47b568f-e93d-4f5b-a090-5b60d01ffa4a"
         },
         {
@@ -494,8 +494,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-094c63aa-d248-4eb0-9a1a-1a9d617da1f9"
         },
         {
@@ -553,15 +553,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-7b47121a-f184-438a-a62d-2d4ed18af69d"
         }
       ],
       "id": "9c0fe778-3e89-4ae7-bd30-a7053fadded7",
       "description": "System user management (/api/users). Requires ADMIN for mutations and ADMIN or SUPERVISOR for queries.",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-9c0fe778-3e89-4ae7-bd30-a7053fadded7"
     },
     {
@@ -621,8 +621,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-f186999f-1e7d-4d2e-b373-0d521ea704b3"
         },
         {
@@ -665,8 +665,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-bd9f38b0-4fba-4283-8875-79b4699352b8"
         },
         {
@@ -710,15 +710,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-371b1b79-fb5f-4462-a631-4bc24b0deb39"
         }
       ],
       "id": "0a939814-2864-4f26-92c0-622cbfa69fba",
       "description": "Seller onboarding and portfolio endpoints (/api/sellers). Sellers cannot self-register; they must be onboarded by an ADMIN along with their first warehouse.",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-0a939814-2864-4f26-92c0-622cbfa69fba"
     },
     {
@@ -777,8 +777,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-a5616009-c869-4c3b-bc74-06c6f3c2b24f"
         },
         {
@@ -834,8 +834,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-bfa1f383-9afd-4d62-9a52-1fbe3e975a90"
         },
         {
@@ -878,15 +878,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-f3947281-20e2-4e5e-9cb3-9cdacd5bcd13"
         }
       ],
       "id": "fbc040b0-7487-444d-8d90-1eb0ca662e81",
       "description": "Warehouse registration and consultation (/api/warehouses).",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-fbc040b0-7487-444d-8d90-1eb0ca662e81"
     },
     {
@@ -945,8 +945,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-382bb45d-3083-41bb-9566-e9a9ebc3c015"
         },
         {
@@ -1002,8 +1002,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-0a8e15c8-ae77-4d43-880c-8a4486f847d4"
         },
         {
@@ -1039,8 +1039,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-cc712e52-2003-43d5-b8fc-9dd00f2c730b"
         },
         {
@@ -1097,8 +1097,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-ebd84517-c3be-4deb-a5ce-25377134f3cd"
         },
         {
@@ -1156,15 +1156,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-dbd0a188-9d73-4f60-b832-6e13557468a4"
         }
       ],
       "id": "6c156d2e-19fc-4db0-8314-fe895c6ab522",
       "description": "Product catalog endpoints (/api/products). Catalog consultation is public; publishing requires SELLER; updating/changing status requires owning SELLER or ADMIN.",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-6c156d2e-19fc-4db0-8314-fe895c6ab522"
     },
     {
@@ -1224,8 +1224,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-b6d5165e-14a0-4f5b-bd95-9ef90ae7efbf"
         },
         {
@@ -1269,8 +1269,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-b59c1466-d863-4fba-8c2b-98dfebcbed5c"
         },
         {
@@ -1327,8 +1327,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-0faf79ea-aea2-4175-a486-8506a8403542"
         },
         {
@@ -1385,8 +1385,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-055a8dab-e002-4a41-8f43-6bb583501eb4"
         },
         {
@@ -1443,8 +1443,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-d74ed849-540e-4d9a-8c70-8a276663db0c"
         },
         {
@@ -1501,15 +1501,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-dd9e821c-e672-4d3d-8540-ccc770b3a1e0"
         }
       ],
       "id": "7087ce00-a5b6-4249-a6fe-18a5894e56dd",
       "description": "Inventory management endpoints (/api/inventory). Shared by SELLER and LOGISTICS_OPERATOR; read access also granted to ADMIN and SUPERVISOR.",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-7087ce00-a5b6-4249-a6fe-18a5894e56dd"
     },
     {
@@ -1562,8 +1562,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-9ae462da-333b-4ed7-9ff2-55cd5cb3e989"
         },
         {
@@ -1606,8 +1606,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-2df35b3b-6937-4af4-bb36-ea64474b5625"
         },
         {
@@ -1664,8 +1664,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-9708f50c-2388-444e-a34b-06f200332e39"
         },
         {
@@ -1723,15 +1723,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-cb8e41e4-a347-4b81-840a-53221f6a5862"
         }
       ],
       "id": "e9ac2a27-42e8-47e7-8890-76c6b5f75114",
       "description": "Buyer self-registration and profile management (/api/buyers).",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-e9ac2a27-42e8-47e7-8890-76c6b5f75114"
     },
     {
@@ -1791,8 +1791,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-028ad09d-19ff-47cb-9bca-704436f2733d"
         },
         {
@@ -1849,8 +1849,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-611100ea-4fa1-40b2-8391-bc45413dd021"
         },
         {
@@ -1892,8 +1892,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-20d2fbbe-0288-43ae-8af8-44564d4b900a"
         },
         {
@@ -1950,8 +1950,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-602e9efb-2397-4a86-93f3-628d53560ce4"
         },
         {
@@ -1995,8 +1995,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-a7d69c2d-ef82-47fe-a9eb-d96f798a16d2"
         },
         {
@@ -2038,15 +2038,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-da656dc8-fa15-4fc6-8586-ba142bd1f43d"
         }
       ],
       "id": "9b7c19f2-d433-4386-bdb7-3b724e6cce82",
       "description": "Shopping cart operations (/api/cart). The authenticated BUYER is automatically resolved from the JWT token.",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-9b7c19f2-d433-4386-bdb7-3b724e6cce82"
     },
     {
@@ -2094,8 +2094,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-c847dcdd-2ca7-41e3-a757-a16a41196dc8"
         },
         {
@@ -2139,8 +2139,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-f8ac03aa-a3e6-4d57-85a5-58168054fd7e"
         },
         {
@@ -2184,8 +2184,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-e164b19f-eae7-4cd7-8d91-3680662bc17a"
         },
         {
@@ -2229,8 +2229,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-09c2f558-1487-41f2-aa82-3ffe74ffed41"
         },
         {
@@ -2273,8 +2273,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-9bf54a62-272e-4f3c-99f6-8c5f6dc7b22e"
         },
         {
@@ -2318,15 +2318,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-9ac00f84-b988-4b8f-b911-ae4fb8ce5722"
         }
       ],
       "id": "9407f22a-1d1c-424e-a9a7-ca57c98d5533",
       "description": "Order checkout, payment processing, logistics dispatch, delivery confirmation, and order history (/api/orders).",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-9407f22a-1d1c-424e-a9a7-ca57c98d5533"
     },
     {
@@ -2373,8 +2373,8 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-472d4e81-a97e-4b77-b469-5d304b31db37"
         },
         {
@@ -2418,15 +2418,15 @@
             }
           },
           "response": [],
-          "createdAt": "2026-11-09T04:12:44.000Z",
-          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "createdAt": "2026-11-09T04:12:44Z",
+          "updatedAt": "2026-11-09T04:12:44Z",
           "uid": "19932203-ce921dc3-9b18-4df9-96e9-6e3fbabd877e"
         }
       ],
       "id": "a625d196-b666-49b7-a85d-f954162828cf",
       "description": "MongoDB Audit Log consultation endpoints (/api/audit). Restricted to ADMIN and SUPERVISOR roles.",
-      "createdAt": "2026-11-09T04:12:44.000Z",
-      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "createdAt": "2026-11-09T04:12:44Z",
+      "updatedAt": "2026-11-09T04:12:44Z",
       "uid": "19932203-a625d196-b666-49b7-a85d-f954162828cf"
     }
   ],
