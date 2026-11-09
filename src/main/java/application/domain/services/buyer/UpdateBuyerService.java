@@ -31,6 +31,9 @@ public class UpdateBuyerService implements UpdateBuyerUseCase {
                 .orElseThrow(() -> new EntityNotFoundException("Buyer"));
 
         stored.setFullName(buyer.getFullName());
+        if (buyer.getEmail() != null) {
+            stored.setEmail(buyer.getEmail());
+        }
         stored.setPhoneNumber(buyer.getPhoneNumber());
         stored.setAddress(buyer.getAddress());
         stored.setMainAddress(buyer.getMainAddress());

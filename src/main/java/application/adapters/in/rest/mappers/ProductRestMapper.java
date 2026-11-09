@@ -10,6 +10,7 @@ import application.domain.models.PhysicalProduct;
 import application.domain.models.Product;
 import application.domain.models.ProductVariant;
 import application.domain.models.Seller;
+import application.domain.models.User;
 import application.domain.valueobjects.DocumentId;
 import application.domain.valueobjects.Money;
 import application.domain.valueobjects.ProductStatus;
@@ -22,6 +23,10 @@ import org.springframework.stereotype.Component;
 public class ProductRestMapper {
 
     public Product toDomain(PublishProductRequest request) {
+        return toDomain(request, null);
+    }
+
+    public Product toDomain(PublishProductRequest request, User requester) {
         if (request == null) {
             return null;
         }
@@ -35,9 +40,16 @@ public class ProductRestMapper {
         product.setDescription(request.description());
         product.setPrice(Money.of(request.price()));
 
-        Seller seller = new Seller();
-        seller.setIdentification(new DocumentId(request.sellerIdentification()));
-        product.setSeller(seller);
+        String resolvedSellerId = (request.sellerIdentification() != null && !request.sellerIdentification().isBlank())
+                ? request.sellerIdentification()
+                : (requester != null && requester.getIdentification() != null
+                        ? requester.getIdentification().value()
+                        : null);
+        if (resolvedSellerId != null && !resolvedSellerId.isBlank()) {
+            Seller seller = new Seller();
+            seller.setIdentification(new DocumentId(resolvedSellerId));
+            product.setSeller(seller);
+        }
 
         if (request.categoryId() != null || request.categoryName() != null) {
             Category category = new Category();

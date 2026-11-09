@@ -2,6 +2,7 @@ package application.adapters.in.rest.controllers;
 
 import application.adapters.in.rest.mappers.CartRestMapper;
 import application.adapters.in.rest.requests.CartItemRequest;
+import application.adapters.in.rest.requests.RemoveCartItemRequest;
 import application.adapters.in.rest.responses.CartResponse;
 import application.domain.models.Buyer;
 import application.domain.models.Cart;
@@ -16,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -50,9 +53,21 @@ public class CartController {
 
     @DeleteMapping("/items")
     public ResponseEntity<ApiResponse<CartResponse>> removeItem(
-            @Valid @RequestBody CartItemRequest request) {
+            @Valid @RequestBody RemoveCartItemRequest request) {
         Buyer buyer = authenticatedUserResolver.resolveBuyer();
-        Cart updated = removeCartItemUseCase.removeItem(buyer, cartRestMapper.toDomain(request));
+        Cart updated = removeCartItemUseCase.removeItem(buyer, cartRestMapper.toRemoveDomain(request));
+        return ResponseEntity.ok(ApiResponse.ok("Item removed from cart", cartRestMapper.toResponse(updated)));
+    }
+
+    @DeleteMapping("/items/{productIdentifier}")
+    public ResponseEntity<ApiResponse<CartResponse>> removeItemByPath(
+            @PathVariable String productIdentifier,
+            @RequestParam(required = false) String variantAttributeName,
+            @RequestParam(required = false) String variantValue) {
+        Buyer buyer = authenticatedUserResolver.resolveBuyer();
+        Cart updated = removeCartItemUseCase.removeItem(
+                buyer,
+                cartRestMapper.toRemoveDomain(productIdentifier, variantAttributeName, variantValue));
         return ResponseEntity.ok(ApiResponse.ok("Item removed from cart", cartRestMapper.toResponse(updated)));
     }
 

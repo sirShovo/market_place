@@ -44,6 +44,9 @@ public class AdjustInventoryService implements AdjustInventoryUseCase {
         int previous = item.getStock().value();
         int delta = Math.abs(newQuantity - previous);
         item.setStock(StockQuantity.of(newQuantity));
+        if (probe.getCondition() != null) {
+            item.setCondition(probe.getCondition());
+        }
         inventoryRepositoryPort.update(item);
 
         InventoryMovement movement = inventoryRepositoryPort.saveMovement(

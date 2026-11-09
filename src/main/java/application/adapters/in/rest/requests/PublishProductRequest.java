@@ -12,7 +12,7 @@ public record PublishProductRequest(
         String description,
         @NotBlank(message = "Product type is required") String type,
         @NotNull(message = "Price is required") @PositiveOrZero(message = "Price must be non-negative") BigDecimal price,
-        @NotBlank(message = "Seller identification is required") String sellerIdentification,
+        String sellerIdentification,
         Long categoryId,
         String categoryName,
         List<ProductVariantDto> variants

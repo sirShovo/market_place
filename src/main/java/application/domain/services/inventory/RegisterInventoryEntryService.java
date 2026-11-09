@@ -14,6 +14,7 @@ import application.domain.services.operation.RegisterOperationAndAuditService;
 import application.domain.valueobjects.InventoryItemCondition;
 import application.domain.valueobjects.InventoryMovementType;
 import application.domain.valueobjects.OperationType;
+import application.domain.valueobjects.ProductType;
 import application.domain.valueobjects.StockQuantity;
 import application.domain.valueobjects.UserRole;
 import java.util.Map;
@@ -41,6 +42,9 @@ public class RegisterInventoryEntryService implements RegisterInventoryEntryUseC
         if (quantity <= 0) {
             throw new DomainException("Entry quantity must be positive.");
         }
+        if (probe.getProduct() != null && ProductType.DIGITAL.equals(probe.getProduct().getType())) {
+            throw new DomainException("Digital products do not manage physical warehouse inventory.");
+        }
 
         InventoryItem item = inventoryRepositoryPort.findByProductAndWarehouse(probe)
                 .orElseGet(() -> {
@@ -48,7 +52,9 @@ public class RegisterInventoryEntryService implements RegisterInventoryEntryUseC
                     fresh.setProduct(probe.getProduct());
                     fresh.setWarehouse(probe.getWarehouse());
                     fresh.setStock(StockQuantity.of(0));
-                    fresh.setCondition(InventoryItemCondition.AVAILABLE);
+                    fresh.setCondition(probe.getCondition() != null
+                            ? probe.getCondition()
+                            : InventoryItemCondition.AVAILABLE);
                     return inventoryRepositoryPort.save(fresh);
                 });
 

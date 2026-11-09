@@ -53,7 +53,7 @@ public class ProductController {
             @Valid @RequestBody PublishProductRequest request) {
         User requester = authenticatedUserResolver.resolveUser();
         Product published = publishProductUseCase.publish(
-                requester, productRestMapper.toDomain(request));
+                requester, productRestMapper.toDomain(request, requester));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("Product published successfully", productRestMapper.toResponse(published)));
     }

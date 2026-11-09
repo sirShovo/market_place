@@ -2,8 +2,10 @@ package application.domain.services.catalog;
 
 import application.domain.enums.AuditSeverity;
 import application.domain.exceptions.DomainException;
+import application.domain.exceptions.UnauthorizedOperationException;
 import application.domain.models.Operation;
 import application.domain.models.Product;
+import application.domain.models.Seller;
 import application.domain.models.User;
 import application.domain.ports.in.PublishProductUseCase;
 import application.domain.ports.out.ProductRepositoryPort;
@@ -35,8 +37,18 @@ public class PublishProductService implements PublishProductUseCase {
         validateUserStatusService.execute(requester);
         validateRoleAuthorizationService.execute(requester, UserRole.SELLER);
 
+        if (product.getSeller() == null && requester.getIdentification() != null) {
+            Seller seller = new Seller();
+            seller.setIdentification(requester.getIdentification());
+            product.setSeller(seller);
+        }
         if (product.getSeller() == null) {
             throw new DomainException("A product must reference its seller.");
+        }
+        if (requester.getIdentification() != null
+                && product.getSeller().getIdentification() != null
+                && !requester.getIdentification().equals(product.getSeller().getIdentification())) {
+            throw new UnauthorizedOperationException("A seller may only publish products for its own account.");
         }
         if (product.getPrice() == null) {
             throw new DomainException("A product requires a price.");
