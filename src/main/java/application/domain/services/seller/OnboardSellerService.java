@@ -69,6 +69,11 @@ public class OnboardSellerService implements OnboardSellerUseCase {
         firstWarehouse.setType(WarehouseType.SELLER);
         firstWarehouse.setOwner(savedSeller);
         Warehouse savedWarehouse = warehouseRepositoryPort.save(firstWarehouse);
+        if (savedSeller.getWarehouses() == null) {
+            savedSeller.setWarehouses(new java.util.ArrayList<>());
+        } else {
+            savedSeller.setWarehouses(new java.util.ArrayList<>(savedSeller.getWarehouses()));
+        }
         savedSeller.getWarehouses().add(savedWarehouse);
         sellerRepositoryPort.update(savedSeller);
 

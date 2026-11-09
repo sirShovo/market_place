@@ -23,6 +23,9 @@ public final class WarehouseType extends DomainCatalog {
         if (code == null) {
             return null;
         }
+        if ("CENTRAL".equalsIgnoreCase(code)) {
+            return MARKETPLACE;
+        }
         return VALUES.stream()
                 .filter(v -> v.getCode().equalsIgnoreCase(code))
                 .findFirst()

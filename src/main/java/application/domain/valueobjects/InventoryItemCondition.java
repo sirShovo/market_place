@@ -23,8 +23,11 @@ public final class InventoryItemCondition extends DomainCatalog {
         if (code == null) {
             return null;
         }
+        if ("NEW".equalsIgnoreCase(code.trim())) {
+            return AVAILABLE;
+        }
         return VALUES.stream()
-                .filter(v -> v.getCode().equalsIgnoreCase(code))
+                .filter(v -> v.getCode().equalsIgnoreCase(code.trim()))
                 .findFirst()
                 .orElseThrow(() -> new DomainException("Unknown InventoryItemCondition code: " + code));
     }
