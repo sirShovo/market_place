@@ -35,6 +35,7 @@ OrderItem
  ├── variant      : ProductVariant?
  ├── quantity     : int
  ├── unitPrice    : Money              (captured at checkout time)
+ ├── warehouse    : Warehouse?         (set at checkout for physical lines)
  └── subtotal     : Money  (derived)   (unitPrice × quantity)
 ```
 
@@ -275,7 +276,11 @@ PaymentGatewayPort.process(order)
 ### Description
 
 A `LOGISTICS_OPERATOR` dispatches a paid order that contains physical products,
-moving it from `PAID` to `DISPATCHED` (spec Domain 7, responsibility matrix §12).
+moving it from `PAID` to `DISPATCHED` and recording a `SALE_EXIT` inventory movement
+for every physical line against its assigned fulfillment warehouse (spec Domain 6,
+Domain 7, responsibility matrix §12). Stock was already decremented at checkout when
+the reservation was made, so `SALE_EXIT` records the physical warehouse exit for
+traceability without deducting stock a second time.
 
 Input Port: `DispatchOrderUseCase` — `Order dispatch(User requester, Order order)`.
 
@@ -296,11 +301,22 @@ Order
 * The order must exist (`EntityNotFoundException`).
 * The order must contain at least one physical product (`DomainException`).
 * `PAID → DISPATCHED` must be a valid transition (`InvalidStatusTransitionException`).
+* Each physical `OrderItem` must reference its fulfillment `warehouse` (`DomainException`),
+  and the corresponding `InventoryItem` for `(product, warehouse)` must exist
+  (`EntityNotFoundException`).
+
+### Effect / State Change
+
+* `PAID → DISPATCHED`.
+* For each physical `OrderItem`, an `InventoryMovement` of type `SALE_EXIT` is saved
+  for the `(product, warehouse)` `InventoryItem` with `performedBy = requester`.
 
 ### Persistence
 
 ```text
 OrderRepositoryPort.findByIdentifier(order)
+InventoryRepositoryPort.findByProductAndWarehouse(probe)  (per physical line)
+InventoryRepositoryPort.saveMovement(SALE_EXIT)           (per physical line)
 OrderRepositoryPort.update(order)
 ```
 
@@ -383,6 +399,41 @@ Not an audited operation (read-only).
 
 ---
 
+## 6. Consult Buyer Orders
+
+### Description
+
+Returns all orders placed by a given buyer. A `BUYER` may only list its own orders;
+`ADMIN` and `SUPERVISOR` may list any buyer's orders (spec RG03).
+
+Input Port: `ConsultBuyerOrdersUseCase` —
+`List<Order> consultByBuyer(User requester, Buyer buyer)`.
+
+### Input
+
+```text
+User    (requester)
+Buyer   (probe — carries the buyer's identification)
+```
+
+### Authorization
+
+* `ValidateUserStatusService` — requester is `ACTIVE`.
+* `ValidateBuyerOwnershipService` — a `BUYER` may only list its own orders;
+  `ADMIN` / `SUPERVISOR` may list any buyer's.
+
+### Persistence
+
+```text
+OrderRepositoryPort.findByBuyer(buyer)
+```
+
+### Operation and Audit
+
+Not an audited operation (read-only).
+
+---
+
 ## Output Ports
 
 The Order subdomain requires:
@@ -402,7 +453,8 @@ interface CartRepositoryPort {
 }
 
 interface InventoryRepositoryPort {
-    // consumed via ReserveStockForOrderItemService for every physical line —
+    // consumed via ReserveStockForOrderItemService at checkout and directly in
+    // DispatchOrderService to record per-line SALE_EXIT movements —
     // see inventory-services.md
 }
 
@@ -431,6 +483,7 @@ interface ProcessOrderPaymentUseCase { Order pay(Buyer buyer, Order order); }
 interface DispatchOrderUseCase       { Order dispatch(User requester, Order order); }
 interface ConfirmDeliveryUseCase     { Order confirmDelivery(User requester, Order order); }
 interface ConsultOrderUseCase        { Order consult(User requester, Order probe); }
+interface ConsultBuyerOrdersUseCase  { List<Order> consultByBuyer(User requester, Buyer buyer); }
 ```
 
 All interfaces live in `application.domain.ports.in`. Each is implemented by exactly

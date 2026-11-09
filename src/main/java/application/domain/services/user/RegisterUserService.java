@@ -1,6 +1,8 @@
 package application.domain.services.user;
 
 import application.domain.enums.AuditSeverity;
+import application.domain.exceptions.DomainException;
+import application.domain.exceptions.DuplicateUserException;
 import application.domain.models.Operation;
 import application.domain.models.User;
 import application.domain.ports.in.RegisterUserUseCase;
@@ -37,7 +39,15 @@ public class RegisterUserService implements RegisterUserUseCase {
     public User register(User requester, User newUser) {
         validateUserStatusService.execute(requester);
         validateRoleAuthorizationService.execute(requester, UserRole.ADMIN);
+
+        if (newUser == null || newUser.getUsername() == null || newUser.getUsername().isBlank()
+                || newUser.getPassword() == null || newUser.getPassword().isBlank()) {
+            throw new DomainException("A user requires login credentials.");
+        }
         validatePlatformUniquenessService.execute(newUser.getIdentification(), newUser.getEmail());
+        if (userRepositoryPort.findByUsername(newUser).isPresent()) {
+            throw new DuplicateUserException("This username is already taken.");
+        }
 
         newUser.setStatus(UserStatus.ACTIVE);
         newUser.setPassword(passwordServicePort.encrypt(newUser.getPassword()));

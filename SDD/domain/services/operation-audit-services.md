@@ -109,8 +109,8 @@ RegisterOperationAndAuditService
 
 | Situation | Severity |
 | --------- | -------- |
-| Normal successful action (registration, publication, entry, reservation, payment, dispatch, delivery) | `INFO` |
-| Sensitive state change (user status change, inventory adjustment) | `WARNING` |
+| Normal successful action (registration, publication, entry, reservation, return, payment, dispatch, delivery) | `INFO` |
+| Sensitive state change (user status change, buyer commercial status change, inventory adjustment) | `WARNING` |
 | Failed sensitive action (payment rejected) | `ERROR` |
 | Reserved for future use (integrity violations) | `CRITICAL` |
 
@@ -179,10 +179,10 @@ Every command service in the other subdomains depends on
 
 ```text
 user      : USER_REGISTRATION, USER_STATUS_CHANGE
-buyer     : USER_REGISTRATION
+buyer     : USER_REGISTRATION, USER_STATUS_CHANGE
 seller    : SELLER_ONBOARDING
 warehouse : WAREHOUSE_REGISTRATION
 catalog   : PRODUCT_PUBLICATION, PRODUCT_STATUS_CHANGE
-inventory : INVENTORY_ENTRY, INVENTORY_RESERVATION, INVENTORY_RELEASE, INVENTORY_ADJUSTMENT
+inventory : INVENTORY_ENTRY, INVENTORY_RESERVATION, INVENTORY_RELEASE, INVENTORY_ADJUSTMENT, INVENTORY_RETURN
 order     : CART_CHECKOUT, ORDER_PAYMENT, ORDER_DISPATCH, ORDER_DELIVERY
 ```

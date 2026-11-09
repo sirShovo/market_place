@@ -56,7 +56,7 @@ Seller onboard(String adminId, String sellerDoc, String warehouseName);
 Correct:
 
 ```java
-Seller onboard(User requester, Seller seller, Warehouse firstWarehouse);
+Seller onboard(User requester, Seller seller, Warehouse firstWarehouse, User sellerAccount);
 ```
 
 ### External information
@@ -171,7 +171,8 @@ Seller  (probe — carries the identification)
 ### Authorization
 
 * `ValidateUserStatusService` — requester is `ACTIVE`.
-* `ValidateRoleAuthorizationService` — requester role is `ADMIN` or `SUPERVISOR`.
+* `ValidateSellerOwnershipService` — a `SELLER` may read only its own record;
+  `ADMIN` / `SUPERVISOR` may read any (spec RG03).
 
 ### Domain Validations
 
@@ -225,7 +226,7 @@ interface ConsultSellerUseCase { Seller consult(User requester, Seller probe); }
 HTTP Request  (Phase 6)
      │
      ▼
-Request DTO ──► Request Mapper ──► User (requester), Seller, Warehouse
+Request DTO ──► Request Mapper ──► User (requester), Seller, Warehouse, User (sellerAccount)
      │
      ▼
 OnboardSellerUseCase
@@ -234,9 +235,10 @@ OnboardSellerUseCase
 OnboardSellerService
      ├── ValidateUserStatusService
      ├── ValidateRoleAuthorizationService (ADMIN)
-     ├── SellerRepositoryPort.existsByIdentification
+     ├── ValidatePlatformUniquenessService + findByUsername
      ├── SellerRepositoryPort.save
      ├── WarehouseRepositoryPort.save
      ├── SellerRepositoryPort.update
+     ├── UserRepositoryPort.save
      └── RegisterOperationAndAuditService (SELLER_ONBOARDING)
 ```

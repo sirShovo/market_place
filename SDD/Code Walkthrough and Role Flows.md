@@ -25,23 +25,23 @@ login**. Phases 1–4 (domain modeling, services, ports) are complete; phases 5�
 
 | Layer | Status | Where |
 | ----- | ------ | ----- |
-| Domain models, Value Objects, exceptions | ✅ Built | `application.domain.{models,valueobjects,enums,exceptions}` |
-| Domain services (business logic) | ✅ Built, unit-tested | `application.domain.services.*` (35 classes) |
-| Input Ports (use-case contracts) | ✅ Built | `application.domain.ports.in` (28 interfaces) |
-| Output Ports (contracts to the outside) | ✅ Built, **zero implementations** | `application.domain.ports.out` (16 interfaces) |
-| Persistence adapters (MySQL / MongoDB) | ❌ Not built | Phase 5 |
-| `PaymentGatewayPort` adapter (payment simulation) | ❌ Not built | Phase 5 |
-| `NotificationPort` adapter (e-mail/SMS/push) | ❌ Not built | Phase 5 |
-| `PasswordServicePort` / `JwtServicePort` adapters | ❌ Not built | Phase 6 |
-| **Login / authentication (`LoginService`, `SecurityConfig`, JWT filter)** | ❌ **Not built at all** | Phase 6 |
-| REST controllers | ❌ Not built | Phase 6 |
-| Schedulers, data seeder | ❌ Not built | Phase 7 |
+| Domain models, Value Objects, exceptions | Built | `application.domain.{models,valueobjects,enums,exceptions}` |
+| Domain services (business logic) | Built, unit-tested | `application.domain.services.*` (46 classes) |
+| Input Ports (use-case contracts) | Built | `application.domain.ports.in` (33 interfaces) |
+| Output Ports (contracts to the outside) | Built, **zero implementations** | `application.domain.ports.out` (16 interfaces) |
+| Persistence adapters (MySQL / MongoDB) | Not built | Phase 5 |
+| `PaymentGatewayPort` adapter (payment simulation) | Not built | Phase 5 |
+| `NotificationPort` adapter (e-mail/SMS/push) | Not built | Phase 5 |
+| `PasswordServicePort` / `JwtServicePort` adapters | Not built | Phase 6 |
+| **Login / authentication (`LoginService`, `SecurityConfig`, JWT filter)** | **Not built at all** | Phase 6 |
+| REST controllers | Not built | Phase 6 |
+| Schedulers, data seeder | Not built | Phase 7 |
 
 Because there is no persistence and no security, **you cannot currently run
 `./mvnw spring-boot:run` and use the API**. What you *can* do is run
 `./mvnw test`: every domain service is unit-testable in isolation by constructing it
 directly with hand-written fake ports (see `application.domain.support.Fakes` and the
-three test classes under `src/test/java/application/domain/`).
+test classes under `src/test/java/application/domain/`).
 
 Every flow described below for phases 5–7 is therefore the **intended design**, traced
 from the ports and services that already exist — not something you can click through
@@ -63,8 +63,8 @@ graph TD
     end
 
     subgraph DOMAIN["Domain — Phases 1-4, BUILT & TESTED"]
-        INPORTS["Input Ports (28)<br/>application.domain.ports.in"]
-        SERVICES["Domain Services (35)<br/>application.domain.services.*"]
+        INPORTS["Input Ports (33)<br/>application.domain.ports.in"]
+        SERVICES["Domain Services (46)<br/>application.domain.services.*"]
         AUTHZ["authorization/* — role, status, ownership guards"]
         AUDIT["operation/RegisterOperationAndAuditService"]
         MODELS["Models & Value Objects<br/>models / valueobjects / enums"]
@@ -111,7 +111,7 @@ A one-paragraph refresher per package (full detail in the linked SDD files):
   `@RequiredArgsConstructor`, implementing the matching Input Port. See
   [Domain Services](domain/Domain%20Services.md) and the 10 files in
   [`domain/services/`](domain/services/).
-- **`ports/in`** — 28 use-case interfaces (`RegisterUserUseCase`,
+- **`ports/in`** — 33 use-case interfaces (`RegisterUserUseCase`,
   `CheckoutCartUseCase`, …). See [Input Ports](domain/Input%20Ports.md).
 - **`ports/out`** — 16 interfaces the domain needs from the outside (repositories,
   `PaymentGatewayPort`, `NotificationPort`, `PasswordServicePort`, `JwtServicePort`,
@@ -252,7 +252,7 @@ sequenceDiagram
     participant Cart as Cart services
     participant Chk as CheckoutCartService
     participant Pay as ProcessOrderPaymentService
-    participant Ord as ConsultOrderService
+    participant Ord as ConsultOrderService / ConsultBuyerOrdersService
 
     B->>Reg: RegisterBuyerUseCase.register(buyer, account)
     Note right of Reg: mainAddress + credentials required
@@ -278,8 +278,8 @@ sequenceDiagram
             Pay-->>B: PAID (-> DELIVERED if digital-only)
         end
     end
-    B->>Ord: ConsultOrderUseCase.consult(requester, order)
-    Note right of Ord: ValidateOrderAccessService: a buyer only sees its own orders
+    B->>Ord: ConsultOrderUseCase / ConsultBuyerOrdersUseCase
+    Note right of Ord: a buyer only sees its own orders
 ```
 
 **Step by step**
@@ -318,9 +318,10 @@ sequenceDiagram
    `PaymentRejectedException` is thrown so the buyer can retry step 7. On approval:
    `PAID`, and immediately `DELIVERED` if the order has no physical products; a
    confirmation `Notification` is sent through `NotificationPort`.
-8. **Track the order** — `ConsultOrderUseCase.consult(requester, order)` →
-   `ConsultOrderService`. `ValidateOrderAccessService` guarantees a buyer only ever
-   sees its own orders (spec RG03).
+8. **Track orders** — `ConsultOrderUseCase.consult(requester, order)` and
+   `ConsultBuyerOrdersUseCase.consultByBuyer(requester, buyer)`. Guarded by
+   `ValidateOrderAccessService` and `ValidateBuyerOwnershipService` so a buyer only
+   ever sees its own orders (spec RG03).
 9. **Maintain the profile** — `UpdateBuyerUseCase` / `ConsultBuyerUseCase`, guarded
    by `ValidateBuyerOwnershipService` (self only).
 
@@ -342,6 +343,7 @@ sequenceDiagram
     participant Pub as PublishProductService
     participant Upd as UpdateProductService
     participant Stat as ChangeProductStatusService
+    participant List as ConsultSellerProductsService
     participant Inv as Inventory services
 
     A->>Onb: OnboardSellerUseCase.onboard(admin, seller, firstWarehouse, sellerAccount)
@@ -359,7 +361,9 @@ sequenceDiagram
     S->>Stat: ChangeProductStatusUseCase.changeStatus(seller, product)
     Note right of Stat: PUBLISHED / SUSPENDED / DISCONTINUED
     Note right of Stat: Operation(PRODUCT_STATUS_CHANGE)
-    S->>Inv: RegisterInventoryEntryUseCase / AdjustInventoryUseCase / ConsultInventoryUseCase
+    S->>List: ConsultSellerProductsUseCase.consultBySeller(seller, sellerProfile)
+    Note right of List: ValidateSellerOwnershipService: only its own portfolio
+    S->>Inv: RegisterInventoryEntryUseCase / RegisterInventoryReturnUseCase / AdjustInventoryUseCase / ConsultInventoryUseCase
     Note right of Inv: role SELLER or LOGISTICS_OPERATOR
 ```
 
@@ -375,24 +379,23 @@ sequenceDiagram
    the seller's identity — this is the identity the seller will later log in with;
    records `Operation(SELLER_ONBOARDING)`.
 2. **(Planned) Login** → JWT with `role = SELLER`.
-3. **Publish a product** — `PublishProductUseCase.publish(seller, product)` →
+3. **Consult its own seller profile** — `ConsultSellerUseCase.consult(requester, probe)`
+   → `ConsultSellerService`, guarded by `ValidateSellerOwnershipService` (allows self
+   or `ADMIN`/`SUPERVISOR`).
+4. **Publish a product** — `PublishProductUseCase.publish(seller, product)` →
    `PublishProductService`. Requires role `SELLER`; the caller decides
    `PhysicalProduct` vs `DigitalProduct`; sets `status = PUBLISHED`.
-4. **Update a product** — `UpdateProductUseCase` → `UpdateProductService`, guarded by
+5. **Update a product** — `UpdateProductUseCase` → `UpdateProductService`, guarded by
    `ValidateProductOwnershipService` (a seller only touches its own products; an
    `ADMIN` may touch any).
-5. **Change a product's status** — `ChangeProductStatusUseCase` →
+6. **Change a product's status** — `ChangeProductStatusUseCase` →
    `ChangeProductStatusService` — same ownership guard.
-6. **Manage inventory** (shared responsibility with `LOGISTICS_OPERATOR`, spec §12) —
+7. **List its own products** — `ConsultSellerProductsUseCase.consultBySeller(requester, seller)`
+   → `ConsultSellerProductsService`, guarded by `ValidateSellerOwnershipService`.
+8. **Manage inventory** (shared responsibility with `LOGISTICS_OPERATOR`, spec §12) —
    `RegisterInventoryEntryUseCase`, `ReserveInventoryUseCase`,
    `ReleaseReservationUseCase`, `AdjustInventoryUseCase`,
-   `ConsultInventoryUseCase`.
-
-> **Gap:** `ConsultSellerUseCase` is currently restricted to `ADMIN` /
-> `SUPERVISOR` — a seller cannot yet look up its own seller record through an
-> existing Input Port, and there is no "list my products" use case (only the public,
-> `PUBLISHED`-only `ConsultCatalogUseCase`). Worth adding self-service consult
-> use cases when the REST layer is built in Phase 6. See [§8](#8-known-gaps).
+   `RegisterInventoryReturnUseCase`, `ConsultInventoryUseCase`.
 
 ---
 
@@ -412,11 +415,12 @@ sequenceDiagram
 
     Note over L: (planned) Login -> JWT role LOGISTICS_OPERATOR
     L->>Wh: ConsultWarehouseUseCase.consult(requester, warehouse)
-    L->>Inv: RegisterInventoryEntryUseCase / ReserveInventoryUseCase / ReleaseReservationUseCase / AdjustInventoryUseCase
+    L->>Inv: RegisterInventoryEntryUseCase / ReserveInventoryUseCase / ReleaseReservationUseCase / AdjustInventoryUseCase / RegisterInventoryReturnUseCase
     Note right of Inv: spec §11 - rejects missing or DAMAGED inventory
     Note right of Inv: never lets stock go negative
     L->>Disp: DispatchOrderUseCase.dispatch(requester, order)
     Note right of Disp: order must contain physical products
+    Note right of Disp: logs SALE_EXIT movements per physical line
     Note right of Disp: PAID becomes DISPATCHED, Operation(ORDER_DISPATCH)
     L->>Del: ConfirmDeliveryUseCase.confirmDelivery(requester, order)
     Note right of Del: DISPATCHED becomes DELIVERED (finalized, immutable)
@@ -428,14 +432,17 @@ sequenceDiagram
 1. **(Planned) Login** → JWT with `role = LOGISTICS_OPERATOR`.
 2. **Consult warehouses** — `ConsultWarehouseUseCase` (allowed roles: `ADMIN`,
    `SUPERVISOR`, `LOGISTICS_OPERATOR`).
-3. **Operate inventory** — the same five inventory use cases a seller uses
+3. **Operate inventory** — the six inventory use cases a seller also uses
    (`RegisterInventoryEntry`, `ReserveInventory`, `ReleaseReservation`,
-   `AdjustInventory`, `ConsultInventory`); `ReserveInventoryService` is where the
-   spec §11 rules are enforced (`InvalidReservationException` for missing/`DAMAGED`
-   inventory, `NegativeStockException` for over-reservation).
+   `AdjustInventory`, `RegisterInventoryReturn`, `ConsultInventory`);
+   `ReserveInventoryService` is where the spec §11 rules are enforced
+   (`InvalidReservationException` for missing/`DAMAGED` inventory,
+   `NegativeStockException` for over-reservation).
 4. **Dispatch an order** — `DispatchOrderUseCase.dispatch(requester, order)` →
    `DispatchOrderService`. Only orders containing physical products can be
-   dispatched; `PAID → DISPATCHED`; records `Operation(ORDER_DISPATCH)`.
+   dispatched; records a `SALE_EXIT` `InventoryMovement` for each physical line
+   against its fulfillment `warehouse`; `PAID → DISPATCHED`; records
+   `Operation(ORDER_DISPATCH)`.
 5. **Confirm delivery** — `ConfirmDeliveryUseCase.confirmDelivery(requester, order)`
    → `ConfirmDeliveryService`. `DISPATCHED → DELIVERED`; the order becomes
    finalized and immutable (spec §11); records `Operation(ORDER_DELIVERY)`.
@@ -456,6 +463,7 @@ the first `ADMIN` has to be inserted directly, outside any use case. See
 sequenceDiagram
     actor A as Administrator
     participant Usr as User services
+    participant Buy as ChangeBuyerCommercialStatusService
     participant Sel as Seller services
     participant Wh as Warehouse services
     participant Cat as ChangeProductStatusService
@@ -463,6 +471,7 @@ sequenceDiagram
 
     Note over A: (planned) Login -> JWT role ADMIN
     A->>Usr: RegisterUserUseCase / ChangeUserStatusUseCase / ConsultUserUseCase
+    A->>Buy: ChangeBuyerCommercialStatusUseCase
     A->>Sel: OnboardSellerUseCase / ConsultSellerUseCase
     A->>Wh: RegisterWarehouseUseCase / ConsultWarehouseUseCase
     A->>Cat: ChangeProductStatusUseCase.changeStatus(admin, anyProduct)
@@ -476,15 +485,17 @@ sequenceDiagram
 2. **User administration** — `RegisterUserUseCase` (any role, including other
    admins, logistics operators, supervisors), `ChangeUserStatusUseCase`
    (activate/block/deactivate), `ConsultUserUseCase`.
-3. **Seller administration** — `OnboardSellerUseCase` (seller + first warehouse in
-   one flow), `ConsultSellerUseCase`.
-4. **Warehouse administration** — `RegisterWarehouseUseCase` (additional
+3. **Buyer administration** — `ChangeBuyerCommercialStatusUseCase`
+   (`ACTIVE` / `SUSPENDED`), `ConsultBuyerUseCase`, `ConsultBuyerOrdersUseCase`.
+4. **Seller administration** — `OnboardSellerUseCase` (seller + first warehouse in
+   one flow), `ConsultSellerUseCase`, `ConsultSellerProductsUseCase`.
+5. **Warehouse administration** — `RegisterWarehouseUseCase` (additional
    `MARKETPLACE` or `SELLER` warehouses, with type/owner consistency check),
    `ConsultWarehouseUseCase`.
-5. **Catalog moderation** — `ChangeProductStatusUseCase` also accepts an `ADMIN`
+6. **Catalog moderation** — `ChangeProductStatusUseCase` also accepts an `ADMIN`
    requester (`ValidateProductOwnershipService` allows `ADMIN` on *any* product, not
    just the requester's own).
-6. **Audit oversight** — `ConsultAuditLogUseCase` → `ConsultAuditLogService`.
+7. **Audit oversight** — `ConsultAuditLogUseCase` → `ConsultAuditLogService`.
 
 An `ADMIN` is the only role that can create other users and onboard sellers — every
 other role in the system ultimately traces back to something an `ADMIN` did.
@@ -502,7 +513,8 @@ in `Consult*` services.
 sequenceDiagram
     actor Sv as Supervisor
     participant Usr as ConsultUserService
-    participant Sel as ConsultSellerService
+    participant Buy as ConsultBuyerService / ConsultBuyerOrdersService
+    participant Sel as ConsultSellerService / ConsultSellerProductsService
     participant Wh as ConsultWarehouseService
     participant Inv as ConsultInventoryService
     participant Ord as ConsultOrderService
@@ -510,7 +522,8 @@ sequenceDiagram
 
     Note over Sv: (planned) Login -> JWT role SUPERVISOR
     Sv->>Usr: ConsultUserUseCase
-    Sv->>Sel: ConsultSellerUseCase
+    Sv->>Buy: ConsultBuyerUseCase / ConsultBuyerOrdersUseCase
+    Sv->>Sel: ConsultSellerUseCase / ConsultSellerProductsUseCase
     Sv->>Wh: ConsultWarehouseUseCase
     Sv->>Inv: ConsultInventoryUseCase
     Sv->>Ord: ConsultOrderUseCase
@@ -520,7 +533,8 @@ sequenceDiagram
 **Step by step**
 
 1. **(Planned) Login** → JWT with `role = SUPERVISOR`.
-2. Read-only access across the system: `ConsultUserUseCase`, `ConsultSellerUseCase`,
+2. Read-only access across the system: `ConsultUserUseCase`, `ConsultBuyerUseCase`,
+   `ConsultBuyerOrdersUseCase`, `ConsultSellerUseCase`, `ConsultSellerProductsUseCase`,
    `ConsultWarehouseUseCase`, `ConsultInventoryUseCase`, `ConsultOrderUseCase`
    (any order, via `ValidateOrderAccessService`), `ConsultAuditLogUseCase`.
 3. No write path exists for this role by design.
@@ -549,55 +563,47 @@ order through an illegal path or mutate a `DELIVERED` order.
 
 ## 8. Known Gaps
 
-Things a reader should know are **intentionally incomplete** at this stage, so they
+Things a reader should know are **intentionally deferred to Phases 5–7**, so they
 are not mistaken for bugs.
 
-**Fixed since the first version of this document** (a closer review of every service
-surfaced these; see the updated `buyer-services.md`, `seller-services.md`,
-`order-services.md`, `inventory-services.md`, `authorization-services.md` and
-`Output Ports.md` for the detail):
+**Resolved in the domain layer (Phases 1–4):**
 
-- Document/e-mail uniqueness (spec §11) is now checked **across `User`, `Buyer` and
-  `Seller` together** via `ValidatePlatformUniquenessService`, not per-repository.
-  `SellerRepositoryPort` also gained the `existsByEmail` check it was missing.
-- `RegisterBuyerService` and `OnboardSellerService` now also create a linked login
-  `User` (§5 above), closing the identity-bridge gap this document used to flag.
-- `ProcessOrderPaymentService` now calls `ValidateBuyerOwnsOrderService` — a buyer can
-  no longer pay for another buyer's order.
-- `CheckoutCartService` now reserves inventory for every physical line through the new
-  `ReserveStockForOrderItemService`, and `OrderItem` gained a `warehouse` field to
-  record which one fulfills it. Previously nothing in the order flow reserved stock at
-  all.
+- Document/e-mail uniqueness (spec §11) is checked **across `User`, `Buyer` and
+  `Seller` together** via `ValidatePlatformUniquenessService`, and `username`
+  uniqueness is checked across all registration flows (`RegisterUserService`,
+  `RegisterBuyerService`, `OnboardSellerService`).
+- `RegisterBuyerService` and `OnboardSellerService` also create a linked login
+  `User` (§5 above), closing the identity-bridge gap.
+- `ProcessOrderPaymentService` calls `ValidateBuyerOwnsOrderService` — a buyer can
+  only pay for its own order.
+- `CheckoutCartService` reserves inventory for every physical line through
+  `ReserveStockForOrderItemService`, setting `OrderItem.warehouse`.
+- `DispatchOrderService` records per-item `SALE_EXIT` `InventoryMovement`s for each
+  physical line against its fulfillment warehouse.
+- `RegisterInventoryReturnService` (`RegisterInventoryReturnUseCase`) records
+  `RETURN` inventory movements and `INVENTORY_RETURN` operations.
+- `ChangeBuyerCommercialStatusService` (`ChangeBuyerCommercialStatusUseCase`) lets an
+  `ADMIN` activate or suspend a buyer's commercial status.
+- `ConsultSellerService` allows a `SELLER` to consult its own seller profile via
+  `ValidateSellerOwnershipService`, and `ConsultSellerProductsService` /
+  `ConsultBuyerOrdersService` expose seller product portfolios and buyer order
+  histories.
 
-**Still open:**
+**Deferred to Phases 5–7:**
 
-1. **No login at all.** No `LoginService`, no `SecurityConfig`, no JWT filter, no
-   controllers. `PasswordServicePort` and `JwtServicePort` exist as contracts only.
-2. **No bootstrap `ADMIN`.** `RegisterUserService` requires an `ADMIN` requester,
-   including to create the first one. Planned fix: a `DataSeeder` in Phase 7.
-3. **Sellers can't self-consult.** `ConsultSellerUseCase` only allows `ADMIN` /
-   `SUPERVISOR`; there's no "get my own seller profile" use case yet.
-4. **No "list my products" for sellers**, and **no "list my orders" for buyers** —
-   `ProductRepositoryPort.findBySeller` and `OrderRepositoryPort.findByBuyer` exist
-   but no Input Port exposes them yet.
-5. **Zero output-port implementations.** All 16 `ports/out` interfaces (persistence,
-   payment, notification, password, JWT, configuration) have no adapter. Nothing
-   persists; everything is proven via unit tests with hand-written fakes
-   (`application.domain.support.Fakes`).
-6. **`DispatchOrderService` still doesn't emit per-item `SALE_EXIT` movements.** The
-   blocker is smaller now — `OrderItem.warehouse` is set at checkout, so dispatch has
-   the information it needs — but the wiring itself isn't done.
-7. **Checkout's inventory reservation isn't transactional.** If a later physical line
-   in the same checkout fails to reserve, earlier reservations from that same checkout
-   call are not rolled back at this layer. Phase 5 wraps checkout in a transaction at
-   the adapter boundary.
-8. **`@SpringBootTest` is `@Disabled`** (`NexusMarketApplicationTests`) because the
-   Spring context cannot wire the `@Service` beans without their output-port
-   adapters.
-
-None of these block the domain layer from being correct and fully tested; they are
-simply the work items for Phases 5–7 (see [`ALIGNMENT_PLAN.md`](../ALIGNMENT_PLAN.md)
-and [`IMPLEMENTATION_PLAN.md`](../IMPLEMENTATION_PLAN.md)).
+1. **Zero output-port implementations (Phase 5).** All 16 `ports/out` interfaces
+   (persistence, payment, notification, password, JWT, configuration) have no adapter
+   yet. Nothing persists to a database; everything is proven via unit tests with
+   hand-written fakes (`application.domain.support.Fakes`).
+2. **Checkout's inventory reservation isn't transactional yet (Phase 5).** Phase 5
+   wraps checkout in a transaction at the adapter boundary.
+3. **`@SpringBootTest` is `@Disabled` until Phase 5** (`NexusMarketApplicationTests`)
+   because the Spring context cannot wire the `@Service` beans without their
+   output-port adapters.
+4. **No login / REST / Security yet (Phase 6).** `LoginService`, `SecurityConfig`,
+   JWT filter and REST controllers arrive in Phase 6.
+5. **No bootstrap `ADMIN` seeder or order-expiration scheduler yet (Phase 7).**
+   `DataSeeder` and `OrderExpirationScheduler` arrive in Phase 7.
 
 ---
 
@@ -605,8 +611,8 @@ and [`IMPLEMENTATION_PLAN.md`](../IMPLEMENTATION_PLAN.md)).
 
 | Role | Can do | Cannot do |
 | ---- | ------ | --------- |
-| **Buyer** | Register itself, browse catalog, manage its own cart, checkout, pay (with retry), consult its own orders, update its own profile | Anything with sellers, warehouses, inventory, other buyers' data, or other orders |
-| **Seller** | Publish/update/change status of its own products, operate inventory | Onboard itself, consult its own `Seller` record (gap), touch another seller's products |
-| **Logistics Operator** | Operate inventory, consult warehouses, dispatch orders, confirm delivery, consult any order | Manage users, sellers, warehouses (creation), or the catalog |
-| **Administrator** | Register/change status of any user, onboard sellers, register warehouses, moderate any product's status, consult audit log | — (superuser for management, but still subject to `ValidateUserStatusService`) |
-| **Supervisor** | Consult users, sellers, warehouses, inventory, orders, audit log | Any mutation, anywhere |
+| **Buyer** | Register itself, browse catalog, manage its own cart, checkout, pay (with retry), consult/list its own orders, update/consult its own profile | Anything with sellers, warehouses, inventory, other buyers' data, or other orders |
+| **Seller** | Consult its own seller profile, publish/update/change status/list its own products, operate inventory | Onboard itself, touch another seller's products or profile |
+| **Logistics Operator** | Operate inventory, consult warehouses, dispatch orders (logging `SALE_EXIT`), confirm delivery, consult any order | Manage users, sellers, warehouses (creation), or the catalog |
+| **Administrator** | Register/change status of any user, change buyer commercial status, onboard/consult sellers, register/consult warehouses, moderate any product's status, consult audit log | — (superuser for management, but still subject to `ValidateUserStatusService`) |
+| **Supervisor** | Consult users, buyers, sellers, warehouses, inventory, orders, audit log | Any mutation, anywhere |

@@ -368,7 +368,54 @@ Operation type: `INVENTORY_ADJUSTMENT`, severity `WARNING`, details
 
 ---
 
-## 5. Consult Inventory
+## 5. Register Inventory Return
+
+### Description
+
+Records stock returned to a warehouse (spec Domain 6), incrementing the item's
+available stock and appending a `RETURN` movement.
+
+Input Port: `RegisterInventoryReturnUseCase` —
+`InventoryMovement registerReturn(User requester, InventoryItem probe, int quantity)`.
+
+### Input
+
+```text
+User            (requester)
+InventoryItem   (probe — carries product + warehouse)
+int             (quantity)
+```
+
+### Authorization
+
+`ACTIVE` requester with role `SELLER` or `LOGISTICS_OPERATOR`.
+
+### Domain Validations
+
+* `quantity > 0` (`DomainException`).
+* The inventory item must exist (`EntityNotFoundException`).
+
+### Effect / State Change
+
+* `stock += quantity`.
+* A `RETURN` movement is appended and returned.
+
+### Persistence
+
+```text
+InventoryRepositoryPort.findByProductAndWarehouse(probe)
+InventoryRepositoryPort.update(item)
+InventoryRepositoryPort.saveMovement(RETURN)
+```
+
+### Operation and Audit
+
+Operation type: `INVENTORY_RETURN`, severity `INFO`, details
+`{ returned, resultingStock }`.
+
+---
+
+## 6. Consult Inventory
 
 ### Description
 
@@ -423,11 +470,12 @@ See [Output Ports](../Output%20Ports.md) for the full contracts.
 ## Input Ports
 
 ```java
-interface RegisterInventoryEntryUseCase { InventoryItem registerEntry(User requester, InventoryItem probe, int quantity); }
-interface ReserveInventoryUseCase       { InventoryMovement reserve(User requester, InventoryItem probe, int quantity); }
-interface ReleaseReservationUseCase     { InventoryMovement release(User requester, InventoryItem probe, int quantity); }
-interface AdjustInventoryUseCase        { InventoryMovement adjust(User requester, InventoryItem probe, int newQuantity); }
-interface ConsultInventoryUseCase       { List<InventoryItem> consult(User requester, Product product); }
+interface RegisterInventoryEntryUseCase  { InventoryItem registerEntry(User requester, InventoryItem probe, int quantity); }
+interface ReserveInventoryUseCase        { InventoryMovement reserve(User requester, InventoryItem probe, int quantity); }
+interface ReleaseReservationUseCase      { InventoryMovement release(User requester, InventoryItem probe, int quantity); }
+interface AdjustInventoryUseCase         { InventoryMovement adjust(User requester, InventoryItem probe, int newQuantity); }
+interface RegisterInventoryReturnUseCase { InventoryMovement registerReturn(User requester, InventoryItem probe, int quantity); }
+interface ConsultInventoryUseCase        { List<InventoryItem> consult(User requester, Product product); }
 ```
 
 ---
@@ -438,13 +486,9 @@ interface ConsultInventoryUseCase       { List<InventoryItem> consult(User reque
 Order checkout  (order subdomain)
         │  requests stock for each physical line
         ▼
-ReserveInventoryUseCase
-        │
-        ▼
-ReserveInventoryService
-        ├── authorization (SELLER / LOGISTICS_OPERATOR, ACTIVE)
-        ├── locate InventoryItem via InventoryRepositoryPort
-        ├── spec §11 validations (exists, not DAMAGED, non-negative)
+ReserveStockForOrderItemService
+        ├── locate candidate InventoryItems via InventoryRepositoryPort.findByProduct
+        ├── spec §11 validations (AVAILABLE, stock >= quantity)
         ├── stock -= quantity
         ├── InventoryRepositoryPort.update
         ├── InventoryRepositoryPort.saveMovement(RESERVATION)

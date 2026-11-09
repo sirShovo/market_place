@@ -59,13 +59,13 @@ complete order lifecycle. The functional specification is kept in
 | Subdomain | Responsibility |
 | --------- | -------------- |
 | `user` | System identities: register, change status, consult |
-| `buyer` | Buyer self-registration and profile |
-| `seller` | Seller onboarding (with first warehouse) |
+| `buyer` | Buyer self-registration, profile maintenance, commercial status, consultation |
+| `seller` | Seller onboarding (with first warehouse) and consultation |
 | `warehouse` | Marketplace / seller storage locations |
-| `catalog` | Publish and maintain products, variants and status |
-| `inventory` | Distributed stock: entry, reservation, release, adjustment (spec §11) |
+| `catalog` | Publish and maintain products, variants, status, and portfolio consultation |
+| `inventory` | Distributed stock: entry, reservation, release, adjustment, return (spec §11) |
 | `cart` | The buyer's single active shopping cart |
-| `order` | Checkout, payment, dispatch, delivery |
+| `order` | Checkout, payment, dispatch (with `SALE_EXIT` logging), delivery, consultation |
 | `authorization` | Role / status / ownership guards (internal collaborators) |
 | `operation` | Operation + AuditLog registration and consultation |
 
@@ -133,9 +133,9 @@ src/main/java/application/
 │   ├── services/        # one class per use case, grouped by subdomain
 │   │   ├── user/  buyer/  seller/  warehouse/  catalog/
 │   │   ├── inventory/  cart/  order/
-│   │   └── authorization/  operation/
+│   │   └── authorization/  operation/  identity/
 │   └── ports/
-│       ├── in/          # use-case interfaces (28)
+│       ├── in/          # use-case interfaces (33)
 │       └── out/         # repository + service ports (16)
 └── infrastructure/
     └── config/          # JacksonConfig, GlobalExceptionHandler, ApiResponse
@@ -144,10 +144,16 @@ src/test/java/application/domain/
 ├── models/OrderTest.java
 ├── services/user/RegisterUserServiceTest.java
 ├── services/buyer/RegisterBuyerServiceTest.java
+├── services/buyer/ChangeBuyerCommercialStatusServiceTest.java
 ├── services/seller/OnboardSellerServiceTest.java
+├── services/seller/ConsultSellerServiceTest.java
+├── services/catalog/ConsultSellerProductsServiceTest.java
 ├── services/inventory/ReserveInventoryServiceTest.java
+├── services/inventory/RegisterInventoryReturnServiceTest.java
 ├── services/order/CheckoutCartServiceTest.java
 ├── services/order/ProcessOrderPaymentServiceTest.java
+├── services/order/DispatchOrderServiceTest.java
+├── services/order/ConsultBuyerOrdersServiceTest.java
 └── support/Fakes.java     # hand-written test-double ports
 ```
 
@@ -162,7 +168,7 @@ conventions in [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md).
 - [x] **Phase 1** — Base structure, build, `application`-rooted packages, architecture SDD.
 - [x] **Phase 2** — Domain model: `DomainCatalog` value objects, entity hierarchy, exceptions.
 - [x] **Phase 3** — Domain services (per subdomain) + Operation/Audit + authorization.
-- [x] **Phase 4** — Input / Output ports; legacy `dto` / `usecase` / `port` layer retired.
+- [x] **Phase 4** — Input / Output ports (33 in, 16 out); legacy `dto` / `usecase` / `port` layer retired.
 - [ ] **Phase 5** — Persistence adapters (MySQL + MongoDB), payment simulation adapter.
 - [ ] **Phase 6** — REST controllers + Spring Security (JWT) + Swagger.
 - [ ] **Phase 7** — Schedulers (unpaid-order expiration) and final refinements.
@@ -203,20 +209,26 @@ Current coverage (plain unit tests, direct instantiation with test-double ports)
 | Test | What it checks |
 | ---- | -------------- |
 | `OrderTest` | total = Σ subtotals; valid lifecycle; illegal transition → `InvalidStatusTransitionException`; finalized order immutable |
-| `RegisterUserServiceTest` | `ADMIN` registers `SELLER` + password encrypted; non-`ADMIN` rejected; document/e-mail uniqueness enforced **across `User`/`Buyer`/`Seller`** |
+| `RegisterUserServiceTest` | `ADMIN` registers `SELLER` + password encrypted; non-`ADMIN` rejected; missing credentials and duplicate username rejected; document/e-mail uniqueness enforced **across `User`/`Buyer`/`Seller`** |
 | `RegisterBuyerServiceTest` | self-registration creates a `Buyer` **and** a linked login `User`; missing address/credentials rejected; platform-wide uniqueness; duplicate username rejected |
+| `ChangeBuyerCommercialStatusServiceTest` | `ADMIN` suspends/activates buyer commercial status + logs `USER_STATUS_CHANGE`; non-`ADMIN` and missing buyer rejected |
 | `OnboardSellerServiceTest` | `ADMIN` onboarding creates `Seller` + first `Warehouse` + linked login `User`; non-`ADMIN` rejected; missing warehouse/credentials rejected; platform-wide uniqueness |
+| `ConsultSellerServiceTest` | `SELLER` can consult its own profile, rejected on another seller's; `ADMIN` / `SUPERVISOR` can consult any |
+| `ConsultSellerProductsServiceTest` | `SELLER` lists its own portfolio, rejected on another seller's; `ADMIN` can list any |
 | `ReserveInventoryServiceTest` | reservation decrements stock + logs movement; missing / `DAMAGED` inventory rejected; over-reservation → `NegativeStockException` |
+| `RegisterInventoryReturnServiceTest` | return increments stock, logs `RETURN` movement and `INVENTORY_RETURN` operation; non-positive quantity and missing item rejected |
 | `CheckoutCartServiceTest` | physical lines reserve stock and get a `warehouse` assigned; checkout fails when no warehouse has enough stock; digital lines need no reservation; empty cart rejected |
 | `ProcessOrderPaymentServiceTest` | approved digital-only order is delivered and notified; approved physical order stays `PAID`; rejection keeps the order payable again; **a buyer cannot pay another buyer's order** |
+| `DispatchOrderServiceTest` | `LOGISTICS_OPERATOR` dispatches paid physical order, records per-line `SALE_EXIT` movements and `ORDER_DISPATCH` operation; rejects missing warehouse, digital-only order, or non-operator |
+| `ConsultBuyerOrdersServiceTest` | `BUYER` lists its own orders, rejected on another buyer's; `ADMIN` / `SUPERVISOR` can list any |
 
 ```
-Tests run: 32, Failures: 0, Errors: 0, Skipped: 1
+Tests run: 53, Failures: 0, Errors: 0, Skipped: 1
 ```
 
-> `NexusMarketApplicationTests` (`@SpringBootTest`) is **`@Disabled` until Phase 5**:
+> `NexusMarketApplicationTests` (`@SpringBootTest`) is **`@Disabled` until Phase 6**:
 > the domain services are `@Service` beans that depend on output ports whose adapters
-> do not exist yet, so the full context cannot be built.
+> are delivered across Phases 5–6, so the full context cannot be built yet.
 
 ---
 
@@ -233,7 +245,7 @@ The Software Design Document lives in [`SDD/`](SDD/).
 - [Domain Value Objects](SDD/domain/Domain%20Value%20Objects.md) — `DomainCatalog`, catalogs, primitive wrappers.
 - [Domain Services](SDD/domain/Domain%20Services.md) — high-level catalogue + shared principles.
 - [Output Ports](SDD/domain/Output%20Ports.md) — 16 ports: responsibility, signatures, consumers, adapter mapping.
-- [Input Ports](SDD/domain/Input%20Ports.md) — 28 use-case contracts.
+- [Input Ports](SDD/domain/Input%20Ports.md) — 33 use-case contracts.
 
 **Per-subdomain service specs (`SDD/domain/services/`)**
 

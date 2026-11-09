@@ -4,7 +4,8 @@
 
 This document defines the services belonging to the **Catalog Management** subdomain
 of NexusMarket (spec **Domain 5**). These services own the product catalog: publishing
-products, maintaining their data and variants, and controlling their catalog status.
+products, maintaining their data and variants, controlling their catalog status, and
+consulting both the public catalog and a seller's own product portfolio.
 
 The catalog differentiates **physical products** (require inventory and dispatch) from
 **digital products** (delivered immediately after payment). Each product carries a
@@ -66,7 +67,9 @@ Product publish(User requester, Product product);
 
 `ValidateProductOwnershipService` is the shared guard for the mutating services:
 `ADMIN` may manage any product; a `SELLER` only its own (the product's
-`seller.identification` must match the requester's).
+`seller.identification` must match the requester's). For seller-portfolio queries,
+`ValidateSellerOwnershipService` ensures a `SELLER` only lists its own products while
+`ADMIN` / `SUPERVISOR` may list any seller's.
 
 ### External information
 
@@ -240,6 +243,42 @@ Not an audited operation (read-only).
 
 ---
 
+## 5. Consult Seller Products
+
+### Description
+
+Returns all products belonging to a given seller (regardless of catalog status:
+`PUBLISHED`, `SUSPENDED`, or `DISCONTINUED`). A `SELLER` may only list its own
+products; `ADMIN` and `SUPERVISOR` may list any seller's portfolio (spec RG03).
+
+Input Port: `ConsultSellerProductsUseCase` —
+`List<Product> consultBySeller(User requester, Seller seller)`.
+
+### Input
+
+```text
+User     (requester)
+Seller   (probe — carries the seller's identification)
+```
+
+### Authorization
+
+* `ValidateUserStatusService` — requester is `ACTIVE`.
+* `ValidateSellerOwnershipService` — a `SELLER` may only list its own products;
+  `ADMIN` / `SUPERVISOR` may list any seller's.
+
+### Persistence
+
+```text
+ProductRepositoryPort.findBySeller(seller)
+```
+
+### Operation and Audit
+
+Not an audited operation (read-only).
+
+---
+
 ## Output Ports
 
 ```java
@@ -268,10 +307,11 @@ See [Output Ports](../Output%20Ports.md) for the full contracts.
 ## Input Ports
 
 ```java
-interface PublishProductUseCase      { Product publish(User requester, Product product); }
-interface UpdateProductUseCase       { Product update(User requester, Product product); }
-interface ChangeProductStatusUseCase { Product changeStatus(User requester, Product product); }
-interface ConsultCatalogUseCase      { List<Product> consultPublished(); }
+interface PublishProductUseCase        { Product publish(User requester, Product product); }
+interface UpdateProductUseCase         { Product update(User requester, Product product); }
+interface ChangeProductStatusUseCase   { Product changeStatus(User requester, Product product); }
+interface ConsultCatalogUseCase        { List<Product> consultPublished(); }
+interface ConsultSellerProductsUseCase { List<Product> consultBySeller(User requester, Seller seller); }
 ```
 
 ---
