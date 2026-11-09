@@ -1,18 +1,19 @@
 {
   "info": {
-    "_postman_id": "15195e55-9bd9-45f8-8b09-3a14dbd2e153",
+    "_postman_id": "17280f17-a88c-445a-8f18-e7ebd7ccc143",
     "name": "NexusMarket API - Complete Collection",
     "description": "Complete end-to-end Postman Collection for NexusMarket API (Hexagonal Architecture + DDD in Spring Boot 4.1.0). Covers all 10 controllers and 29 endpoints across Auth, Users, Sellers, Warehouses, Products & Catalog, Inventory, Buyers, Cart, Orders, and Audit, with automatic JWT variable chaining and pm.test assertions.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-11-09T04:12:43.000Z",
+    "updatedAt": "2026-11-09T04:12:43.000Z",
+    "lastUpdatedBy": "19932203",
+    "uid": "19932203-17280f17-a88c-445a-8f18-e7ebd7ccc143"
   },
   "item": [
     {
-      "id": "321f724e-9f5d-454b-ab7c-74bb7b078f8a",
       "name": "01. Auth (/api/auth)",
-      "description": "Authentication endpoints (/api/auth). Run 1.1 first after starting the app to obtain adminToken, and run 1.2-1.5 after registering/onboarding the respective users.",
       "item": [
         {
-          "id": "b671202d-0834-432f-866d-f988a1744b7c",
           "name": "1.1 Login as Admin (Seeded Bootstrap)",
           "event": [
             {
@@ -28,6 +29,7 @@
               }
             }
           ],
+          "id": "70e3b4cf-7bfe-4a07-8331-6ccdf4c48ac0",
           "request": {
             "auth": {
               "type": "noauth"
@@ -60,10 +62,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-70e3b4cf-7bfe-4a07-8331-6ccdf4c48ac0"
         },
         {
-          "id": "db53eecf-534e-4af8-8869-0fdfc93728f4",
           "name": "1.2 Login as Seller",
           "event": [
             {
@@ -78,6 +82,7 @@
               }
             }
           ],
+          "id": "2ccbfb54-3e95-41d1-ab7b-f46fcbca1ba2",
           "request": {
             "auth": {
               "type": "noauth"
@@ -110,10 +115,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-2ccbfb54-3e95-41d1-ab7b-f46fcbca1ba2"
         },
         {
-          "id": "cb0701a3-028e-4507-b816-e8354a881b04",
           "name": "1.3 Login as Logistics Operator",
           "event": [
             {
@@ -128,6 +135,7 @@
               }
             }
           ],
+          "id": "44ca7822-4c2a-4612-89ce-639125ca7cd9",
           "request": {
             "auth": {
               "type": "noauth"
@@ -160,10 +168,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-44ca7822-4c2a-4612-89ce-639125ca7cd9"
         },
         {
-          "id": "b2ccc985-27d1-4d99-b640-266ec82ef0e8",
           "name": "1.4 Login as Supervisor",
           "event": [
             {
@@ -178,6 +188,7 @@
               }
             }
           ],
+          "id": "918ba687-dae9-480c-9303-014bed824dfe",
           "request": {
             "auth": {
               "type": "noauth"
@@ -210,10 +221,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-918ba687-dae9-480c-9303-014bed824dfe"
         },
         {
-          "id": "acbbf15a-65f9-4646-accd-472423061b99",
           "name": "1.5 Login as Buyer",
           "event": [
             {
@@ -228,6 +241,7 @@
               }
             }
           ],
+          "id": "688a0665-3005-41be-a716-ddaaf342d725",
           "request": {
             "auth": {
               "type": "noauth"
@@ -260,10 +274,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-688a0665-3005-41be-a716-ddaaf342d725"
         },
         {
-          "id": "33ccbbc7-cd05-4df1-96f0-e5dc80f731c2",
           "name": "1.6 Login - Invalid Credentials (401)",
           "event": [
             {
@@ -276,6 +292,7 @@
               }
             }
           ],
+          "id": "a4e38b02-5e7d-48c9-85e5-4b8260e78a17",
           "request": {
             "auth": {
               "type": "noauth"
@@ -308,17 +325,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-a4e38b02-5e7d-48c9-85e5-4b8260e78a17"
         }
-      ]
+      ],
+      "id": "c44076e5-9a61-44c8-bbd1-93c05de7f8e7",
+      "description": "Authentication endpoints (/api/auth). Run 1.1 first after starting the app to obtain adminToken, and run 1.2-1.5 after registering/onboarding the respective users.",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-c44076e5-9a61-44c8-bbd1-93c05de7f8e7"
     },
     {
-      "id": "5cbd2b63-cc3f-4298-8536-ceaef353aac4",
       "name": "02. Users (/api/users)",
-      "description": "System user management (/api/users). Requires ADMIN for mutations and ADMIN or SUPERVISOR for queries.",
       "item": [
         {
-          "id": "2d4d50ba-1b24-4b1c-9dd6-33ca6d9139ce",
           "name": "2.1 Register Logistics Operator (ADMIN)",
           "event": [
             {
@@ -331,6 +353,7 @@
               }
             }
           ],
+          "id": "b43b4540-5f88-4511-8d62-a04cc78dc8fe",
           "request": {
             "auth": {
               "type": "bearer",
@@ -369,10 +392,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-b43b4540-5f88-4511-8d62-a04cc78dc8fe"
         },
         {
-          "id": "c2de655f-cc85-4a5f-878d-2313921551de",
           "name": "2.2 Register Supervisor (ADMIN)",
           "event": [
             {
@@ -385,6 +410,7 @@
               }
             }
           ],
+          "id": "b47b568f-e93d-4f5b-a090-5b60d01ffa4a",
           "request": {
             "auth": {
               "type": "bearer",
@@ -423,10 +449,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-b47b568f-e93d-4f5b-a090-5b60d01ffa4a"
         },
         {
-          "id": "3d38c510-b611-4e7d-af09-5093e26c7dda",
           "name": "2.3 Consult User by Username (ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -439,6 +467,7 @@
               }
             }
           ],
+          "id": "094c63aa-d248-4eb0-9a1a-1a9d617da1f9",
           "request": {
             "auth": {
               "type": "bearer",
@@ -464,10 +493,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-094c63aa-d248-4eb0-9a1a-1a9d617da1f9"
         },
         {
-          "id": "11f39a80-4c24-4013-8788-394b434b67aa",
           "name": "2.4 Change User Status (ADMIN)",
           "event": [
             {
@@ -480,6 +511,7 @@
               }
             }
           ],
+          "id": "7b47121a-f184-438a-a62d-2d4ed18af69d",
           "request": {
             "auth": {
               "type": "bearer",
@@ -520,17 +552,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-7b47121a-f184-438a-a62d-2d4ed18af69d"
         }
-      ]
+      ],
+      "id": "9c0fe778-3e89-4ae7-bd30-a7053fadded7",
+      "description": "System user management (/api/users). Requires ADMIN for mutations and ADMIN or SUPERVISOR for queries.",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-9c0fe778-3e89-4ae7-bd30-a7053fadded7"
     },
     {
-      "id": "726795a1-4ecc-4039-91a3-253b212fad94",
       "name": "03. Sellers (/api/sellers)",
-      "description": "Seller onboarding and portfolio endpoints (/api/sellers). Sellers cannot self-register; they must be onboarded by an ADMIN along with their first warehouse.",
       "item": [
         {
-          "id": "f0e3cc63-4e86-47fc-b18f-4f3149bbdf1c",
           "name": "3.1 Onboard Seller + First Warehouse (ADMIN)",
           "event": [
             {
@@ -543,6 +580,7 @@
               }
             }
           ],
+          "id": "f186999f-1e7d-4d2e-b373-0d521ea704b3",
           "request": {
             "auth": {
               "type": "bearer",
@@ -582,10 +620,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-f186999f-1e7d-4d2e-b373-0d521ea704b3"
         },
         {
-          "id": "dc050dc8-476b-433b-bc1c-5516ebf9af88",
           "name": "3.2 Consult Seller Profile (SELLER / ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -598,6 +638,7 @@
               }
             }
           ],
+          "id": "bd9f38b0-4fba-4283-8875-79b4699352b8",
           "request": {
             "auth": {
               "type": "bearer",
@@ -623,10 +664,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-bd9f38b0-4fba-4283-8875-79b4699352b8"
         },
         {
-          "id": "f423a745-b2c8-435a-837c-ea6b21c99874",
           "name": "3.3 Consult Seller Products Portfolio (SELLER / ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -639,6 +682,7 @@
               }
             }
           ],
+          "id": "371b1b79-fb5f-4462-a631-4bc24b0deb39",
           "request": {
             "auth": {
               "type": "bearer",
@@ -665,17 +709,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-371b1b79-fb5f-4462-a631-4bc24b0deb39"
         }
-      ]
+      ],
+      "id": "0a939814-2864-4f26-92c0-622cbfa69fba",
+      "description": "Seller onboarding and portfolio endpoints (/api/sellers). Sellers cannot self-register; they must be onboarded by an ADMIN along with their first warehouse.",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-0a939814-2864-4f26-92c0-622cbfa69fba"
     },
     {
-      "id": "9c372b42-775a-4779-ae8c-ab933c0360a0",
       "name": "04. Warehouses (/api/warehouses)",
-      "description": "Warehouse registration and consultation (/api/warehouses).",
       "item": [
         {
-          "id": "4524428f-3004-4e0a-bc97-b288a388c668",
           "name": "4.1 Register Marketplace Warehouse (ADMIN)",
           "event": [
             {
@@ -688,6 +737,7 @@
               }
             }
           ],
+          "id": "a5616009-c869-4c3b-bc74-06c6f3c2b24f",
           "request": {
             "auth": {
               "type": "bearer",
@@ -726,10 +776,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-a5616009-c869-4c3b-bc74-06c6f3c2b24f"
         },
         {
-          "id": "6fe21b02-f46e-4f79-b8e3-c30edf31a3da",
           "name": "4.2 Register Additional Seller Warehouse (ADMIN)",
           "event": [
             {
@@ -742,6 +794,7 @@
               }
             }
           ],
+          "id": "bfa1f383-9afd-4d62-9a52-1fbe3e975a90",
           "request": {
             "auth": {
               "type": "bearer",
@@ -780,10 +833,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-bfa1f383-9afd-4d62-9a52-1fbe3e975a90"
         },
         {
-          "id": "155d9547-1b66-4fda-b7f2-9427cef786ca",
           "name": "4.3 Consult Warehouse by Identifier (ADMIN / SUPERVISOR / LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -796,6 +851,7 @@
               }
             }
           ],
+          "id": "f3947281-20e2-4e5e-9cb3-9cdacd5bcd13",
           "request": {
             "auth": {
               "type": "bearer",
@@ -821,17 +877,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-f3947281-20e2-4e5e-9cb3-9cdacd5bcd13"
         }
-      ]
+      ],
+      "id": "fbc040b0-7487-444d-8d90-1eb0ca662e81",
+      "description": "Warehouse registration and consultation (/api/warehouses).",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-fbc040b0-7487-444d-8d90-1eb0ca662e81"
     },
     {
-      "id": "cd177e58-19ac-494b-acd8-895601231369",
       "name": "05. Products & Catalog (/api/products)",
-      "description": "Product catalog endpoints (/api/products). Catalog consultation is public; publishing requires SELLER; updating/changing status requires owning SELLER or ADMIN.",
       "item": [
         {
-          "id": "d055a536-301a-4874-93b3-0feca861d050",
           "name": "5.1 Publish Physical Product (SELLER)",
           "event": [
             {
@@ -844,6 +905,7 @@
               }
             }
           ],
+          "id": "382bb45d-3083-41bb-9566-e9a9ebc3c015",
           "request": {
             "auth": {
               "type": "bearer",
@@ -882,10 +944,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-382bb45d-3083-41bb-9566-e9a9ebc3c015"
         },
         {
-          "id": "fa36c2bf-72e5-4e49-90c2-74e9ce3156e8",
           "name": "5.2 Publish Digital Product (SELLER - Auto-resolves sellerIdentification from JWT)",
           "event": [
             {
@@ -898,6 +962,7 @@
               }
             }
           ],
+          "id": "0a8e15c8-ae77-4d43-880c-8a4486f847d4",
           "request": {
             "auth": {
               "type": "bearer",
@@ -936,10 +1001,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-0a8e15c8-ae77-4d43-880c-8a4486f847d4"
         },
         {
-          "id": "6a968183-b738-47a7-981b-7d175558c224",
           "name": "5.3 Consult Published Catalog (Public - No Auth)",
           "event": [
             {
@@ -952,6 +1019,7 @@
               }
             }
           ],
+          "id": "cc712e52-2003-43d5-b8fc-9dd00f2c730b",
           "request": {
             "auth": {
               "type": "noauth"
@@ -970,10 +1038,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-cc712e52-2003-43d5-b8fc-9dd00f2c730b"
         },
         {
-          "id": "0e218614-08fa-40d8-aa65-8969da5241b6",
           "name": "5.4 Update Product Details (SELLER / ADMIN)",
           "event": [
             {
@@ -986,6 +1056,7 @@
               }
             }
           ],
+          "id": "ebd84517-c3be-4deb-a5ce-25377134f3cd",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1025,10 +1096,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-ebd84517-c3be-4deb-a5ce-25377134f3cd"
         },
         {
-          "id": "12564cec-8132-44a2-864c-d0db6f8cb8c8",
           "name": "5.5 Change Product Status (SELLER / ADMIN)",
           "event": [
             {
@@ -1041,6 +1114,7 @@
               }
             }
           ],
+          "id": "dbd0a188-9d73-4f60-b832-6e13557468a4",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1081,17 +1155,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-dbd0a188-9d73-4f60-b832-6e13557468a4"
         }
-      ]
+      ],
+      "id": "6c156d2e-19fc-4db0-8314-fe895c6ab522",
+      "description": "Product catalog endpoints (/api/products). Catalog consultation is public; publishing requires SELLER; updating/changing status requires owning SELLER or ADMIN.",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-6c156d2e-19fc-4db0-8314-fe895c6ab522"
     },
     {
-      "id": "3ee78f02-14b6-495d-8e62-0709edba5d04",
       "name": "06. Inventory (/api/inventory)",
-      "description": "Inventory management endpoints (/api/inventory). Shared by SELLER and LOGISTICS_OPERATOR; read access also granted to ADMIN and SUPERVISOR.",
       "item": [
         {
-          "id": "11ebbff7-4624-4cda-b24b-741f86d851e0",
           "name": "6.1 Register Inventory Entry (SELLER / LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -1104,6 +1183,7 @@
               }
             }
           ],
+          "id": "b6d5165e-14a0-4f5b-bd95-9ef90ae7efbf",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1143,10 +1223,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-b6d5165e-14a0-4f5b-bd95-9ef90ae7efbf"
         },
         {
-          "id": "e3bb71f8-517c-4166-b1ff-9e11dd390179",
           "name": "6.2 Consult Inventory by Product (SELLER / LOGISTICS_OPERATOR / ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -1159,6 +1241,7 @@
               }
             }
           ],
+          "id": "b59c1466-d863-4fba-8c2b-98dfebcbed5c",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1185,10 +1268,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-b59c1466-d863-4fba-8c2b-98dfebcbed5c"
         },
         {
-          "id": "f6061a31-94b2-4abe-981b-a87b95f0ca16",
           "name": "6.3 Reserve Inventory Manually (SELLER / LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -1201,6 +1286,7 @@
               }
             }
           ],
+          "id": "0faf79ea-aea2-4175-a486-8506a8403542",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1240,10 +1326,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-0faf79ea-aea2-4175-a486-8506a8403542"
         },
         {
-          "id": "9925c035-f372-4e03-8456-f1d63bf1552a",
           "name": "6.4 Release Inventory Reservation (SELLER / LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -1256,6 +1344,7 @@
               }
             }
           ],
+          "id": "055a8dab-e002-4a41-8f43-6bb583501eb4",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1295,10 +1384,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-055a8dab-e002-4a41-8f43-6bb583501eb4"
         },
         {
-          "id": "00aa510a-c792-477e-945d-29fb43fa7e20",
           "name": "6.5 Adjust Inventory Stock (SELLER / LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -1311,6 +1402,7 @@
               }
             }
           ],
+          "id": "d74ed849-540e-4d9a-8c70-8a276663db0c",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1350,10 +1442,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-d74ed849-540e-4d9a-8c70-8a276663db0c"
         },
         {
-          "id": "3d7731b8-af00-41ec-8d42-fff9ee9cf019",
           "name": "6.6 Register Inventory Return (SELLER / LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -1366,6 +1460,7 @@
               }
             }
           ],
+          "id": "dd9e821c-e672-4d3d-8540-ccc770b3a1e0",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1405,17 +1500,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-dd9e821c-e672-4d3d-8540-ccc770b3a1e0"
         }
-      ]
+      ],
+      "id": "7087ce00-a5b6-4249-a6fe-18a5894e56dd",
+      "description": "Inventory management endpoints (/api/inventory). Shared by SELLER and LOGISTICS_OPERATOR; read access also granted to ADMIN and SUPERVISOR.",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-7087ce00-a5b6-4249-a6fe-18a5894e56dd"
     },
     {
-      "id": "abe1ffbc-6682-4f60-9d23-7e48d1ccefed",
       "name": "07. Buyers (/api/buyers)",
-      "description": "Buyer self-registration and profile management (/api/buyers).",
       "item": [
         {
-          "id": "bb519c7a-e90a-497e-9628-b85adbc5c6a2",
           "name": "7.1 Self-Register Buyer (Public - No Auth)",
           "event": [
             {
@@ -1428,6 +1528,7 @@
               }
             }
           ],
+          "id": "9ae462da-333b-4ed7-9ff2-55cd5cb3e989",
           "request": {
             "auth": {
               "type": "noauth"
@@ -1460,10 +1561,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-9ae462da-333b-4ed7-9ff2-55cd5cb3e989"
         },
         {
-          "id": "dd55d0ec-7bbe-46f7-821f-4a11776ace5a",
           "name": "7.2 Consult Buyer Profile (BUYER Self / ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -1476,6 +1579,7 @@
               }
             }
           ],
+          "id": "2df35b3b-6937-4af4-bb36-ea64474b5625",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1501,10 +1605,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-2df35b3b-6937-4af4-bb36-ea64474b5625"
         },
         {
-          "id": "8c6a8ab6-6268-4599-bc10-32074695ad27",
           "name": "7.3 Update Buyer Profile (BUYER Self)",
           "event": [
             {
@@ -1517,6 +1623,7 @@
               }
             }
           ],
+          "id": "9708f50c-2388-444e-a34b-06f200332e39",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1556,10 +1663,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-9708f50c-2388-444e-a34b-06f200332e39"
         },
         {
-          "id": "f56db5cf-ac93-49d6-9e84-43fa732c6f0c",
           "name": "7.4 Change Buyer Commercial Status (ADMIN)",
           "event": [
             {
@@ -1572,6 +1681,7 @@
               }
             }
           ],
+          "id": "cb8e41e4-a347-4b81-840a-53221f6a5862",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1612,17 +1722,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-cb8e41e4-a347-4b81-840a-53221f6a5862"
         }
-      ]
+      ],
+      "id": "e9ac2a27-42e8-47e7-8890-76c6b5f75114",
+      "description": "Buyer self-registration and profile management (/api/buyers).",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-e9ac2a27-42e8-47e7-8890-76c6b5f75114"
     },
     {
-      "id": "59a667e0-62ac-4039-bd38-949770aeaa6a",
       "name": "08. Cart (/api/cart)",
-      "description": "Shopping cart operations (/api/cart). The authenticated BUYER is automatically resolved from the JWT token.",
       "item": [
         {
-          "id": "a265c019-2526-4fee-8b86-f50d3cd18151",
           "name": "8.1 Add Physical Product to Cart (BUYER)",
           "event": [
             {
@@ -1635,6 +1750,7 @@
               }
             }
           ],
+          "id": "028ad09d-19ff-47cb-9bca-704436f2733d",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1674,10 +1790,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-028ad09d-19ff-47cb-9bca-704436f2733d"
         },
         {
-          "id": "d988fda2-fa4b-4551-b1db-33c031c0f556",
           "name": "8.2 Add Digital Product to Cart (BUYER)",
           "event": [
             {
@@ -1690,6 +1808,7 @@
               }
             }
           ],
+          "id": "611100ea-4fa1-40b2-8391-bc45413dd021",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1729,10 +1848,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-611100ea-4fa1-40b2-8391-bc45413dd021"
         },
         {
-          "id": "3a92b78e-0c28-49b4-8ec2-b7d25fbfe836",
           "name": "8.3 Consult Active Cart (BUYER)",
           "event": [
             {
@@ -1745,6 +1866,7 @@
               }
             }
           ],
+          "id": "20d2fbbe-0288-43ae-8af8-44564d4b900a",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1769,10 +1891,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-20d2fbbe-0288-43ae-8af8-44564d4b900a"
         },
         {
-          "id": "fc6564f0-22be-46d9-a80e-cf60d83d9f8b",
           "name": "8.4 Remove Item from Cart by Body (BUYER)",
           "event": [
             {
@@ -1785,6 +1909,7 @@
               }
             }
           ],
+          "id": "602e9efb-2397-4a86-93f3-628d53560ce4",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1824,10 +1949,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-602e9efb-2397-4a86-93f3-628d53560ce4"
         },
         {
-          "id": "353a1fa3-7501-4a39-a041-9536b57e1b88",
           "name": "8.5 Remove Item from Cart by Path (BUYER)",
           "event": [
             {
@@ -1840,6 +1967,7 @@
               }
             }
           ],
+          "id": "a7d69c2d-ef82-47fe-a9eb-d96f798a16d2",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1866,10 +1994,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-a7d69c2d-ef82-47fe-a9eb-d96f798a16d2"
         },
         {
-          "id": "fe32a1da-07c6-4bdf-916b-80902177e74b",
           "name": "8.6 Clear Active Cart (BUYER)",
           "event": [
             {
@@ -1882,6 +2012,7 @@
               }
             }
           ],
+          "id": "da656dc8-fa15-4fc6-8586-ba142bd1f43d",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1906,17 +2037,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-da656dc8-fa15-4fc6-8586-ba142bd1f43d"
         }
-      ]
+      ],
+      "id": "9b7c19f2-d433-4386-bdb7-3b724e6cce82",
+      "description": "Shopping cart operations (/api/cart). The authenticated BUYER is automatically resolved from the JWT token.",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-9b7c19f2-d433-4386-bdb7-3b724e6cce82"
     },
     {
-      "id": "0c5ef6c3-958e-45d9-992e-4864822d8520",
       "name": "09. Orders (/api/orders)",
-      "description": "Order checkout, payment processing, logistics dispatch, delivery confirmation, and order history (/api/orders).",
       "item": [
         {
-          "id": "ddc26f5b-9a08-4d9a-80d4-680dc7865bcd",
           "name": "9.1 Checkout Active Cart -> Create Order (BUYER)",
           "event": [
             {
@@ -1931,6 +2067,7 @@
               }
             }
           ],
+          "id": "c847dcdd-2ca7-41e3-a757-a16a41196dc8",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1956,10 +2093,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-c847dcdd-2ca7-41e3-a757-a16a41196dc8"
         },
         {
-          "id": "11699a4d-54e5-4f35-9418-50557f9347aa",
           "name": "9.2 Pay Order (BUYER - Retry if simulated payment rejects)",
           "event": [
             {
@@ -1972,6 +2111,7 @@
               }
             }
           ],
+          "id": "f8ac03aa-a3e6-4d57-85a5-58168054fd7e",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1998,10 +2138,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-f8ac03aa-a3e6-4d57-85a5-58168054fd7e"
         },
         {
-          "id": "9343f636-d224-4a0f-a84e-f45e6ff24271",
           "name": "9.3 Dispatch Physical Order (LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -2014,6 +2156,7 @@
               }
             }
           ],
+          "id": "e164b19f-eae7-4cd7-8d91-3680662bc17a",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2040,10 +2183,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-e164b19f-eae7-4cd7-8d91-3680662bc17a"
         },
         {
-          "id": "4c79fd62-8d5f-43e9-b96f-b5e192d6416a",
           "name": "9.4 Confirm Order Delivery (LOGISTICS_OPERATOR)",
           "event": [
             {
@@ -2056,6 +2201,7 @@
               }
             }
           ],
+          "id": "09c2f558-1487-41f2-aa82-3ffe74ffed41",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2082,10 +2228,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-09c2f558-1487-41f2-aa82-3ffe74ffed41"
         },
         {
-          "id": "311104b0-3819-4a9c-b0e2-4d5099148777",
           "name": "9.5 Consult Order by Identifier (BUYER Owner / LOGISTICS_OPERATOR / ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -2098,6 +2246,7 @@
               }
             }
           ],
+          "id": "9bf54a62-272e-4f3c-99f6-8c5f6dc7b22e",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2123,10 +2272,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-9bf54a62-272e-4f3c-99f6-8c5f6dc7b22e"
         },
         {
-          "id": "fc6f2385-4ef5-4136-99cf-f7e101bb5712",
           "name": "9.6 Consult Buyer Order History (BUYER Owner / ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -2139,6 +2290,7 @@
               }
             }
           ],
+          "id": "9ac00f84-b988-4b8f-b911-ae4fb8ce5722",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2165,17 +2317,22 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-9ac00f84-b988-4b8f-b911-ae4fb8ce5722"
         }
-      ]
+      ],
+      "id": "9407f22a-1d1c-424e-a9a7-ca57c98d5533",
+      "description": "Order checkout, payment processing, logistics dispatch, delivery confirmation, and order history (/api/orders).",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-9407f22a-1d1c-424e-a9a7-ca57c98d5533"
     },
     {
-      "id": "a860ae6f-8331-4fbf-84eb-6492b7a2de1f",
       "name": "10. Audit (/api/audit)",
-      "description": "MongoDB Audit Log consultation endpoints (/api/audit). Restricted to ADMIN and SUPERVISOR roles.",
       "item": [
         {
-          "id": "1a30a4e3-d0ee-4052-b282-a9b51efea158",
           "name": "10.1 Consult Order Audit History (ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -2188,6 +2345,7 @@
               }
             }
           ],
+          "id": "472d4e81-a97e-4b77-b469-5d304b31db37",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2214,10 +2372,12 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-472d4e81-a97e-4b77-b469-5d304b31db37"
         },
         {
-          "id": "a833e740-9e69-430e-8c3d-cfe346ef6de9",
           "name": "10.2 Consult Seller Audit History (ADMIN / SUPERVISOR)",
           "event": [
             {
@@ -2230,6 +2390,7 @@
               }
             }
           ],
+          "id": "ce921dc3-9b18-4df9-96e9-6e3fbabd877e",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2256,9 +2417,17 @@
               ]
             }
           },
-          "response": []
+          "response": [],
+          "createdAt": "2026-11-09T04:12:44.000Z",
+          "updatedAt": "2026-11-09T04:12:44.000Z",
+          "uid": "19932203-ce921dc3-9b18-4df9-96e9-6e3fbabd877e"
         }
-      ]
+      ],
+      "id": "a625d196-b666-49b7-a85d-f954162828cf",
+      "description": "MongoDB Audit Log consultation endpoints (/api/audit). Restricted to ADMIN and SUPERVISOR roles.",
+      "createdAt": "2026-11-09T04:12:44.000Z",
+      "updatedAt": "2026-11-09T04:12:44.000Z",
+      "uid": "19932203-a625d196-b666-49b7-a85d-f954162828cf"
     }
   ],
   "variable": [
