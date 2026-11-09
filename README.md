@@ -3,7 +3,7 @@
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-brightgreen.svg)
 ![Architecture](https://img.shields.io/badge/Architecture-Hexagonal%20%7C%20DDD-blue.svg)
-![Status](https://img.shields.io/badge/Status-Phases%201--4%20complete-yellow.svg)
+![Status](https://img.shields.io/badge/Status-Phases%201--5%20complete-yellow.svg)
 
 A RESTful API for **NexusMarket**, a digital and physical marketplace that acts as a
 commercial intermediary between buyers and sellers. Built with **Spring Boot**,
@@ -83,7 +83,7 @@ A rejected payment leaves the order in `PENDING_PAYMENT` so the buyer can retry.
 ## Technologies Used
 
 - **Core:** Java 17, Spring Boot 4.1
-- **Persistence:** Spring Data JPA + MySQL (transactional data), MongoDB (audit trail) — *from Phase 5*
+- **Persistence:** Spring Data JPA + MySQL (transactional data), Spring Data MongoDB (audit trail)
 - **Security:** Spring Security, JWT — *from Phase 6*
 - **Validation:** Jakarta Bean Validation
 - **API Documentation:** OpenAPI (Swagger) — *from Phase 6*
@@ -102,10 +102,10 @@ points **toward** the domain.
   `ports` (`in` / `out`). No dependency on JPA, HTTP or JSON. Domain services are
   annotated `@Service` purely for wiring and stay unit-testable without a Spring
   context.
-- **`application.adapters`** — inbound REST controllers and outbound adapters
-  (MySQL / MongoDB persistence, payment gateway, notifications). *Phases 5–6.*
+- **`application.adapters`** — inbound REST controllers (Phase 6) and outbound adapters
+  (MySQL / MongoDB persistence, payment gateway, notifications — Phase 5).
 - **`application.infrastructure`** — `config` (Jackson, exception handling, response
-  wrapper), `database`, `security`. Technical wiring only.
+  wrapper, business configuration), `database`, `security`. Technical wiring only.
 
 ```
 REST Controller ──► Input Port ──► Domain Service ──► Output Port ──► Adapter ──► DB / gateway
@@ -137,24 +137,15 @@ src/main/java/application/
 │   └── ports/
 │       ├── in/          # use-case interfaces (33)
 │       └── out/         # repository + service ports (16)
+├── adapters/
+│   └── out/
+│       ├── persistence/
+│       │   ├── mysql/   # entities (14), repositories (11), mappers (10), adapters (10)
+│       │   └── mongodb/ # AuditLogDocument, AuditLogMongoRepository, mapper, adapter
+│       ├── payment/     # SimulatedPaymentAdapter
+│       └── notification/# EmailNotificationAdapter
 └── infrastructure/
-    └── config/          # JacksonConfig, GlobalExceptionHandler, ApiResponse
-
-src/test/java/application/domain/
-├── models/OrderTest.java
-├── services/user/RegisterUserServiceTest.java
-├── services/buyer/RegisterBuyerServiceTest.java
-├── services/buyer/ChangeBuyerCommercialStatusServiceTest.java
-├── services/seller/OnboardSellerServiceTest.java
-├── services/seller/ConsultSellerServiceTest.java
-├── services/catalog/ConsultSellerProductsServiceTest.java
-├── services/inventory/ReserveInventoryServiceTest.java
-├── services/inventory/RegisterInventoryReturnServiceTest.java
-├── services/order/CheckoutCartServiceTest.java
-├── services/order/ProcessOrderPaymentServiceTest.java
-├── services/order/DispatchOrderServiceTest.java
-├── services/order/ConsultBuyerOrdersServiceTest.java
-└── support/Fakes.java     # hand-written test-double ports
+    └── config/          # JacksonConfig, GlobalExceptionHandler, ApiResponse, PropertiesConfigurationAdapter
 ```
 
 ---
@@ -169,11 +160,11 @@ conventions in [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md).
 - [x] **Phase 2** — Domain model: `DomainCatalog` value objects, entity hierarchy, exceptions.
 - [x] **Phase 3** — Domain services (per subdomain) + Operation/Audit + authorization.
 - [x] **Phase 4** — Input / Output ports (33 in, 16 out); legacy `dto` / `usecase` / `port` layer retired.
-- [ ] **Phase 5** — Persistence adapters (MySQL + MongoDB), payment simulation adapter.
+- [x] **Phase 5** — Persistence adapters (MySQL + MongoDB), payment simulation, email notification & configuration adapters.
 - [ ] **Phase 6** — REST controllers + Spring Security (JWT) + Swagger.
 - [ ] **Phase 7** — Schedulers (unpaid-order expiration) and final refinements.
 
-Phases 1–4 build green (`./mvnw clean test`).
+Phases 1–5 build green (`./mvnw clean test`).
 
 ---
 
@@ -182,7 +173,7 @@ Phases 1–4 build green (`./mvnw clean test`).
 ### Prerequisites
 - **Java 17** or higher.
 - The bundled Maven wrapper (`./mvnw`) — no local Maven install required.
-- **MySQL** with a database named `market_place_db` — only needed from **Phase 5**.
+- **MySQL** (`market_place_db`) and **MongoDB** (`market_place_audit_db`) for runtime execution.
 
 ### Build
 
@@ -190,21 +181,17 @@ Phases 1–4 build green (`./mvnw clean test`).
 ./mvnw clean compile
 ```
 
-During phases 1–4 the API endpoints are not exposed yet; the domain compiles and is
-unit-testable in isolation. `./mvnw spring-boot:run` and the Swagger UI arrive in
-Phase 6.
-
 ---
 
 ## Testing
 
-The domain is testable without a Spring context or a database:
+The domain and output adapters are unit-tested without requiring a live database:
 
 ```bash
 ./mvnw test
 ```
 
-Current coverage (plain unit tests, direct instantiation with test-double ports):
+Current coverage:
 
 | Test | What it checks |
 | ---- | -------------- |
@@ -221,14 +208,20 @@ Current coverage (plain unit tests, direct instantiation with test-double ports)
 | `ProcessOrderPaymentServiceTest` | approved digital-only order is delivered and notified; approved physical order stays `PAID`; rejection keeps the order payable again; **a buyer cannot pay another buyer's order** |
 | `DispatchOrderServiceTest` | `LOGISTICS_OPERATOR` dispatches paid physical order, records per-line `SALE_EXIT` movements and `ORDER_DISPATCH` operation; rejects missing warehouse, digital-only order, or non-operator |
 | `ConsultBuyerOrdersServiceTest` | `BUYER` lists its own orders, rejected on another buyer's; `ADMIN` / `SUPERVISOR` can list any |
+| `PersistenceMappersTest` | round-trip mapping for all 10 MySQL mappers, product polymorphism (`PhysicalProduct`/`DigitalProduct`), and finalized `DELIVERED` order rehydration |
+| `MySqlAdaptersTest` | delegation and mapping across all 10 MySQL repository adapters |
+| `AuditLogMongoAdapterTest` | document mapping and query delegation for `AuditLogMongoAdapter` |
+| `SimulatedPaymentAdapterTest` | probabilistic approval/rejection and null safety |
+| `EmailNotificationAdapterTest` | `SimpleMailMessage` delivery and graceful fallback when SMTP fails |
+| `PropertiesConfigurationAdapterTest` | externalized unpaid-order expiration configuration |
 
 ```
-Tests run: 53, Failures: 0, Errors: 0, Skipped: 1
+Tests run: 65, Failures: 0, Errors: 0, Skipped: 1
 ```
 
 > `NexusMarketApplicationTests` (`@SpringBootTest`) is **`@Disabled` until Phase 6**:
-> the domain services are `@Service` beans that depend on output ports whose adapters
-> are delivered across Phases 5–6, so the full context cannot be built yet.
+> the remaining security output adapters (`BCryptPasswordAdapter`, `JjwtAdapter`) are
+> delivered in Phase 6.
 
 ---
 
@@ -238,6 +231,7 @@ The Software Design Document lives in [`SDD/`](SDD/).
 
 - **[Software Architecture](SDD/Software%20Architecture/Software%20Architecture.md)** — layers, dependency rules, constraints.
 - **[Code Walkthrough & Role Flows](SDD/Code%20Walkthrough%20and%20Role%20Flows.md)** — how the code calls together end to end, the planned login flow, and a step-by-step journey per role (Buyer, Seller, Logistics Operator, Administrator, Supervisor), with diagrams and known gaps.
+- **[Persistence and Output Adapters](SDD/adapters/Persistence%20and%20Output%20Adapters.md)** — JPA entities, Spring Data repositories, mappers, MySQL & MongoDB adapters, payment simulation, email notifications, and configuration adapter.
 
 **Domain (`SDD/domain/`)**
 
