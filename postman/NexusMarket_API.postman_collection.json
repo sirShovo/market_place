@@ -1,0 +1,691 @@
+{
+  "info": {
+    "_postman_id": "15195e55-9bd9-45f8-8b09-3a14dbd2e153",
+    "name": "NexusMarket API - Complete Collection",
+    "description": "Complete end-to-end Postman Collection for NexusMarket API (Hexagonal Architecture + DDD in Spring Boot 4.1.0). Covers all 10 controllers and 29 endpoints across Auth, Users, Sellers, Warehouses, Products & Catalog, Inventory, Buyers, Cart, Orders, and Audit, with automatic JWT variable chaining and pm.test assertions.",
+    "schema": "https://schema.postman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01. Auth (/api/auth)",
+      "description": "Authentication endpoints (/api/auth). Run 1.1 first after starting the app to obtain adminToken, and run 1.2-1.5 after registering/onboarding the respective users.",
+      "item": [
+        {
+          "name": "1.1 Login as Admin (Seeded Bootstrap)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.token) { pm.environment.set(\"adminToken\", json.data.token); pm.collectionVariables.set(\"adminToken\", json.data.token); }",
+                  "pm.test(\"JWT token returned\", function () { pm.expect(json.data.token).to.be.a(\"string\").and.not.empty; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login" }
+          }
+        },
+        {
+          "name": "1.2 Login as Seller",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.token) { pm.environment.set(\"sellerToken\", json.data.token); pm.collectionVariables.set(\"sellerToken\", json.data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{sellerUsername}}\",\n  \"password\": \"{{sellerPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login" }
+          }
+        },
+        {
+          "name": "1.3 Login as Logistics Operator",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.token) { pm.environment.set(\"operatorToken\", json.data.token); pm.collectionVariables.set(\"operatorToken\", json.data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{operatorUsername}}\",\n  \"password\": \"{{operatorPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login" }
+          }
+        },
+        {
+          "name": "1.4 Login as Supervisor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.token) { pm.environment.set(\"supervisorToken\", json.data.token); pm.collectionVariables.set(\"supervisorToken\", json.data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{supervisorUsername}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login" }
+          }
+        },
+        {
+          "name": "1.5 Login as Buyer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.token) { pm.environment.set(\"buyerToken\", json.data.token); pm.collectionVariables.set(\"buyerToken\", json.data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{buyerUsername}}\",\n  \"password\": \"{{buyerPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login" }
+          }
+        },
+        {
+          "name": "1.6 Login - Invalid Credentials (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 401 Unauthorized\", function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"wrong-password\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Users (/api/users)",
+      "description": "System user management (/api/users). Requires ADMIN for mutations and ADMIN or SUPERVISOR for queries.",
+      "item": [
+        {
+          "name": "2.1 Register Logistics Operator (ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"{{operatorIdentification}}\",\n  \"fullName\": \"Carlos Operador Logistico\",\n  \"email\": \"logop@nexusmarket.com\",\n  \"phoneNumber\": \"3001112233\",\n  \"address\": \"Zona Franca Bodega 4\",\n  \"role\": \"LOGISTICS_OPERATOR\",\n  \"username\": \"{{operatorUsername}}\",\n  \"password\": \"{{operatorPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/users" }
+          }
+        },
+        {
+          "name": "2.2 Register Supervisor (ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"{{supervisorIdentification}}\",\n  \"fullName\": \"Laura Supervisora\",\n  \"email\": \"supervisor@nexusmarket.com\",\n  \"phoneNumber\": \"3004445566\",\n  \"address\": \"Torre Central Piso 8\",\n  \"role\": \"SUPERVISOR\",\n  \"username\": \"{{supervisorUsername}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/users" }
+          }
+        },
+        {
+          "name": "2.3 Consult User by Username (ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/users/{{operatorUsername}}" }
+          }
+        },
+        {
+          "name": "2.4 Change User Status (ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/users/{{operatorUsername}}/status" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Sellers (/api/sellers)",
+      "description": "Seller onboarding and portfolio endpoints (/api/sellers). Sellers cannot self-register; they must be onboarded by an ADMIN along with their first warehouse.",
+      "item": [
+        {
+          "name": "3.1 Onboard Seller + First Warehouse (ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"{{sellerIdentification}}\",\n  \"fullName\": \"Tech Seller Colombia SAS\",\n  \"email\": \"seller@nexusmarket.com\",\n  \"phoneNumber\": \"3109998877\",\n  \"address\": \"Parque Industrial Norte\",\n  \"username\": \"{{sellerUsername}}\",\n  \"password\": \"{{sellerPassword}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"warehouseName\": \"Bodega Principal TechSeller Bogota\",\n  \"warehouseLocation\": \"Bogota D.C.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/sellers/onboard" }
+          }
+        },
+        {
+          "name": "3.2 Consult Seller Profile (SELLER / ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/sellers/{{sellerIdentification}}" }
+          }
+        },
+        {
+          "name": "3.3 Consult Seller Products Portfolio (SELLER / ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/sellers/{{sellerIdentification}}/products" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Warehouses (/api/warehouses)",
+      "description": "Warehouse registration and consultation (/api/warehouses).",
+      "item": [
+        {
+          "name": "4.1 Register Marketplace Warehouse (ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{marketplaceWarehouseId}}\",\n  \"name\": \"Centro de Distribucion Central NexusMarket\",\n  \"type\": \"MARKETPLACE\",\n  \"ownerIdentification\": null,\n  \"location\": \"Medellin\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/warehouses" }
+          }
+        },
+        {
+          "name": "4.2 Register Additional Seller Warehouse (ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"WH-SELLER-02\",\n  \"name\": \"Bodega Secundaria TechSeller Cali\",\n  \"type\": \"SELLER\",\n  \"ownerIdentification\": \"{{sellerIdentification}}\",\n  \"location\": \"Cali\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/warehouses" }
+          }
+        },
+        {
+          "name": "4.3 Consult Warehouse by Identifier (ADMIN / SUPERVISOR / LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/warehouses/{{sellerWarehouseId}}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Products & Catalog (/api/products)",
+      "description": "Product catalog endpoints (/api/products). Catalog consultation is public; publishing requires SELLER; updating/changing status requires owning SELLER or ADMIN.",
+      "item": [
+        {
+          "name": "5.1 Publish Physical Product (SELLER)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{physicalProductId}}\",\n  \"name\": \"Pro Workstation Laptop 16\",\n  \"description\": \"High-performance developer laptop\",\n  \"type\": \"PHYSICAL\",\n  \"price\": 1500.00,\n  \"sellerIdentification\": \"{{sellerIdentification}}\",\n  \"categoryName\": \"Hardware\",\n  \"variants\": [\n    {\n      \"attributeName\": \"RAM\",\n      \"value\": \"32GB\"\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/products" }
+          }
+        },
+        {
+          "name": "5.2 Publish Digital Product (SELLER - Auto-resolves sellerIdentification from JWT)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{digitalProductId}}\",\n  \"name\": \"Enterprise Antivirus 1-Year Digital Key\",\n  \"description\": \"Instant digital license delivery\",\n  \"type\": \"DIGITAL\",\n  \"price\": 50.00,\n  \"categoryName\": \"Software\",\n  \"variants\": []\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/products" }
+          }
+        },
+        {
+          "name": "5.3 Consult Published Catalog (Public - No Auth)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/products/catalog" }
+          }
+        },
+        {
+          "name": "5.4 Update Product Details (SELLER / ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Pro Workstation Laptop 16 (2026 Edition)\",\n  \"description\": \"Updated high-performance developer laptop\",\n  \"price\": 1500.00,\n  \"categoryName\": \"Hardware\",\n  \"variants\": [\n    {\n      \"attributeName\": \"RAM\",\n      \"value\": \"32GB\"\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/products/{{physicalProductId}}" }
+          }
+        },
+        {
+          "name": "5.5 Change Product Status (SELLER / ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"PUBLISHED\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/products/{{physicalProductId}}/status" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Inventory (/api/inventory)",
+      "description": "Inventory management endpoints (/api/inventory). Shared by SELLER and LOGISTICS_OPERATOR; read access also granted to ADMIN and SUPERVISOR.",
+      "item": [
+        {
+          "name": "6.1 Register Inventory Entry (SELLER / LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 20,\n  \"condition\": \"AVAILABLE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/inventory/entries" }
+          }
+        },
+        {
+          "name": "6.2 Consult Inventory by Product (SELLER / LOGISTICS_OPERATOR / ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/inventory/product/{{physicalProductId}}" }
+          }
+        },
+        {
+          "name": "6.3 Reserve Inventory Manually (SELLER / LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/inventory/reservations" }
+          }
+        },
+        {
+          "name": "6.4 Release Inventory Reservation (SELLER / LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/inventory/releases" }
+          }
+        },
+        {
+          "name": "6.5 Adjust Inventory Stock (SELLER / LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 18,\n  \"condition\": \"AVAILABLE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/inventory/adjustments" }
+          }
+        },
+        {
+          "name": "6.6 Register Inventory Return (SELLER / LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/inventory/returns" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Buyers (/api/buyers)",
+      "description": "Buyer self-registration and profile management (/api/buyers).",
+      "item": [
+        {
+          "name": "7.1 Self-Register Buyer (Public - No Auth)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"{{buyerIdentification}}\",\n  \"fullName\": \"Maria Compradora\",\n  \"email\": \"maria@nexusmarket.com\",\n  \"phoneNumber\": \"3157776655\",\n  \"address\": \"Carrera 43A # 1-50\",\n  \"mainAddress\": \"Carrera 43A # 1-50 Apto 502\",\n  \"additionalAddresses\": [\n    \"Calle 10 # 20-30 Oficina 301\"\n  ],\n  \"username\": \"{{buyerUsername}}\",\n  \"password\": \"{{buyerPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/buyers/register" }
+          }
+        },
+        {
+          "name": "7.2 Consult Buyer Profile (BUYER Self / ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}" }
+          }
+        },
+        {
+          "name": "7.3 Update Buyer Profile (BUYER Self)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Maria Fernanda Compradora\",\n  \"email\": \"maria@nexusmarket.com\",\n  \"phoneNumber\": \"3157776699\",\n  \"address\": \"Carrera 43A # 1-50\",\n  \"mainAddress\": \"Carrera 43A # 1-50 Apto 502, Medellin\",\n  \"additionalAddresses\": [\n    \"Calle 10 # 20-30 Oficina 301\"\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}" }
+          }
+        },
+        {
+          "name": "7.4 Change Buyer Commercial Status (ADMIN)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}/status" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08. Cart (/api/cart)",
+      "description": "Shopping cart operations (/api/cart). The authenticated BUYER is automatically resolved from the JWT token.",
+      "item": [
+        {
+          "name": "8.1 Add Physical Product to Cart (BUYER)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"variantAttributeName\": \"RAM\",\n  \"variantValue\": \"32GB\",\n  \"quantity\": 2\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/cart/items" }
+          }
+        },
+        {
+          "name": "8.2 Add Digital Product to Cart (BUYER)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{digitalProductId}}\",\n  \"variantAttributeName\": null,\n  \"variantValue\": null,\n  \"quantity\": 1\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/cart/items" }
+          }
+        },
+        {
+          "name": "8.3 Consult Active Cart (BUYER)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/cart" }
+          }
+        },
+        {
+          "name": "8.4 Remove Item from Cart by Body (BUYER)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productIdentifier\": \"{{digitalProductId}}\",\n  \"variantAttributeName\": null,\n  \"variantValue\": null\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/cart/items" }
+          }
+        },
+        {
+          "name": "8.5 Remove Item from Cart by Path (BUYER)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/cart/items/{{digitalProductId}}" }
+          }
+        },
+        {
+          "name": "8.6 Clear Active Cart (BUYER)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/cart" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09. Orders (/api/orders)",
+      "description": "Order checkout, payment processing, logistics dispatch, delivery confirmation, and order history (/api/orders).",
+      "item": [
+        {
+          "name": "9.1 Checkout Active Cart -> Create Order (BUYER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.data && json.data.identifier) { pm.environment.set(\"orderIdentifier\", json.data.identifier); pm.collectionVariables.set(\"orderIdentifier\", json.data.identifier); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/orders/checkout" }
+          }
+        },
+        {
+          "name": "9.2 Pay Order (BUYER - Retry if simulated payment rejects)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/pay" }
+          }
+        },
+        {
+          "name": "9.3 Dispatch Physical Order (LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/dispatch" }
+          }
+        },
+        {
+          "name": "9.4 Confirm Order Delivery (LOGISTICS_OPERATOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/deliver" }
+          }
+        },
+        {
+          "name": "9.5 Consult Order by Identifier (BUYER Owner / LOGISTICS_OPERATOR / ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}" }
+          }
+        },
+        {
+          "name": "9.6 Consult Buyer Order History (BUYER Owner / ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/orders/buyer/{{buyerIdentification}}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Audit (/api/audit)",
+      "description": "MongoDB Audit Log consultation endpoints (/api/audit). Restricted to ADMIN and SUPERVISOR roles.",
+      "item": [
+        {
+          "name": "10.1 Consult Order Audit History (ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/audit/Order/{{orderIdentifier}}" }
+          }
+        },
+        {
+          "name": "10.2 Consult Seller Audit History (ADMIN / SUPERVISOR)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/audit/Seller/{{sellerIdentification}}" }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "adminUsername", "value": "admin" },
+    { "key": "adminPassword", "value": "admin123" },
+    { "key": "adminToken", "value": "" },
+    { "key": "sellerIdentification", "value": "SELLER-001" },
+    { "key": "sellerUsername", "value": "techseller" },
+    { "key": "sellerPassword", "value": "seller123" },
+    { "key": "sellerToken", "value": "" },
+    { "key": "operatorIdentification", "value": "OP-001" },
+    { "key": "operatorUsername", "value": "logop" },
+    { "key": "operatorPassword", "value": "op123" },
+    { "key": "operatorToken", "value": "" },
+    { "key": "supervisorIdentification", "value": "SUP-001" },
+    { "key": "supervisorUsername", "value": "supervisor1" },
+    { "key": "supervisorPassword", "value": "sup123" },
+    { "key": "supervisorToken", "value": "" },
+    { "key": "buyerIdentification", "value": "BUYER-001" },
+    { "key": "buyerUsername", "value": "maria" },
+    { "key": "buyerPassword", "value": "maria123" },
+    { "key": "buyerToken", "value": "" },
+    { "key": "sellerWarehouseId", "value": "WH-SELLER-01" },
+    { "key": "marketplaceWarehouseId", "value": "WH-MKT-01" },
+    { "key": "physicalProductId", "value": "PROD-LAPTOP-01" },
+    { "key": "digitalProductId", "value": "PROD-LICENSE-01" },
+    { "key": "orderIdentifier", "value": "ORD-001" }
+  ]
+}

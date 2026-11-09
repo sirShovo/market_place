@@ -19,9 +19,10 @@ the business rules are fully isolated from frameworks, databases and transport.
 4. [Architecture & Design](#architecture--design)
 5. [Project Structure](#project-structure)
 6. [Current Progress](#current-progress)
-7. [Getting Started](#getting-started)
-8. [Testing](#testing)
-9. [Documentation (SDD)](#documentation-sdd)
+7. [Getting Started (Databases, Environment & Run)](#getting-started-databases-environment--run)
+8. [Postman Collection & Environment](#postman-collection--environment)
+9. [Testing](#testing)
+10. [Documentation (SDD)](#documentation-sdd)
 
 ---
 
@@ -143,7 +144,7 @@ src/main/java/application/
 │       └── out/         # repository + service ports (16)
 ├── adapters/
 │   ├── in/
-│   │   ├── rest/        # controllers (10), requests (12), responses (13), mappers (9)
+│   │   ├── rest/        # controllers (10), requests (13), responses (13), mappers (9)
 │   │   └── scheduler/   # OrderExpirationScheduler
 │   └── out/
 │       ├── persistence/
@@ -176,22 +177,43 @@ All 7 phases build green (`./mvnw clean test`).
 
 ---
 
-## Getting Started
+## Getting Started (Databases, Environment & Run)
 
 ### Prerequisites
 - **Java 17** or higher.
-- The bundled Maven wrapper (`./mvnw`) — no local Maven install required.
-- **MySQL** (`market_place_db`) and **MongoDB** (`market_place_audit_db`) for runtime execution.
+- The bundled Maven wrapper (`./mvnw` / `.\mvnw.cmd`) — no local Maven install required.
+- **MySQL 8+** (`market_place_db` on port `3306`) and **MongoDB 7+** (`market_place_audit_db` on port `27017`), either installed locally or started via Docker Compose.
 
-### Build & Run
+### 1. Environment Variables
+Copy [`.env.example`](.env.example) to `.env` (or export the variables in your shell/IDE). All variables have sensible defaults in [`src/main/resources/application.properties`](src/main/resources/application.properties).
 
+### 2. Start Databases (Docker Compose or Local Services)
+Using Docker Compose (recommended):
+```bash
+docker compose up -d
+```
+This starts:
+- `nexusmarket-mysql` (`localhost:3306`, database `market_place_db`, user `root`, password `0000`)
+- `nexusmarket-mongodb` (`localhost:27017`, database `market_place_audit_db`)
+
+### 3. Build & Run the Application
 ```bash
 ./mvnw clean compile
 ./mvnw spring-boot:run
 ```
 
-On startup, `DataSeeder` automatically creates the initial `ADMIN` account (`admin` / `admin123`, configurable via `app.seed.admin.*` in `application.properties`) if it does not already exist.
+On startup, `DataSeeder` automatically creates the initial `ADMIN` account (`admin` / `admin123`, configurable via `SEED_ADMIN_*` environment variables) if it does not already exist.
 Swagger UI is available at `http://localhost:8080/swagger-ui.html`.
+
+---
+
+## Postman Collection & Environment
+
+A complete Postman Collection (covering all 10 controllers and 29 endpoints with automatic JWT token chaining and `pm.test` assertions) and its Environment file are located in [`postman/`](postman/):
+- Collection: [`postman/NexusMarket_API.postman_collection.json`](postman/NexusMarket_API.postman_collection.json)
+- Environment: [`postman/NexusMarket_Local.postman_environment.json`](postman/NexusMarket_Local.postman_environment.json)
+
+Both are also synced to the connected Postman Workspace (`My Workspace`).
 
 ---
 
@@ -204,7 +226,7 @@ The domain, persistence adapters, security infrastructure, REST controllers, sch
 ```
 
 ```
-Tests run: 80, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 84, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 ---
