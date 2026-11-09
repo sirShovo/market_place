@@ -38,7 +38,7 @@ Order / OrderItem
 Operation
 AuditLog
 
-AuditableEntity (interface)  ← implemented by User, Seller, Warehouse, Product,
+AuditableEntity (interface)  ← implemented by User, Buyer, Seller, Warehouse, Product,
                                InventoryItem, Cart, Order
 ```
 
@@ -79,7 +79,7 @@ Cart
 
 Order
   ├── buyer ───────────────> Buyer
-  └── items ───────────────> List<OrderItem> ─> (product, variant?, quantity, unitPrice)
+  └── items ───────────────> List<OrderItem> ─> (product, variant?, quantity, unitPrice, warehouse?)
 
 Operation
   ├── performedBy ─────────> User
@@ -363,7 +363,7 @@ DISPATCHED
 | Entity | Operations |
 | ------ | ---------- |
 | `User` | `USER_REGISTRATION`, `USER_STATUS_CHANGE` |
-| `Buyer` | `USER_REGISTRATION` |
+| `Buyer` | `USER_REGISTRATION`, `USER_STATUS_CHANGE` |
 | `Seller` | `SELLER_ONBOARDING` |
 | `Warehouse` | `WAREHOUSE_REGISTRATION` |
 | `Product` | `PRODUCT_PUBLICATION`, `PRODUCT_STATUS_CHANGE` |

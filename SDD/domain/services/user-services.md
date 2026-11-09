@@ -110,9 +110,11 @@ User    (newUser — carries username, password, role, identification, email)
 
 ### Domain Validations
 
-* `UserRepositoryPort.existsByIdentification(newUser)` must be `false`, otherwise
-  `DuplicateUserException`.
-* `UserRepositoryPort.existsByEmail(newUser)` must be `false`, otherwise
+* `newUser.username` and `newUser.password` must be present and non-blank (`DomainException`).
+* `ValidatePlatformUniquenessService.execute(newUser.getIdentification(), newUser.getEmail())`
+  must pass — document and e-mail are unique **across the whole platform**
+  (`User`, `Buyer` and `Seller`), otherwise `DuplicateUserException` (spec §11).
+* `UserRepositoryPort.findByUsername(newUser)` must be empty, otherwise
   `DuplicateUserException`.
 
 ### Effect / State Change
@@ -124,8 +126,8 @@ User    (newUser — carries username, password, role, identification, email)
 ### Persistence
 
 ```text
-UserRepositoryPort.existsByIdentification(newUser)
-UserRepositoryPort.existsByEmail(newUser)
+ValidatePlatformUniquenessService.execute(...)   (UserRepositoryPort + BuyerRepositoryPort + SellerRepositoryPort)
+UserRepositoryPort.findByUsername(newUser)
 UserRepositoryPort.save(newUser)
 ```
 
@@ -138,7 +140,7 @@ newUser
   │
   ▼
 RegisterUserService
-  ├── uniqueness checks
+  ├── validate credentials + ValidatePlatformUniquenessService + findByUsername
   ├── encrypt password
   ├── UserRepositoryPort.save
   └── Operation (USER_REGISTRATION)
@@ -232,8 +234,8 @@ interface UserRepositoryPort {
     User save(User user);
     Optional<User> findByUsername(User user);
     Optional<User> findByIdentification(User user);
-    boolean existsByIdentification(User user);
-    boolean existsByEmail(User user);
+    boolean existsByIdentification(DocumentId identification);
+    boolean existsByEmail(Email email);
     void update(User user);
 }
 
@@ -275,7 +277,7 @@ RegisterUserUseCase
 RegisterUserService
      ├── ValidateUserStatusService
      ├── ValidateRoleAuthorizationService (ADMIN)
-     ├── UserRepositoryPort.existsByIdentification / existsByEmail
+     ├── validate credentials + ValidatePlatformUniquenessService + findByUsername
      ├── PasswordServicePort.encrypt
      ├── UserRepositoryPort.save
      └── RegisterOperationAndAuditService (USER_REGISTRATION)

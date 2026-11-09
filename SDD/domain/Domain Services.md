@@ -87,14 +87,14 @@ can move an order through an illegal path.
 | --------- | -------- |
 | **identity** | ValidatePlatformUniqueness *(internal; checks User+Buyer+Seller together, spec §11)* |
 | **user** | RegisterUser, ChangeUserStatus, ConsultUser |
-| **buyer** | RegisterBuyer *(self-service; also creates the buyer's login `User`)*, UpdateBuyer, ConsultBuyer |
-| **seller** | OnboardSeller *(admin: seller + first warehouse + the seller's login `User`)*, ConsultSeller |
+| **buyer** | RegisterBuyer *(self-service; also creates the buyer's login `User`)*, UpdateBuyer, ChangeBuyerCommercialStatus, ConsultBuyer |
+| **seller** | OnboardSeller *(admin: seller + first warehouse + the seller's login `User`)*, ConsultSeller *(allows self-service by the owning `SELLER` as well as `ADMIN`/`SUPERVISOR`)* |
 | **warehouse** | RegisterWarehouse, ConsultWarehouse |
-| **catalog** | PublishProduct, UpdateProduct, ChangeProductStatus, ConsultCatalog |
-| **inventory** | RegisterInventoryEntry, ReserveInventory *(spec §11 validations)*, ReserveStockForOrderItem *(internal; used by checkout)*, ReleaseReservation, AdjustInventory, ConsultInventory |
+| **catalog** | PublishProduct, UpdateProduct, ChangeProductStatus, ConsultCatalog, ConsultSellerProducts |
+| **inventory** | RegisterInventoryEntry, ReserveInventory *(spec §11 validations)*, ReserveStockForOrderItem *(internal; used by checkout)*, ReleaseReservation, AdjustInventory, RegisterInventoryReturn, ConsultInventory |
 | **cart** | AddCartItem, RemoveCartItem, ClearCart, ConsultCart |
-| **order** | CheckoutCart *(also reserves inventory for physical lines)*, ProcessOrderPayment *(PaymentGatewayPort, retry on rejection, validates order ownership)*, DispatchOrder, ConfirmDelivery, ConsultOrder |
-| **authorization** | ValidateRoleAuthorization, ValidateUserStatus, ValidateBuyerOwnership, ValidateProductOwnership, ValidateOrderAccess, ValidateBuyerOwnsOrder, ValidateBuyerCanPurchase |
+| **order** | CheckoutCart *(also reserves inventory for physical lines)*, ProcessOrderPayment *(PaymentGatewayPort, retry on rejection, validates order ownership)*, DispatchOrder *(also logs per-line `SALE_EXIT` movements)*, ConfirmDelivery, ConsultOrder, ConsultBuyerOrders |
+| **authorization** | ValidateRoleAuthorization, ValidateUserStatus, ValidateBuyerOwnership, ValidateSellerOwnership, ValidateProductOwnership, ValidateOrderAccess, ValidateBuyerOwnsOrder, ValidateBuyerCanPurchase |
 | **operation** | RegisterOperation, RegisterAuditLog, RegisterOperationAndAudit, ConsultAuditLog |
 
 The **identity** subdomain has no per-subdomain doc of its own (it is a single,
@@ -107,6 +107,7 @@ consume it.
 ## Consult / read services
 
 `ConsultUser`, `ConsultBuyer`, `ConsultSeller`, `ConsultWarehouse`,
-`ConsultCatalog`, `ConsultInventory`, `ConsultCart`, `ConsultOrder` and
-`ConsultAuditLog` are read-only: they validate access where applicable and return
-Domain Models, but they do **not** generate an `Operation` or an `AuditLog` record.
+`ConsultCatalog`, `ConsultSellerProducts`, `ConsultInventory`, `ConsultCart`,
+`ConsultOrder`, `ConsultBuyerOrders` and `ConsultAuditLog` are read-only: they validate
+access where applicable and return Domain Models, but they do **not** generate an
+`Operation` or an `AuditLog` record.

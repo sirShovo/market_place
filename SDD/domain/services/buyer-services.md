@@ -4,7 +4,8 @@
 
 This document defines the services belonging to the **Buyer Management** subdomain of
 NexusMarket (spec **Domain 2**). These services own the commercial identity of a
-`Buyer`: self-service registration, data maintenance and consultation.
+`Buyer`: self-service registration, data maintenance, commercial-status administration
+and consultation.
 
 A fundamental restriction governs the whole subdomain: **a buyer never manages
 information belonging to another buyer, nor inventory** (spec Domain 2, RG03).
@@ -185,7 +186,54 @@ Not audited.
 
 ---
 
-## 3. Consult Buyer
+## 3. Change Buyer Commercial Status
+
+### Description
+
+An `ADMIN` activates or suspends a buyer's ability to operate commercially
+(`BuyerCommercialStatus.ACTIVE` / `SUSPENDED`, spec Domain 2). The desired status
+travels on the supplied `target` model.
+
+Input Port: `ChangeBuyerCommercialStatusUseCase` —
+`Buyer changeCommercialStatus(User requester, Buyer target)`.
+
+### Input
+
+```text
+User    (requester)
+Buyer   (target — carries identification and the desired commercialStatus)
+```
+
+### Authorization
+
+* `ValidateUserStatusService` — requester is `ACTIVE`.
+* `ValidateRoleAuthorizationService` — requester role is `ADMIN`.
+
+### Domain Validations
+
+* `target.commercialStatus` must be provided (`DomainException`).
+* The target buyer must exist (`BuyerRepositoryPort.findByIdentification`), otherwise
+  `EntityNotFoundException`.
+
+### Effect / State Change
+
+* The stored buyer's `commercialStatus` is set to `target.commercialStatus`.
+
+### Persistence
+
+```text
+BuyerRepositoryPort.findByIdentification(target)
+BuyerRepositoryPort.update(storedBuyer)
+```
+
+### Operation and Audit
+
+Operation type: `USER_STATUS_CHANGE`, severity `WARNING`, details
+`{ buyer, previousStatus, newStatus }`.
+
+---
+
+## 4. Consult Buyer
 
 ### Description
 
@@ -240,7 +288,8 @@ See [Output Ports](../Output%20Ports.md) for the full contracts.
 ## Input Ports
 
 ```java
-interface RegisterBuyerUseCase { Buyer register(Buyer buyer, User account); }
-interface UpdateBuyerUseCase   { Buyer update(User requester, Buyer buyer); }
-interface ConsultBuyerUseCase  { Buyer consult(User requester, Buyer probe); }
+interface RegisterBuyerUseCase               { Buyer register(Buyer buyer, User account); }
+interface UpdateBuyerUseCase                 { Buyer update(User requester, Buyer buyer); }
+interface ChangeBuyerCommercialStatusUseCase { Buyer changeCommercialStatus(User requester, Buyer target); }
+interface ConsultBuyerUseCase                { Buyer consult(User requester, Buyer probe); }
 ```

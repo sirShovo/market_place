@@ -67,11 +67,27 @@ void execute(User requester, Buyer target)
 * `BUYER` → passes only if `requester.identification` equals `target.identification`.
 * Any other case → `UnauthorizedOperationException`.
 
-Used by `UpdateBuyerService` and `ConsultBuyerService` (spec Domain 2, RG03).
+Used by `UpdateBuyerService`, `ConsultBuyerService` and `ConsultBuyerOrdersService`
+(spec Domain 2, RG03).
 
 ---
 
-## 4. ValidateProductOwnershipService
+## 4. ValidateSellerOwnershipService
+
+```java
+void execute(User requester, Seller target)
+```
+
+* `ADMIN` / `SUPERVISOR` → passes for any seller.
+* `SELLER` → passes only if `requester.identification` equals `target.identification`.
+* Any other case → `UnauthorizedOperationException`.
+
+Used by `ConsultSellerService` and `ConsultSellerProductsService` (spec Domain 3,
+RG03).
+
+---
+
+## 5. ValidateProductOwnershipService
 
 ```java
 void execute(User requester, Product product)
@@ -87,7 +103,7 @@ Used by `UpdateProductService` and `ChangeProductStatusService`, evaluated again
 
 ---
 
-## 5. ValidateOrderAccessService
+## 6. ValidateOrderAccessService
 
 ```java
 void execute(User requester, Order order)
@@ -102,7 +118,7 @@ Used by `ConsultOrderService` (spec RG03).
 
 ---
 
-## 6. ValidateBuyerOwnsOrderService
+## 7. ValidateBuyerOwnsOrderService
 
 ```java
 void execute(Buyer buyer, Order order)
@@ -118,7 +134,7 @@ Used by `ProcessOrderPaymentService`.
 
 ---
 
-## 7. ValidateBuyerCanPurchaseService
+## 8. ValidateBuyerCanPurchaseService
 
 ```java
 void execute(Buyer buyer)

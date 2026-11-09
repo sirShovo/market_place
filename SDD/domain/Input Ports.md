@@ -53,9 +53,10 @@ interface ConsultUserUseCase      { User consult(User requester, User probe); }
 ### Buyer
 
 ```java
-interface RegisterBuyerUseCase { Buyer register(Buyer buyer, User account); }  // self-service; account = login credentials
-interface UpdateBuyerUseCase   { Buyer update(User requester, Buyer buyer); }
-interface ConsultBuyerUseCase  { Buyer consult(User requester, Buyer probe); }
+interface RegisterBuyerUseCase               { Buyer register(Buyer buyer, User account); }  // self-service; account = login credentials
+interface UpdateBuyerUseCase                 { Buyer update(User requester, Buyer buyer); }
+interface ChangeBuyerCommercialStatusUseCase { Buyer changeCommercialStatus(User requester, Buyer target); }
+interface ConsultBuyerUseCase                { Buyer consult(User requester, Buyer probe); }
 ```
 
 ### Seller
@@ -75,20 +76,22 @@ interface ConsultWarehouseUseCase  { Warehouse consult(User requester, Warehouse
 ### Catalog
 
 ```java
-interface PublishProductUseCase      { Product publish(User requester, Product product); }
-interface UpdateProductUseCase       { Product update(User requester, Product product); }
-interface ChangeProductStatusUseCase { Product changeStatus(User requester, Product product); }
-interface ConsultCatalogUseCase      { List<Product> consultPublished(); }   // public
+interface PublishProductUseCase        { Product publish(User requester, Product product); }
+interface UpdateProductUseCase         { Product update(User requester, Product product); }
+interface ChangeProductStatusUseCase   { Product changeStatus(User requester, Product product); }
+interface ConsultCatalogUseCase        { List<Product> consultPublished(); }   // public
+interface ConsultSellerProductsUseCase { List<Product> consultBySeller(User requester, Seller seller); }
 ```
 
 ### Inventory
 
 ```java
-interface RegisterInventoryEntryUseCase { InventoryItem registerEntry(User requester, InventoryItem probe, int quantity); }
-interface ReserveInventoryUseCase       { InventoryMovement reserve(User requester, InventoryItem probe, int quantity); }
-interface ReleaseReservationUseCase     { InventoryMovement release(User requester, InventoryItem probe, int quantity); }
-interface AdjustInventoryUseCase        { InventoryMovement adjust(User requester, InventoryItem probe, int newQuantity); }
-interface ConsultInventoryUseCase       { List<InventoryItem> consult(User requester, Product product); }
+interface RegisterInventoryEntryUseCase  { InventoryItem registerEntry(User requester, InventoryItem probe, int quantity); }
+interface ReserveInventoryUseCase        { InventoryMovement reserve(User requester, InventoryItem probe, int quantity); }
+interface ReleaseReservationUseCase      { InventoryMovement release(User requester, InventoryItem probe, int quantity); }
+interface AdjustInventoryUseCase         { InventoryMovement adjust(User requester, InventoryItem probe, int newQuantity); }
+interface RegisterInventoryReturnUseCase { InventoryMovement registerReturn(User requester, InventoryItem probe, int quantity); }
+interface ConsultInventoryUseCase        { List<InventoryItem> consult(User requester, Product product); }
 ```
 
 ### Cart
@@ -108,6 +111,7 @@ interface ProcessOrderPaymentUseCase { Order pay(Buyer buyer, Order order); }
 interface DispatchOrderUseCase       { Order dispatch(User requester, Order order); }
 interface ConfirmDeliveryUseCase     { Order confirmDelivery(User requester, Order order); }
 interface ConsultOrderUseCase        { Order consult(User requester, Order probe); }
+interface ConsultBuyerOrdersUseCase  { List<Order> consultByBuyer(User requester, Buyer buyer); }
 ```
 
 ### Operation & Audit
