@@ -17,35 +17,26 @@ Read this together with:
 
 ---
 
-## 2. What Exists Today vs. What's Planned
+## 2. Implementation Status (Phases 1–7 Complete)
 
-**Important:** nothing in this repository runs end to end yet, and **there is no
-login**. Phases 1–4 (domain modeling, services, ports) are complete; phases 5–7
-(persistence, REST, security, schedulers) are not started.
+All 7 phases of the implementation plan are complete and tested:
 
 | Layer | Status | Where |
 | ----- | ------ | ----- |
-| Domain models, Value Objects, exceptions | Built | `application.domain.{models,valueobjects,enums,exceptions}` |
-| Domain services (business logic) | Built, unit-tested | `application.domain.services.*` (46 classes) |
-| Input Ports (use-case contracts) | Built | `application.domain.ports.in` (33 interfaces) |
-| Output Ports (contracts to the outside) | Built, **zero implementations** | `application.domain.ports.out` (16 interfaces) |
-| Persistence adapters (MySQL / MongoDB) | Not built | Phase 5 |
-| `PaymentGatewayPort` adapter (payment simulation) | Not built | Phase 5 |
-| `NotificationPort` adapter (e-mail/SMS/push) | Not built | Phase 5 |
-| `PasswordServicePort` / `JwtServicePort` adapters | Not built | Phase 6 |
-| **Login / authentication (`LoginService`, `SecurityConfig`, JWT filter)** | **Not built at all** | Phase 6 |
-| REST controllers | Not built | Phase 6 |
-| Schedulers, data seeder | Not built | Phase 7 |
+| Domain models, Value Objects, exceptions | Built & tested | `application.domain.{models,valueobjects,enums,exceptions}` |
+| Domain services (business logic) | Built & tested | `application.domain.services.*` (48 classes) |
+| Input Ports (use-case contracts) | Built | `application.domain.ports.in` (35 interfaces) |
+| Output Ports (contracts to the outside) | Built | `application.domain.ports.out` (16 interfaces) |
+| Persistence adapters (MySQL / MongoDB) | Built & tested | `application.adapters.out.persistence.{mysql,mongodb}` |
+| `PaymentGatewayPort` adapter (payment simulation) | Built & tested | `application.adapters.out.payment.SimulatedPaymentAdapter` |
+| `NotificationPort` adapter (log simulation) | Built & tested | `application.adapters.out.notification.EmailNotificationAdapter` |
+| `BusinessConfigurationPort` adapter | Built & tested | `application.adapters.out.config.PropertiesConfigurationAdapter` |
+| `PasswordServicePort` / `JwtServicePort` adapters | Built & tested | `application.infrastructure.security.{BCryptPasswordAdapter,JjwtAdapter}` |
+| Login / authentication (`LoginService`, `SecurityConfig`, JWT filter) | Built & tested | `application.domain.services.user.LoginService`, `application.infrastructure.security.*` |
+| REST controllers, DTOs, mappers, OpenAPI | Built & tested | `application.adapters.in.rest.*`, `application.infrastructure.config.OpenApiConfig` |
+| Schedulers & bootstrap data seeder | Built & tested | `application.adapters.in.scheduler.OrderExpirationScheduler`, `application.infrastructure.config.DataSeeder` |
 
-Because there is no persistence and no security, **you cannot currently run
-`./mvnw spring-boot:run` and use the API**. What you *can* do is run
-`./mvnw test`: every domain service is unit-testable in isolation by constructing it
-directly with hand-written fake ports (see `application.domain.support.Fakes` and the
-test classes under `src/test/java/application/domain/`).
-
-Every flow described below for phases 5–7 is therefore the **intended design**, traced
-from the ports and services that already exist — not something you can click through
-today.
+You can run `./mvnw test` without external infrastructure, or run `./mvnw spring-boot:run` against local MySQL and MongoDB instances.
 
 ---
 
@@ -561,10 +552,7 @@ order through an illegal path or mutate a `DELIVERED` order.
 
 ---
 
-## 8. Known Gaps
-
-Things a reader should know are **intentionally deferred to Phases 5–7**, so they
-are not mistaken for bugs.
+## 8. Resolved Gaps Across Phases 1–7
 
 **Resolved in the domain layer (Phases 1–4):**
 
@@ -589,21 +577,12 @@ are not mistaken for bugs.
   `ConsultBuyerOrdersService` expose seller product portfolios and buyer order
   histories.
 
-**Deferred to Phases 5–7:**
+**Resolved in the adapters & infrastructure layers (Phases 5–7):**
 
-1. **Zero output-port implementations (Phase 5).** All 16 `ports/out` interfaces
-   (persistence, payment, notification, password, JWT, configuration) have no adapter
-   yet. Nothing persists to a database; everything is proven via unit tests with
-   hand-written fakes (`application.domain.support.Fakes`).
-2. **Checkout's inventory reservation isn't transactional yet (Phase 5).** Phase 5
-   wraps checkout in a transaction at the adapter boundary.
-3. **`@SpringBootTest` is `@Disabled` until Phase 5** (`NexusMarketApplicationTests`)
-   because the Spring context cannot wire the `@Service` beans without their
-   output-port adapters.
-4. **No login / REST / Security yet (Phase 6).** `LoginService`, `SecurityConfig`,
-   JWT filter and REST controllers arrive in Phase 6.
-5. **No bootstrap `ADMIN` seeder or order-expiration scheduler yet (Phase 7).**
-   `DataSeeder` and `OrderExpirationScheduler` arrive in Phase 7.
+1. **All 16 output ports implemented (Phase 5 & 6).** MySQL JPA adapters (`persistence.mysql.adapters`), MongoDB audit adapter (`AuditLogMongoAdapter`), payment gateway simulator (`SimulatedPaymentAdapter`), notification adapter (`EmailNotificationAdapter`), configuration adapter (`PropertiesConfigurationAdapter`), password hashing (`BCryptPasswordAdapter`), and JWT adapter (`JjwtAdapter`).
+2. **`@SpringBootTest` enabled (Phase 6).** `NexusMarketApplicationTests` verifies full Spring context wiring.
+3. **Authentication, Security & REST API (Phase 6).** `LoginService`, `SecurityConfig`, `JwtAuthenticationFilter`, `AuthenticatedUserResolver`, 10 REST controllers, and OpenAPI/Swagger configuration (`OpenApiConfig`).
+4. **Bootstrap `ADMIN` seeder and order-expiration scheduler (Phase 7).** `DataSeeder` (`CommandLineRunner`) idempotently seeds the initial `ADMIN` user on startup, and `OrderExpirationScheduler` periodically invokes `ReleaseExpiredOrdersUseCase` (`ReleaseExpiredOrdersService`) to release reserved physical stock on expired `PENDING_PAYMENT` orders.
 
 ---
 
