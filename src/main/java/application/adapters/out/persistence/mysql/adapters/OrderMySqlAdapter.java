@@ -6,6 +6,7 @@ import application.adapters.out.persistence.mysql.repositories.OrderJpaRepositor
 import application.domain.models.Buyer;
 import application.domain.models.Order;
 import application.domain.ports.out.OrderRepositoryPort;
+import application.domain.valueobjects.OrderStatus;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,17 @@ public class OrderMySqlAdapter implements OrderRepositoryPort {
             return List.of();
         }
         return orderJpaRepository.findByBuyer_Identification(buyer.getIdentification().value())
+                .stream()
+                .map(orderMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Order> findByStatus(OrderStatus status) {
+        if (status == null) {
+            return List.of();
+        }
+        return orderJpaRepository.findByStatus(status.getCode())
                 .stream()
                 .map(orderMapper::toDomain)
                 .toList();

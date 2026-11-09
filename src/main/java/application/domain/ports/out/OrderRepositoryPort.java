@@ -2,6 +2,7 @@ package application.domain.ports.out;
 
 import application.domain.models.Buyer;
 import application.domain.models.Order;
+import application.domain.valueobjects.OrderStatus;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,10 @@ public interface OrderRepositoryPort {
     Optional<Order> findByIdentifier(Order order);
 
     List<Order> findByBuyer(Buyer buyer);
+
+    default List<Order> findByStatus(OrderStatus status) {
+        return List.of();
+    }
 
     void update(Order order);
 }

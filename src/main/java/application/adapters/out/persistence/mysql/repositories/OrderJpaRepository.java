@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OrderJpaRepository extends JpaRepository<OrderJpaEntity, String> {
 
     List<OrderJpaEntity> findByBuyer_Identification(String buyerIdentification);
+
+    List<OrderJpaEntity> findByStatus(String status);
 }
