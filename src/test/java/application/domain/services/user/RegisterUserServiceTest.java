@@ -3,6 +3,7 @@ package application.domain.services.user;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import application.domain.exceptions.DomainException;
 import application.domain.exceptions.DuplicateUserException;
 import application.domain.exceptions.UnauthorizedOperationException;
 import application.domain.models.User;
@@ -75,6 +76,21 @@ class RegisterUserServiceTest {
     }
 
     @Test
+    void missingCredentialsAreRejected() {
+        User incomplete = newSeller();
+        incomplete.setPassword(" ");
+        assertThrows(DomainException.class,
+                () -> service.register(admin(), incomplete));
+    }
+
+    @Test
+    void duplicateUsernameIsRejected() {
+        repo.usernameTaken = true;
+        assertThrows(DuplicateUserException.class,
+                () -> service.register(admin(), newSeller()));
+    }
+
+    @Test
     void duplicateDocumentWithinUserRepositoryIsRejected() {
         repo.existsByIdentification = true;
         assertThrows(DuplicateUserException.class,
@@ -98,6 +114,7 @@ class RegisterUserServiceTest {
     private static final class FakeUserRepo implements UserRepositoryPort {
         boolean existsByIdentification;
         boolean existsByEmail;
+        boolean usernameTaken;
 
         @Override
         public User save(User user) {
@@ -106,7 +123,7 @@ class RegisterUserServiceTest {
 
         @Override
         public Optional<User> findByUsername(User user) {
-            return Optional.empty();
+            return usernameTaken ? Optional.of(user) : Optional.empty();
         }
 
         @Override
