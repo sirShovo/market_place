@@ -2,7 +2,7 @@
 
 Este documento detalla el plan de accion exhaustivo para construir la API de NexusMarket en Spring Boot. Combina la rigurosidad arquitectonica (Hexagonal + DDD) basada en el proyecto de referencia (`bank`), las decisiones de negocio previas y las directrices de la Especificacion Funcional oficial ([`SPECS.md`](SPECS.md)).
 
-> **Nota de alineacion:** las Fases 1 a 5 estan completadas y alineadas con las convenciones del proyecto de referencia. Ver [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md) para el detalle del proceso de alineacion. La documentacion SDD reside en `SDD/Software Architecture/`, `SDD/domain/` y `SDD/adapters/`, junto con [`SDD/Code Walkthrough and Role Flows.md`](SDD/Code%20Walkthrough%20and%20Role%20Flows.md).
+> **Nota de alineacion:** las Fases 1 a 6 estan completadas y alineadas con las convenciones del proyecto de referencia. Ver [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md) para el detalle del proceso de alineacion. La documentacion SDD reside en `SDD/Software Architecture/`, `SDD/domain/` y `SDD/adapters/`, junto con [`SDD/Code Walkthrough and Role Flows.md`](SDD/Code%20Walkthrough%20and%20Role%20Flows.md).
 
 ## Decisiones y Acuerdos de Diseno
 - **Estructura Estricta (`application` como paquete raiz):** Se respeta la separacion de paquetes alineada con el proyecto de referencia:
@@ -50,7 +50,7 @@ _Objetivo: Disenar el nucleo del negocio sin dependencias tecnologicas en `appli
   - [x] 2.2.3. `Warehouse`, `InventoryItem` y `InventoryMovement`.
   - [x] 2.2.4. `Cart`, `CartItem`, `Order` (con invariantes de ciclo de vida e inmutabilidad en `DELIVERED`) y `OrderItem` (con referencia a `Warehouse` de cumplimiento).
   - [x] 2.2.5. `AuditableEntity`, `Operation`, `AuditLog` y `Notification`.
-- [x] 2.3. **Excepciones de Dominio (`application.domain.exceptions`):** `DomainException`, `EntityNotFoundException`, `InvalidStatusTransitionException`, `UnauthorizedOperationException`, `NegativeStockException`, `InvalidReservationException`, `FinalizedOrderModificationException`, `DuplicateUserException`, `PaymentRejectedException`.
+- [x] 2.3. **Excepciones de Dominio (`application.domain.exceptions`):** `DomainException`, `EntityNotFoundException`, `InvalidStatusTransitionException`, `UnauthorizedOperationException`, `NegativeStockException`, `InvalidReservationException`, `FinalizedOrderModificationException`, `DuplicateUserException`, `PaymentRejectedException`, `InvalidCredentialsException`.
 - [x] 2.4. Documentar el modelo de dominio y objetos de valor en [`SDD/domain/Domain Model.md`](SDD/domain/Domain%20Model.md) y [`SDD/domain/Domain Value Objects.md`](SDD/domain/Domain%20Value%20Objects.md).
 
 ### Fase 3: Servicios de Dominio, Autorizacion y Auditoria (Entregable 3)
@@ -61,7 +61,7 @@ _Objetivo: Implementar las reglas de negocio por caso de uso en `application.dom
   - [x] 3.1.2. Unicidad en plataforma (`application.domain.services.identity`): `ValidatePlatformUniquenessService` (verifica `DocumentId` y `Email` entre `User`, `Buyer` y `Seller`).
   - [x] 3.1.3. Operaciones y Auditoria (`application.domain.services.operation`): `RegisterOperationService`, `RegisterAuditLogService`, `RegisterOperationAndAuditService`, `ConsultAuditLogService`.
 - [x] 3.2. **Servicios de Caso de Uso por Subdominio (`application.domain.services.*`):**
-  - [x] 3.2.1. `user/`: `RegisterUserService`, `ChangeUserStatusService`, `ConsultUserService`.
+  - [x] 3.2.1. `user/`: `RegisterUserService`, `ChangeUserStatusService`, `ConsultUserService`, `LoginService`.
   - [x] 3.2.2. `buyer/`: `RegisterBuyerService` (crea `Buyer` + `User` de login), `UpdateBuyerService`, `ChangeBuyerCommercialStatusService`, `ConsultBuyerService`.
   - [x] 3.2.3. `seller/`: `OnboardSellerService` (solo `ADMIN`; crea `Seller` + primera `Warehouse` + `User` de login), `ConsultSellerService` (permite autogestion del `SELLER` y consulta por `ADMIN`/`SUPERVISOR`).
   - [x] 3.2.4. `warehouse/`: `RegisterWarehouseService`, `ConsultWarehouseService`.
@@ -74,7 +74,7 @@ _Objetivo: Implementar las reglas de negocio por caso de uso en `application.dom
 ### Fase 4: Puertos de Entrada y Salida del Dominio (Entregable 4)
 _Objetivo: Definir los contratos de entrada y salida en `application.domain.ports.{in,out}` trabajando exclusivamente con modelos de dominio y retirar la capa legacy._
 
-- [x] 4.1. **Input Ports (`application.domain.ports.in` - 33 interfaces):** Un contrato `<Verb><Noun>UseCase` por cada servicio de caso de uso (`RegisterUserUseCase`, `ChangeUserStatusUseCase`, `ConsultUserUseCase`, `RegisterBuyerUseCase`, `UpdateBuyerUseCase`, `ChangeBuyerCommercialStatusUseCase`, `ConsultBuyerUseCase`, `OnboardSellerUseCase`, `ConsultSellerUseCase`, `RegisterWarehouseUseCase`, `ConsultWarehouseUseCase`, `PublishProductUseCase`, `UpdateProductUseCase`, `ChangeProductStatusUseCase`, `ConsultCatalogUseCase`, `ConsultSellerProductsUseCase`, `RegisterInventoryEntryUseCase`, `ReserveInventoryUseCase`, `ReleaseReservationUseCase`, `AdjustInventoryUseCase`, `RegisterInventoryReturnUseCase`, `ConsultInventoryUseCase`, `AddCartItemUseCase`, `RemoveCartItemUseCase`, `ClearCartUseCase`, `ConsultCartUseCase`, `CheckoutCartUseCase`, `ProcessOrderPaymentUseCase`, `DispatchOrderUseCase`, `ConfirmDeliveryUseCase`, `ConsultOrderUseCase`, `ConsultBuyerOrdersUseCase`, `ConsultAuditLogUseCase`).
+- [x] 4.1. **Input Ports (`application.domain.ports.in` - 34 interfaces):** Un contrato `<Verb><Noun>UseCase` por cada servicio de caso de uso (`LoginUseCase`, `RegisterUserUseCase`, `ChangeUserStatusUseCase`, `ConsultUserUseCase`, `RegisterBuyerUseCase`, `UpdateBuyerUseCase`, `ChangeBuyerCommercialStatusUseCase`, `ConsultBuyerUseCase`, `OnboardSellerUseCase`, `ConsultSellerUseCase`, `RegisterWarehouseUseCase`, `ConsultWarehouseUseCase`, `PublishProductUseCase`, `UpdateProductUseCase`, `ChangeProductStatusUseCase`, `ConsultCatalogUseCase`, `ConsultSellerProductsUseCase`, `RegisterInventoryEntryUseCase`, `ReserveInventoryUseCase`, `ReleaseReservationUseCase`, `AdjustInventoryUseCase`, `RegisterInventoryReturnUseCase`, `ConsultInventoryUseCase`, `AddCartItemUseCase`, `RemoveCartItemUseCase`, `ClearCartUseCase`, `ConsultCartUseCase`, `CheckoutCartUseCase`, `ProcessOrderPaymentUseCase`, `DispatchOrderUseCase`, `ConfirmDeliveryUseCase`, `ConsultOrderUseCase`, `ConsultBuyerOrdersUseCase`, `ConsultAuditLogUseCase`).
 - [x] 4.2. **Output Ports (`application.domain.ports.out` - 16 interfaces):**
   - [x] 4.2.1. Puertos de repositorio (11): `UserRepositoryPort`, `BuyerRepositoryPort`, `SellerRepositoryPort`, `WarehouseRepositoryPort`, `CategoryRepositoryPort`, `ProductRepositoryPort`, `InventoryRepositoryPort`, `CartRepositoryPort`, `OrderRepositoryPort`, `OperationRepositoryPort`, `AuditLogRepositoryPort`.
   - [x] 4.2.2. Puertos de servicio (5): `PaymentGatewayPort`, `NotificationPort`, `PasswordServicePort`, `JwtServicePort`, `BusinessConfigurationPort`.
@@ -101,15 +101,15 @@ _Objetivo: Implementar los adaptadores de salida en `application.adapters.out` p
 ### Fase 6: Controladores REST y Seguridad (Adaptadores de Entrada)
 _Objetivo: Implementar autenticacion JWT, seguridad por roles y exponer la API REST en `application.adapters.in.rest` y `application.infrastructure.security`._
 
-- [ ] 6.1. **Seguridad y Autenticacion (`application.infrastructure.security` + `domain`):**
-  - [ ] 6.1.1. Implementar `BCryptPasswordAdapter` (`PasswordServicePort`) y `JjwtAdapter` (`JwtServicePort`).
-  - [ ] 6.1.2. Implementar caso de uso de autenticacion (`LoginUseCase` / `LoginService`).
-  - [ ] 6.1.3. Configurar `JwtAuthenticationFilter` y `SecurityConfig` aplicando la matriz de responsabilidades y resolviendo el `User` autenticado.
-- [ ] 6.2. **Capa REST (`application.adapters.in.rest`):**
-  - [ ] 6.2.1. Request DTOs (`requests/`), Response DTOs (`responses/`) y Mappers REST (`mappers/`) para traducir entre HTTP y Modelos de Dominio.
-  - [ ] 6.2.2. Controladores (`controllers/`): `AuthController`, `UserController`, `BuyerController`, `SellerController`, `WarehouseController`, `ProductController`, `InventoryController`, `CartController`, `OrderController`, `AuditController`.
-- [ ] 6.3. Configurar OpenAPI / Swagger UI y habilitar `@SpringBootTest` (`NexusMarketApplicationTests`).
-- [ ] 6.4. Documentar los endpoints REST y el flujo de seguridad en `SDD/`.
+- [x] 6.1. **Seguridad y Autenticacion (`application.infrastructure.security` + `domain`):**
+  - [x] 6.1.1. Implementar `BCryptPasswordAdapter` (`PasswordServicePort`) y `JjwtAdapter` (`JwtServicePort`).
+  - [x] 6.1.2. Implementar caso de uso de autenticacion (`LoginUseCase` / `LoginService` e `InvalidCredentialsException`).
+  - [x] 6.1.3. Configurar `JwtAuthenticationFilter`, `AuthenticatedUserResolver` y `SecurityConfig` aplicando la matriz de responsabilidades y resolviendo el `User` y `Buyer` autenticados.
+- [x] 6.2. **Capa REST (`application.adapters.in.rest`):**
+  - [x] 6.2.1. Request DTOs (`requests/` - 12 records), Response DTOs (`responses/` - 13 records) y Mappers REST (`mappers/` - 9 clases `*RestMapper`) para traducir entre HTTP y Modelos de Dominio.
+  - [x] 6.2.2. Controladores (`controllers/` - 10 clases): `AuthController`, `UserController`, `BuyerController`, `SellerController`, `WarehouseController`, `ProductController`, `InventoryController`, `CartController`, `OrderController`, `AuditController`.
+- [x] 6.3. Configurar OpenAPI / Swagger UI (`OpenApiConfig`) y habilitar `@SpringBootTest` (`NexusMarketApplicationTests`).
+- [x] 6.4. Documentar los endpoints REST y el flujo de seguridad en [`SDD/adapters/REST and Security Adapters.md`](SDD/adapters/REST%20and%20Security%20Adapters.md).
 
 ### Fase 7: Schedulers, Semilla de Datos y Refinamientos Finales
 _Objetivo: Anadir automatizaciones operativas, bootstrap del administrador inicial y pulido final de la documentacion._
