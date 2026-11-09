@@ -1,5 +1,8 @@
 package application.domain.valueobjects;
 
+import application.domain.exceptions.DomainException;
+import java.util.List;
+
 /**
  * Significant business operations recorded in the audit trail.
  */
@@ -36,7 +39,23 @@ public final class OperationType extends DomainCatalog {
     public static final OperationType ORDER_DELIVERY = new OperationType(
             "ORDER_DELIVERY", "Order delivery", "An order delivery was confirmed.");
 
+    private static final List<OperationType> VALUES = List.of(
+            USER_REGISTRATION, USER_STATUS_CHANGE, SELLER_ONBOARDING, WAREHOUSE_REGISTRATION,
+            PRODUCT_PUBLICATION, PRODUCT_STATUS_CHANGE, INVENTORY_ENTRY, INVENTORY_RESERVATION,
+            INVENTORY_RELEASE, INVENTORY_ADJUSTMENT, INVENTORY_RETURN, CART_CHECKOUT,
+            ORDER_PAYMENT, ORDER_DISPATCH, ORDER_DELIVERY);
+
     private OperationType(String code, String name, String description) {
         super(code, name, description);
+    }
+
+    public static OperationType fromCode(String code) {
+        if (code == null) {
+            return null;
+        }
+        return VALUES.stream()
+                .filter(v -> v.getCode().equalsIgnoreCase(code))
+                .findFirst()
+                .orElseThrow(() -> new DomainException("Unknown OperationType code: " + code));
     }
 }

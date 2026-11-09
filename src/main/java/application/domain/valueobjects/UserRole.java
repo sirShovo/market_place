@@ -1,5 +1,8 @@
 package application.domain.valueobjects;
 
+import application.domain.exceptions.DomainException;
+import java.util.List;
+
 /**
  * Responsibilities and permissions of a participant. Exactly one role per participant
  * (spec §5, RG02).
@@ -17,7 +20,20 @@ public final class UserRole extends DomainCatalog {
     public static final UserRole SUPERVISOR = new UserRole(
             "SUPERVISOR", "Supervisor", "Read-only operational monitoring profile.");
 
+    private static final List<UserRole> VALUES = List.of(
+            BUYER, SELLER, LOGISTICS_OPERATOR, ADMIN, SUPERVISOR);
+
     private UserRole(String code, String name, String description) {
         super(code, name, description);
+    }
+
+    public static UserRole fromCode(String code) {
+        if (code == null) {
+            return null;
+        }
+        return VALUES.stream()
+                .filter(v -> v.getCode().equalsIgnoreCase(code))
+                .findFirst()
+                .orElseThrow(() -> new DomainException("Unknown UserRole code: " + code));
     }
 }
