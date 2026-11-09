@@ -2,7 +2,7 @@
 
 Este documento detalla el plan de accion exhaustivo para construir la API de NexusMarket en Spring Boot. Combina la rigurosidad arquitectonica (Hexagonal + DDD) basada en el proyecto de referencia (`bank`), las decisiones de negocio previas y las directrices de la Especificacion Funcional oficial ([`SPECS.md`](SPECS.md)).
 
-> **Nota de alineacion:** las Fases 1 a 4 estan completadas y alineadas con las convenciones del proyecto de referencia. Ver [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md) para el detalle del proceso de alineacion. La documentacion SDD reside en `SDD/Software Architecture/` y `SDD/domain/` (`Domain Model.md`, `Domain Value Objects.md`, `Domain Services.md`, `Output Ports.md`, `Input Ports.md` y `services/*.md` por subdominio), junto con [`SDD/Code Walkthrough and Role Flows.md`](SDD/Code%20Walkthrough%20and%20Role%20Flows.md).
+> **Nota de alineacion:** las Fases 1 a 5 estan completadas y alineadas con las convenciones del proyecto de referencia. Ver [`ALIGNMENT_PLAN.md`](ALIGNMENT_PLAN.md) para el detalle del proceso de alineacion. La documentacion SDD reside en `SDD/Software Architecture/`, `SDD/domain/` y `SDD/adapters/`, junto con [`SDD/Code Walkthrough and Role Flows.md`](SDD/Code%20Walkthrough%20and%20Role%20Flows.md).
 
 ## Decisiones y Acuerdos de Diseno
 - **Estructura Estricta (`application` como paquete raiz):** Se respeta la separacion de paquetes alineada con el proyecto de referencia:
@@ -29,8 +29,8 @@ Este documento detalla el plan de accion exhaustivo para construir la API de Nex
 ### Fase 1: Configuracion Base, Arquitectura Inicial y SDD (Entregable 1)
 _Objetivo: Estructurar el cascaron del proyecto bajo el paquete raiz `application` y preparar la base de la documentacion arquitectonica._
 
-- [x] 1.1. Inicializar y limpiar `pom.xml` con Spring Boot 4.1.0 (Data JPA, MongoDB, Security, WebMVC, Validation, Mail, OpenAPI, JJWT, MySQL, Lombok).
-- [x] 1.2. Configurar `application.properties` (conexion a MySQL, variables JWT, dialecto de Hibernate, credenciales SMTP).
+- [x] 1.1. Inicializar y limpiar `pom.xml` con Spring Boot 4.1.0 (Data JPA, Data MongoDB, Security, WebMVC, Validation, Mail, OpenAPI, JJWT, MySQL, Lombok).
+- [x] 1.2. Configurar `application.properties` (conexion a MySQL, MongoDB, variables JWT, dialecto de Hibernate, credenciales SMTP).
 - [x] 1.3. Crear estructura de paquetes Hexagonal con raiz `application` (`NexusMarketApplication`, `application.domain`, `application.infrastructure.config`).
 - [x] 1.4. Implementar utilidades de infraestructura y configuraciones globales:
   - [x] 1.4.1. `GlobalExceptionHandler` y envoltorio de respuesta unificado `ApiResponse`.
@@ -85,18 +85,18 @@ _Objetivo: Definir los contratos de entrada y salida en `application.domain.port
 ### Fase 5: Persistencia e Infraestructura de Salida (Adaptadores de Salida)
 _Objetivo: Implementar los adaptadores de salida en `application.adapters.out` para MySQL, MongoDB, pasarela de pago simulada, notificaciones y configuracion._
 
-- [ ] 5.1. **Persistencia Relacional MySQL (`application.adapters.out.persistence.mysql`):**
-  - [ ] 5.1.1. Entidades JPA (`entities/`): `UserJpaEntity`, `BuyerJpaEntity`, `SellerJpaEntity`, `WarehouseJpaEntity`, `CategoryJpaEntity`, `ProductJpaEntity` (soporte para `PhysicalProduct` y `DigitalProduct` + variantes), `InventoryItemJpaEntity`, `InventoryMovementJpaEntity`, `CartJpaEntity`, `CartItemJpaEntity`, `OrderJpaEntity`, `OrderItemJpaEntity`, `OperationJpaEntity`.
-  - [ ] 5.1.2. Repositorios Spring Data JPA (`repositories/`): interfaces `*JpaRepository` para cada entidad.
-  - [ ] 5.1.3. Mappers de persistencia (`mappers/`): conversion explicita entre Modelos de Dominio (y `DomainCatalog` / Value Objects) y Entidades JPA.
-  - [ ] 5.1.4. Adaptadores MySQL (`adapters/`): implementaciones `@Component` / `@Repository` de los 10 puertos de repositorio relacionales (`UserMySqlAdapter`, `BuyerMySqlAdapter`, `SellerMySqlAdapter`, `WarehouseMySqlAdapter`, `CategoryMySqlAdapter`, `ProductMySqlAdapter`, `InventoryMySqlAdapter`, `CartMySqlAdapter`, `OrderMySqlAdapter`, `OperationMySqlAdapter`).
-- [ ] 5.2. **Persistencia Documental MongoDB (`application.adapters.out.persistence.mongodb`):**
-  - [ ] 5.2.1. `AuditLogDocument`, `AuditLogMongoRepository`, `AuditLogDocumentMapper` y `AuditLogMongoAdapter` (implementando `AuditLogRepositoryPort`).
-- [ ] 5.3. **Adaptadores de Servicio Externo (`application.adapters.out`):**
-  - [ ] 5.3.1. `SimulatedPaymentAdapter` (`application.adapters.out.payment`) implementando `PaymentGatewayPort` con aprobacion/rechazo probabilistico configurable para probar reintentos.
-  - [ ] 5.3.2. `EmailNotificationAdapter` (`application.adapters.out.notification`) implementando `NotificationPort` mediante `JavaMailSender` (con fallback seguro si SMTP no esta activo en entorno local/test).
-  - [ ] 5.3.3. `PropertiesConfigurationAdapter` (`application.infrastructure.config`) implementando `BusinessConfigurationPort`.
-- [ ] 5.4. Documentar la capa de persistencia y adaptadores de salida en `SDD/adapters/` (en ingles) y validar pruebas de adaptadores.
+- [x] 5.1. **Persistencia Relacional MySQL (`application.adapters.out.persistence.mysql`):**
+  - [x] 5.1.1. Entidades JPA (`entities/`): `UserJpaEntity`, `BuyerJpaEntity`, `SellerJpaEntity`, `WarehouseJpaEntity`, `CategoryJpaEntity`, `ProductJpaEntity` (soporte para `PhysicalProduct` y `DigitalProduct` + `ProductVariantEmbeddable`), `InventoryItemJpaEntity`, `InventoryMovementJpaEntity`, `CartJpaEntity`, `CartItemJpaEntity`, `OrderJpaEntity`, `OrderItemJpaEntity`, `OperationJpaEntity`.
+  - [x] 5.1.2. Repositorios Spring Data JPA (`repositories/`): interfaces `*JpaRepository` para cada entidad (`UserJpaRepository`, `BuyerJpaRepository`, `SellerJpaRepository`, `WarehouseJpaRepository`, `CategoryJpaRepository`, `ProductJpaRepository`, `InventoryItemJpaRepository`, `InventoryMovementJpaRepository`, `CartJpaRepository`, `OrderJpaRepository`, `OperationJpaRepository`).
+  - [x] 5.1.3. Mappers de persistencia (`mappers/`): conversion explicita entre Modelos de Dominio (y `DomainCatalog` / Value Objects) y Entidades JPA (`UserMapper`, `BuyerMapper`, `SellerMapper`, `WarehouseMapper`, `CategoryMapper`, `ProductMapper`, `InventoryMapper`, `CartMapper`, `OrderMapper`, `OperationMapper`).
+  - [x] 5.1.4. Adaptadores MySQL (`adapters/`): implementaciones `@Component` de los 10 puertos de repositorio relacionales (`UserMySqlAdapter`, `BuyerMySqlAdapter`, `SellerMySqlAdapter`, `WarehouseMySqlAdapter`, `CategoryMySqlAdapter`, `ProductMySqlAdapter`, `InventoryMySqlAdapter`, `CartMySqlAdapter`, `OrderMySqlAdapter`, `OperationMySqlAdapter`).
+- [x] 5.2. **Persistencia Documental MongoDB (`application.adapters.out.persistence.mongodb`):**
+  - [x] 5.2.1. `AuditLogDocument`, `AuditLogMongoRepository`, `AuditLogDocumentMapper` y `AuditLogMongoAdapter` (implementando `AuditLogRepositoryPort`).
+- [x] 5.3. **Adaptadores de Servicio Externo (`application.adapters.out`):**
+  - [x] 5.3.1. `SimulatedPaymentAdapter` (`application.adapters.out.payment`) implementando `PaymentGatewayPort` con aprobacion/rechazo probabilistico configurable para probar reintentos.
+  - [x] 5.3.2. `EmailNotificationAdapter` (`application.adapters.out.notification`) implementando `NotificationPort` mediante `JavaMailSender` (con fallback seguro si SMTP no esta activo en entorno local/test).
+  - [x] 5.3.3. `PropertiesConfigurationAdapter` (`application.infrastructure.config`) implementando `BusinessConfigurationPort`.
+- [x] 5.4. Documentar la capa de persistencia y adaptadores de salida en [`SDD/adapters/Persistence and Output Adapters.md`](SDD/adapters/Persistence%20and%20Output%20Adapters.md) (en ingles) y validar pruebas de adaptadores.
 
 ### Fase 6: Controladores REST y Seguridad (Adaptadores de Entrada)
 _Objetivo: Implementar autenticacion JWT, seguridad por roles y exponer la API REST en `application.adapters.in.rest` y `application.infrastructure.security`._

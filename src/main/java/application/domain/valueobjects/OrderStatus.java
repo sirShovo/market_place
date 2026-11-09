@@ -1,5 +1,6 @@
 package application.domain.valueobjects;
 
+import application.domain.exceptions.DomainException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,9 @@ public final class OrderStatus extends DomainCatalog {
     public static final OrderStatus DELIVERED = new OrderStatus(
             "DELIVERED", "Delivered", "Delivery confirmed; order finalized and immutable.");
 
+    private static final List<OrderStatus> VALUES = List.of(
+            CART, PENDING_PAYMENT, PAID, DISPATCHED, DELIVERED);
+
     private static final Map<OrderStatus, List<OrderStatus>> ALLOWED = Map.of(
             CART, List.of(PENDING_PAYMENT),
             PENDING_PAYMENT, List.of(PAID),
@@ -33,5 +37,15 @@ public final class OrderStatus extends DomainCatalog {
     /** @return {@code true} if {@code target} is reachable from this status. */
     public boolean canTransitionTo(OrderStatus target) {
         return ALLOWED.getOrDefault(this, List.of()).contains(target);
+    }
+
+    public static OrderStatus fromCode(String code) {
+        if (code == null) {
+            return null;
+        }
+        return VALUES.stream()
+                .filter(v -> v.getCode().equalsIgnoreCase(code))
+                .findFirst()
+                .orElseThrow(() -> new DomainException("Unknown OrderStatus code: " + code));
     }
 }

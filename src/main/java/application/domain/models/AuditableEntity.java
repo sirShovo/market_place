@@ -11,4 +11,24 @@ public interface AuditableEntity {
 
     /** Business identifier of the entity, as text. */
     String auditableId();
+
+    /**
+     * Reconstructs a lightweight {@link AuditableEntity} reference from stored type and id.
+     */
+    static AuditableEntity of(String type, String id) {
+        if (type == null && id == null) {
+            return null;
+        }
+        return new AuditableEntity() {
+            @Override
+            public String auditableType() {
+                return type;
+            }
+
+            @Override
+            public String auditableId() {
+                return id;
+            }
+        };
+    }
 }
