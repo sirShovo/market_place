@@ -3,14 +3,16 @@
     "_postman_id": "15195e55-9bd9-45f8-8b09-3a14dbd2e153",
     "name": "NexusMarket API - Complete Collection",
     "description": "Complete end-to-end Postman Collection for NexusMarket API (Hexagonal Architecture + DDD in Spring Boot 4.1.0). Covers all 10 controllers and 29 endpoints across Auth, Users, Sellers, Warehouses, Products & Catalog, Inventory, Buyers, Cart, Orders, and Audit, with automatic JWT variable chaining and pm.test assertions.",
-    "schema": "https://schema.postman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
+      "id": "321f724e-9f5d-454b-ab7c-74bb7b078f8a",
       "name": "01. Auth (/api/auth)",
       "description": "Authentication endpoints (/api/auth). Run 1.1 first after starting the app to obtain adminToken, and run 1.2-1.5 after registering/onboarding the respective users.",
       "item": [
         {
+          "id": "b671202d-0834-432f-866d-f988a1744b7c",
           "name": "1.1 Login as Admin (Seeded Bootstrap)",
           "event": [
             {
@@ -27,17 +29,41 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "db53eecf-534e-4af8-8869-0fdfc93728f4",
           "name": "1.2 Login as Seller",
           "event": [
             {
@@ -53,17 +79,41 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"{{sellerUsername}}\",\n  \"password\": \"{{sellerPassword}}\"\n}"
+              "raw": "{\n  \"username\": \"{{sellerUsername}}\",\n  \"password\": \"{{sellerPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "cb0701a3-028e-4507-b816-e8354a881b04",
           "name": "1.3 Login as Logistics Operator",
           "event": [
             {
@@ -79,17 +129,41 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"{{operatorUsername}}\",\n  \"password\": \"{{operatorPassword}}\"\n}"
+              "raw": "{\n  \"username\": \"{{operatorUsername}}\",\n  \"password\": \"{{operatorPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "b2ccc985-27d1-4d99-b640-266ec82ef0e8",
           "name": "1.4 Login as Supervisor",
           "event": [
             {
@@ -105,17 +179,41 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"{{supervisorUsername}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}"
+              "raw": "{\n  \"username\": \"{{supervisorUsername}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "acbbf15a-65f9-4646-accd-472423061b99",
           "name": "1.5 Login as Buyer",
           "event": [
             {
@@ -131,17 +229,41 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"{{buyerUsername}}\",\n  \"password\": \"{{buyerPassword}}\"\n}"
+              "raw": "{\n  \"username\": \"{{buyerUsername}}\",\n  \"password\": \"{{buyerPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "33ccbbc7-cd05-4df1-96f0-e5dc80f731c2",
           "name": "1.6 Login - Invalid Credentials (401)",
           "event": [
             {
@@ -155,419 +277,1646 @@
             }
           ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"wrong-password\"\n}"
+              "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"wrong-password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/auth/login" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "5cbd2b63-cc3f-4298-8536-ceaef353aac4",
       "name": "02. Users (/api/users)",
       "description": "System user management (/api/users). Requires ADMIN for mutations and ADMIN or SUPERVISOR for queries.",
       "item": [
         {
+          "id": "2d4d50ba-1b24-4b1c-9dd6-33ca6d9139ce",
           "name": "2.1 Register Logistics Operator (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identification\": \"{{operatorIdentification}}\",\n  \"fullName\": \"Carlos Operador Logistico\",\n  \"email\": \"logop@nexusmarket.com\",\n  \"phoneNumber\": \"3001112233\",\n  \"address\": \"Zona Franca Bodega 4\",\n  \"role\": \"LOGISTICS_OPERATOR\",\n  \"username\": \"{{operatorUsername}}\",\n  \"password\": \"{{operatorPassword}}\"\n}"
+              "raw": "{\n  \"identification\": \"{{operatorIdentification}}\",\n  \"fullName\": \"Carlos Operador Logistico\",\n  \"email\": \"logop@nexusmarket.com\",\n  \"phoneNumber\": \"3001112233\",\n  \"address\": \"Zona Franca Bodega 4\",\n  \"role\": \"LOGISTICS_OPERATOR\",\n  \"username\": \"{{operatorUsername}}\",\n  \"password\": \"{{operatorPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/users" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "c2de655f-cc85-4a5f-878d-2313921551de",
           "name": "2.2 Register Supervisor (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identification\": \"{{supervisorIdentification}}\",\n  \"fullName\": \"Laura Supervisora\",\n  \"email\": \"supervisor@nexusmarket.com\",\n  \"phoneNumber\": \"3004445566\",\n  \"address\": \"Torre Central Piso 8\",\n  \"role\": \"SUPERVISOR\",\n  \"username\": \"{{supervisorUsername}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}"
+              "raw": "{\n  \"identification\": \"{{supervisorIdentification}}\",\n  \"fullName\": \"Laura Supervisora\",\n  \"email\": \"supervisor@nexusmarket.com\",\n  \"phoneNumber\": \"3004445566\",\n  \"address\": \"Torre Central Piso 8\",\n  \"role\": \"SUPERVISOR\",\n  \"username\": \"{{supervisorUsername}}\",\n  \"password\": \"{{supervisorPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/users" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "3d38c510-b611-4e7d-af09-5093e26c7dda",
           "name": "2.3 Consult User by Username (ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/users/{{operatorUsername}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{operatorUsername}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{operatorUsername}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "11f39a80-4c24-4013-8788-394b434b67aa",
           "name": "2.4 Change User Status (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" },
-            "url": { "raw": "{{baseUrl}}/api/users/{{operatorUsername}}/status" }
-          }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACTIVE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{operatorUsername}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{operatorUsername}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "726795a1-4ecc-4039-91a3-253b212fad94",
       "name": "03. Sellers (/api/sellers)",
       "description": "Seller onboarding and portfolio endpoints (/api/sellers). Sellers cannot self-register; they must be onboarded by an ADMIN along with their first warehouse.",
       "item": [
         {
+          "id": "f0e3cc63-4e86-47fc-b18f-4f3149bbdf1c",
           "name": "3.1 Onboard Seller + First Warehouse (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identification\": \"{{sellerIdentification}}\",\n  \"fullName\": \"Tech Seller Colombia SAS\",\n  \"email\": \"seller@nexusmarket.com\",\n  \"phoneNumber\": \"3109998877\",\n  \"address\": \"Parque Industrial Norte\",\n  \"username\": \"{{sellerUsername}}\",\n  \"password\": \"{{sellerPassword}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"warehouseName\": \"Bodega Principal TechSeller Bogota\",\n  \"warehouseLocation\": \"Bogota D.C.\"\n}"
+              "raw": "{\n  \"identification\": \"{{sellerIdentification}}\",\n  \"fullName\": \"Tech Seller Colombia SAS\",\n  \"email\": \"seller@nexusmarket.com\",\n  \"phoneNumber\": \"3109998877\",\n  \"address\": \"Parque Industrial Norte\",\n  \"username\": \"{{sellerUsername}}\",\n  \"password\": \"{{sellerPassword}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"warehouseName\": \"Bodega Principal TechSeller Bogota\",\n  \"warehouseLocation\": \"Bogota D.C.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/sellers/onboard" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/onboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "onboard"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "dc050dc8-476b-433b-bc1c-5516ebf9af88",
           "name": "3.2 Consult Seller Profile (SELLER / ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/sellers/{{sellerIdentification}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/{{sellerIdentification}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "{{sellerIdentification}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "f423a745-b2c8-435a-837c-ea6b21c99874",
           "name": "3.3 Consult Seller Products Portfolio (SELLER / ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/sellers/{{sellerIdentification}}/products" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/sellers/{{sellerIdentification}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "sellers",
+                "{{sellerIdentification}}",
+                "products"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "9c372b42-775a-4779-ae8c-ab933c0360a0",
       "name": "04. Warehouses (/api/warehouses)",
       "description": "Warehouse registration and consultation (/api/warehouses).",
       "item": [
         {
+          "id": "4524428f-3004-4e0a-bc97-b288a388c668",
           "name": "4.1 Register Marketplace Warehouse (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identifier\": \"{{marketplaceWarehouseId}}\",\n  \"name\": \"Centro de Distribucion Central NexusMarket\",\n  \"type\": \"MARKETPLACE\",\n  \"ownerIdentification\": null,\n  \"location\": \"Medellin\"\n}"
+              "raw": "{\n  \"identifier\": \"{{marketplaceWarehouseId}}\",\n  \"name\": \"Centro de Distribucion Central NexusMarket\",\n  \"type\": \"MARKETPLACE\",\n  \"ownerIdentification\": null,\n  \"location\": \"Medellin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/warehouses" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/warehouses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "warehouses"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "6fe21b02-f46e-4f79-b8e3-c30edf31a3da",
           "name": "4.2 Register Additional Seller Warehouse (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identifier\": \"WH-SELLER-02\",\n  \"name\": \"Bodega Secundaria TechSeller Cali\",\n  \"type\": \"SELLER\",\n  \"ownerIdentification\": \"{{sellerIdentification}}\",\n  \"location\": \"Cali\"\n}"
+              "raw": "{\n  \"identifier\": \"WH-SELLER-02\",\n  \"name\": \"Bodega Secundaria TechSeller Cali\",\n  \"type\": \"SELLER\",\n  \"ownerIdentification\": \"{{sellerIdentification}}\",\n  \"location\": \"Cali\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/warehouses" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/warehouses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "warehouses"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "155d9547-1b66-4fda-b7f2-9427cef786ca",
           "name": "4.3 Consult Warehouse by Identifier (ADMIN / SUPERVISOR / LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{operatorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/warehouses/{{sellerWarehouseId}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/warehouses/{{sellerWarehouseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "warehouses",
+                "{{sellerWarehouseId}}"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "cd177e58-19ac-494b-acd8-895601231369",
       "name": "05. Products & Catalog (/api/products)",
       "description": "Product catalog endpoints (/api/products). Catalog consultation is public; publishing requires SELLER; updating/changing status requires owning SELLER or ADMIN.",
       "item": [
         {
+          "id": "d055a536-301a-4874-93b3-0feca861d050",
           "name": "5.1 Publish Physical Product (SELLER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identifier\": \"{{physicalProductId}}\",\n  \"name\": \"Pro Workstation Laptop 16\",\n  \"description\": \"High-performance developer laptop\",\n  \"type\": \"PHYSICAL\",\n  \"price\": 1500.00,\n  \"sellerIdentification\": \"{{sellerIdentification}}\",\n  \"categoryName\": \"Hardware\",\n  \"variants\": [\n    {\n      \"attributeName\": \"RAM\",\n      \"value\": \"32GB\"\n    }\n  ]\n}"
+              "raw": "{\n  \"identifier\": \"{{physicalProductId}}\",\n  \"name\": \"Pro Workstation Laptop 16\",\n  \"description\": \"High-performance developer laptop\",\n  \"type\": \"PHYSICAL\",\n  \"price\": 1500.00,\n  \"sellerIdentification\": \"{{sellerIdentification}}\",\n  \"categoryName\": \"Hardware\",\n  \"variants\": [\n    {\n      \"attributeName\": \"RAM\",\n      \"value\": \"32GB\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/products" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "fa36c2bf-72e5-4e49-90c2-74e9ce3156e8",
           "name": "5.2 Publish Digital Product (SELLER - Auto-resolves sellerIdentification from JWT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identifier\": \"{{digitalProductId}}\",\n  \"name\": \"Enterprise Antivirus 1-Year Digital Key\",\n  \"description\": \"Instant digital license delivery\",\n  \"type\": \"DIGITAL\",\n  \"price\": 50.00,\n  \"categoryName\": \"Software\",\n  \"variants\": []\n}"
+              "raw": "{\n  \"identifier\": \"{{digitalProductId}}\",\n  \"name\": \"Enterprise Antivirus 1-Year Digital Key\",\n  \"description\": \"Instant digital license delivery\",\n  \"type\": \"DIGITAL\",\n  \"price\": 50.00,\n  \"categoryName\": \"Software\",\n  \"variants\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/products" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "6a968183-b738-47a7-981b-7d175558c224",
           "name": "5.3 Consult Published Catalog (Public - No Auth)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/products/catalog" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/products/catalog",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "catalog"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "0e218614-08fa-40d8-aa65-8969da5241b6",
           "name": "5.4 Update Product Details (SELLER / ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Pro Workstation Laptop 16 (2026 Edition)\",\n  \"description\": \"Updated high-performance developer laptop\",\n  \"price\": 1500.00,\n  \"categoryName\": \"Hardware\",\n  \"variants\": [\n    {\n      \"attributeName\": \"RAM\",\n      \"value\": \"32GB\"\n    }\n  ]\n}"
+              "raw": "{\n  \"name\": \"Pro Workstation Laptop 16 (2026 Edition)\",\n  \"description\": \"Updated high-performance developer laptop\",\n  \"price\": 1500.00,\n  \"categoryName\": \"Hardware\",\n  \"variants\": [\n    {\n      \"attributeName\": \"RAM\",\n      \"value\": \"32GB\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/products/{{physicalProductId}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{physicalProductId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{physicalProductId}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "12564cec-8132-44a2-864c-d0db6f8cb8c8",
           "name": "5.5 Change Product Status (SELLER / ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"status\": \"PUBLISHED\"\n}" },
-            "url": { "raw": "{{baseUrl}}/api/products/{{physicalProductId}}/status" }
-          }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PUBLISHED\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{physicalProductId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "{{physicalProductId}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "3ee78f02-14b6-495d-8e62-0709edba5d04",
       "name": "06. Inventory (/api/inventory)",
       "description": "Inventory management endpoints (/api/inventory). Shared by SELLER and LOGISTICS_OPERATOR; read access also granted to ADMIN and SUPERVISOR.",
       "item": [
         {
+          "id": "11ebbff7-4624-4cda-b24b-741f86d851e0",
           "name": "6.1 Register Inventory Entry (SELLER / LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 20,\n  \"condition\": \"AVAILABLE\"\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 20,\n  \"condition\": \"AVAILABLE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/inventory/entries" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/entries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "entries"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "e3bb71f8-517c-4166-b1ff-9e11dd390179",
           "name": "6.2 Consult Inventory by Product (SELLER / LOGISTICS_OPERATOR / ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{sellerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sellerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/inventory/product/{{physicalProductId}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/product/{{physicalProductId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "product",
+                "{{physicalProductId}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "f6061a31-94b2-4abe-981b-a87b95f0ca16",
           "name": "6.3 Reserve Inventory Manually (SELLER / LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{operatorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/inventory/reservations" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "9925c035-f372-4e03-8456-f1d63bf1552a",
           "name": "6.4 Release Inventory Reservation (SELLER / LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{operatorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/inventory/releases" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/releases",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "releases"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "00aa510a-c792-477e-945d-29fb43fa7e20",
           "name": "6.5 Adjust Inventory Stock (SELLER / LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{operatorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 18,\n  \"condition\": \"AVAILABLE\"\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 18,\n  \"condition\": \"AVAILABLE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/inventory/adjustments" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/adjustments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "adjustments"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "3d7731b8-af00-41ec-8d42-fff9ee9cf019",
           "name": "6.6 Register Inventory Return (SELLER / LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{operatorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"warehouseIdentifier\": \"{{sellerWarehouseId}}\",\n  \"quantity\": 2,\n  \"condition\": \"AVAILABLE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/inventory/returns" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/inventory/returns",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inventory",
+                "returns"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "abe1ffbc-6682-4f60-9d23-7e48d1ccefed",
       "name": "07. Buyers (/api/buyers)",
       "description": "Buyer self-registration and profile management (/api/buyers).",
       "item": [
         {
+          "id": "bb519c7a-e90a-497e-9628-b85adbc5c6a2",
           "name": "7.1 Self-Register Buyer (Public - No Auth)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "noauth" },
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"identification\": \"{{buyerIdentification}}\",\n  \"fullName\": \"Maria Compradora\",\n  \"email\": \"maria@nexusmarket.com\",\n  \"phoneNumber\": \"3157776655\",\n  \"address\": \"Carrera 43A # 1-50\",\n  \"mainAddress\": \"Carrera 43A # 1-50 Apto 502\",\n  \"additionalAddresses\": [\n    \"Calle 10 # 20-30 Oficina 301\"\n  ],\n  \"username\": \"{{buyerUsername}}\",\n  \"password\": \"{{buyerPassword}}\"\n}"
+              "raw": "{\n  \"identification\": \"{{buyerIdentification}}\",\n  \"fullName\": \"Maria Compradora\",\n  \"email\": \"maria@nexusmarket.com\",\n  \"phoneNumber\": \"3157776655\",\n  \"address\": \"Carrera 43A # 1-50\",\n  \"mainAddress\": \"Carrera 43A # 1-50 Apto 502\",\n  \"additionalAddresses\": [\n    \"Calle 10 # 20-30 Oficina 301\"\n  ],\n  \"username\": \"{{buyerUsername}}\",\n  \"password\": \"{{buyerPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/buyers/register" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/buyers/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buyers",
+                "register"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "dd55d0ec-7bbe-46f7-821f-4a11776ace5a",
           "name": "7.2 Consult Buyer Profile (BUYER Self / ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buyers",
+                "{{buyerIdentification}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "8c6a8ab6-6268-4599-bc10-32074695ad27",
           "name": "7.3 Update Buyer Profile (BUYER Self)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fullName\": \"Maria Fernanda Compradora\",\n  \"email\": \"maria@nexusmarket.com\",\n  \"phoneNumber\": \"3157776699\",\n  \"address\": \"Carrera 43A # 1-50\",\n  \"mainAddress\": \"Carrera 43A # 1-50 Apto 502, Medellin\",\n  \"additionalAddresses\": [\n    \"Calle 10 # 20-30 Oficina 301\"\n  ]\n}"
+              "raw": "{\n  \"fullName\": \"Maria Fernanda Compradora\",\n  \"email\": \"maria@nexusmarket.com\",\n  \"phoneNumber\": \"3157776699\",\n  \"address\": \"Carrera 43A # 1-50\",\n  \"mainAddress\": \"Carrera 43A # 1-50 Apto 502, Medellin\",\n  \"additionalAddresses\": [\n    \"Calle 10 # 20-30 Oficina 301\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buyers",
+                "{{buyerIdentification}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "f56db5cf-ac93-49d6-9e84-43fa732c6f0c",
           "name": "7.4 Change Buyer Commercial Status (ADMIN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" },
-            "url": { "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}/status" }
-          }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACTIVE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/buyers/{{buyerIdentification}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "buyers",
+                "{{buyerIdentification}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "59a667e0-62ac-4039-bd38-949770aeaa6a",
       "name": "08. Cart (/api/cart)",
       "description": "Shopping cart operations (/api/cart). The authenticated BUYER is automatically resolved from the JWT token.",
       "item": [
         {
+          "id": "a265c019-2526-4fee-8b86-f50d3cd18151",
           "name": "8.1 Add Physical Product to Cart (BUYER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"variantAttributeName\": \"RAM\",\n  \"variantValue\": \"32GB\",\n  \"quantity\": 2\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{physicalProductId}}\",\n  \"variantAttributeName\": \"RAM\",\n  \"variantValue\": \"32GB\",\n  \"quantity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/cart/items" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "items"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "d988fda2-fa4b-4551-b1db-33c031c0f556",
           "name": "8.2 Add Digital Product to Cart (BUYER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{digitalProductId}}\",\n  \"variantAttributeName\": null,\n  \"variantValue\": null,\n  \"quantity\": 1\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{digitalProductId}}\",\n  \"variantAttributeName\": null,\n  \"variantValue\": null,\n  \"quantity\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/cart/items" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "items"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "3a92b78e-0c28-49b4-8ec2-b7d25fbfe836",
           "name": "8.3 Consult Active Cart (BUYER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/cart" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cart"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "fc6564f0-22be-46d9-a80e-cf60d83d9f8b",
           "name": "8.4 Remove Item from Cart by Body (BUYER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productIdentifier\": \"{{digitalProductId}}\",\n  \"variantAttributeName\": null,\n  \"variantValue\": null\n}"
+              "raw": "{\n  \"productIdentifier\": \"{{digitalProductId}}\",\n  \"variantAttributeName\": null,\n  \"variantValue\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
-            "url": { "raw": "{{baseUrl}}/api/cart/items" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "items"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "353a1fa3-7501-4a39-a041-9536b57e1b88",
           "name": "8.5 Remove Item from Cart by Path (BUYER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/cart/items/{{digitalProductId}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/items/{{digitalProductId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "{{digitalProductId}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "fe32a1da-07c6-4bdf-916b-80902177e74b",
           "name": "8.6 Clear Active Cart (BUYER)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/cart" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/cart",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cart"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "0c5ef6c3-958e-45d9-992e-4864822d8520",
       "name": "09. Orders (/api/orders)",
       "description": "Order checkout, payment processing, logistics dispatch, delivery confirmation, and order history (/api/orders).",
       "item": [
         {
+          "id": "ddc26f5b-9a08-4d9a-80d4-680dc7865bcd",
           "name": "9.1 Checkout Active Cart -> Create Order (BUYER)",
           "event": [
             {
@@ -583,109 +1932,435 @@
             }
           ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/orders/checkout" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/checkout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "checkout"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "11699a4d-54e5-4f35-9418-50557f9347aa",
           "name": "9.2 Pay Order (BUYER - Retry if simulated payment rejects)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Payment processed (200 Approved or 400 Rejected by simulator)\", function () { pm.expect(pm.response.code).to.be.oneOf([200, 400]); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/pay" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/pay",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{orderIdentifier}}",
+                "pay"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "9343f636-d224-4a0f-a84e-f45e6ff24271",
           "name": "9.3 Dispatch Physical Order (LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{operatorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/dispatch" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/dispatch",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{orderIdentifier}}",
+                "dispatch"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "4c79fd62-8d5f-43e9-b96f-b5e192d6416a",
           "name": "9.4 Confirm Order Delivery (LOGISTICS_OPERATOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{operatorToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{operatorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/deliver" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}/deliver",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{orderIdentifier}}",
+                "deliver"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "311104b0-3819-4a9c-b0e2-4d5099148777",
           "name": "9.5 Consult Order by Identifier (BUYER Owner / LOGISTICS_OPERATOR / ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/{{orderIdentifier}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{orderIdentifier}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "fc6f2385-4ef5-4136-99cf-f7e101bb5712",
           "name": "9.6 Consult Buyer Order History (BUYER Owner / ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{buyerToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{buyerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/orders/buyer/{{buyerIdentification}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/buyer/{{buyerIdentification}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "buyer",
+                "{{buyerIdentification}}"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
+      "id": "a860ae6f-8331-4fbf-84eb-6492b7a2de1f",
       "name": "10. Audit (/api/audit)",
       "description": "MongoDB Audit Log consultation endpoints (/api/audit). Restricted to ADMIN and SUPERVISOR roles.",
       "item": [
         {
+          "id": "1a30a4e3-d0ee-4052-b282-a9b51efea158",
           "name": "10.1 Consult Order Audit History (ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/audit/Order/{{orderIdentifier}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/audit/Order/{{orderIdentifier}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "audit",
+                "Order",
+                "{{orderIdentifier}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
+          "id": "a833e740-9e69-430e-8c3d-cfe346ef6de9",
           "name": "10.2 Consult Seller Audit History (ADMIN / SUPERVISOR)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
           "request": {
-            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/api/audit/Seller/{{sellerIdentification}}" }
-          }
+            "url": {
+              "raw": "{{baseUrl}}/api/audit/Seller/{{sellerIdentification}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "audit",
+                "Seller",
+                "{{sellerIdentification}}"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }
   ],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080" },
-    { "key": "adminUsername", "value": "admin" },
-    { "key": "adminPassword", "value": "admin123" },
-    { "key": "adminToken", "value": "" },
-    { "key": "sellerIdentification", "value": "SELLER-001" },
-    { "key": "sellerUsername", "value": "techseller" },
-    { "key": "sellerPassword", "value": "seller123" },
-    { "key": "sellerToken", "value": "" },
-    { "key": "operatorIdentification", "value": "OP-001" },
-    { "key": "operatorUsername", "value": "logop" },
-    { "key": "operatorPassword", "value": "op123" },
-    { "key": "operatorToken", "value": "" },
-    { "key": "supervisorIdentification", "value": "SUP-001" },
-    { "key": "supervisorUsername", "value": "supervisor1" },
-    { "key": "supervisorPassword", "value": "sup123" },
-    { "key": "supervisorToken", "value": "" },
-    { "key": "buyerIdentification", "value": "BUYER-001" },
-    { "key": "buyerUsername", "value": "maria" },
-    { "key": "buyerPassword", "value": "maria123" },
-    { "key": "buyerToken", "value": "" },
-    { "key": "sellerWarehouseId", "value": "WH-SELLER-01" },
-    { "key": "marketplaceWarehouseId", "value": "WH-MKT-01" },
-    { "key": "physicalProductId", "value": "PROD-LAPTOP-01" },
-    { "key": "digitalProductId", "value": "PROD-LICENSE-01" },
-    { "key": "orderIdentifier", "value": "ORD-001" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "adminUsername",
+      "value": "admin"
+    },
+    {
+      "key": "adminPassword",
+      "value": "admin123"
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "sellerIdentification",
+      "value": "SELLER-001"
+    },
+    {
+      "key": "sellerUsername",
+      "value": "techseller"
+    },
+    {
+      "key": "sellerPassword",
+      "value": "seller123"
+    },
+    {
+      "key": "sellerToken",
+      "value": ""
+    },
+    {
+      "key": "operatorIdentification",
+      "value": "OP-001"
+    },
+    {
+      "key": "operatorUsername",
+      "value": "logop"
+    },
+    {
+      "key": "operatorPassword",
+      "value": "op123"
+    },
+    {
+      "key": "operatorToken",
+      "value": ""
+    },
+    {
+      "key": "supervisorIdentification",
+      "value": "SUP-001"
+    },
+    {
+      "key": "supervisorUsername",
+      "value": "supervisor1"
+    },
+    {
+      "key": "supervisorPassword",
+      "value": "sup123"
+    },
+    {
+      "key": "supervisorToken",
+      "value": ""
+    },
+    {
+      "key": "buyerIdentification",
+      "value": "BUYER-001"
+    },
+    {
+      "key": "buyerUsername",
+      "value": "maria"
+    },
+    {
+      "key": "buyerPassword",
+      "value": "maria123"
+    },
+    {
+      "key": "buyerToken",
+      "value": ""
+    },
+    {
+      "key": "sellerWarehouseId",
+      "value": "WH-SELLER-01"
+    },
+    {
+      "key": "marketplaceWarehouseId",
+      "value": "WH-MKT-01"
+    },
+    {
+      "key": "physicalProductId",
+      "value": "PROD-LAPTOP-01"
+    },
+    {
+      "key": "digitalProductId",
+      "value": "PROD-LICENSE-01"
+    },
+    {
+      "key": "orderIdentifier",
+      "value": "ORD-001"
+    }
   ]
 }
